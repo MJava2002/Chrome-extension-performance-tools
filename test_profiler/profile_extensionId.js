@@ -1,3 +1,11 @@
+/*  Collect a profile of an extension's background worker 
+*
+*   (!) Attaching to an extension background worker requires 
+*   the extensions-on-chrome-urls flag to be set
+*   Based on the docs, the silent-debugger-extension-api flag is 
+*   requred, but it's unclear whether this is still supported
+*/
+
 const extensionId = "kkkbiiikppgjdiebcabomlbidfodipjg";
 var tabId;
 

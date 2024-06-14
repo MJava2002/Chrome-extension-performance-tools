@@ -1,6 +1,9 @@
+/* Collect the profile of an entire tab, 
+* filter extension related events from the result
+*/
+
 var tabId;
 const extensionId = 'gighmmpiobklfepjocnamgkkbiglidom';
-
 
 chrome.action.onClicked.addListener(function (tab) {
     console.log('CLICKED');
