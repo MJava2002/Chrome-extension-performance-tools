@@ -1,4 +1,4 @@
-# Project Title
+# Bookmarker
 
 Simple extension for bookmarking
 
