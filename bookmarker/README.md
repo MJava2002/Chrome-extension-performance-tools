@@ -14,10 +14,5 @@ Download and upload extension in your chrome browser
 
 ## Authors
 
-Contributors names and contact info
+Nino Gogoberishvili
 
-ex. Nino Gogoberishvili
-
-## License
-
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
