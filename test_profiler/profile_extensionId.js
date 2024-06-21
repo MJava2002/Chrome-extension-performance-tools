@@ -2,7 +2,7 @@
 *
 *   (!) Attaching to an extension background worker requires 
 *   the extensions-on-chrome-urls flag to be set
-*   Enabling this flag shows a warning: "You are using an unsupported 
+*   It works, but it shows a warning: "You are using an unsupported 
 *   command-line flag. Stability and security will suffer"
 * 
 *   Based on the docs, the silent-debugger-extension-api flag is 
