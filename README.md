@@ -1,4 +1,4 @@
-# Tested features, librarys and extensions
+# Tested features, libraries and extensions
 
 ## Description
 
