@@ -3,7 +3,7 @@
 */
 
 var tabId;
-const extensionId = 'gighmmpiobklfepjocnamgkkbiglidom';
+const extensionId = 'mdnleldcmiljblolnjhpnblkcekpdkpa';
 
 chrome.action.onClicked.addListener(function (tab) {
     console.log('CLICKED');
@@ -44,3 +44,18 @@ chrome.action.onClicked.addListener(function (tab) {
 function isExtensionNode(node) {
     return node.callFrame.url.includes(extensionId);
 }
+
+
+
+/***
+ * returned nodes array contains objects with fields: 
+ * callFrame: 
+ *          {columnNumber: 307363, functionName: '', lineNumber: 9, 
+ *          scriptId: '1063', url: 'https://cdn.pendo.io/agent/static/bfe8c8aa-f7a6-46f4-5ede-db5a212ce2cc/pendo.js'}
+    children: [50] // contains an id of a node that they are calling, could be empty
+    hitCount: 0 // unclear
+    id: 49
+ * 
+ * 
+ * 
+ */
