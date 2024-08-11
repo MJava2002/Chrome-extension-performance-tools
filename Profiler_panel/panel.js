@@ -50,6 +50,26 @@ messagesContainer.style.cssText = `
 `;
 document.body.appendChild(messagesContainer);
 
+
+let startTime, endTime;
+
+document.getElementById('recordButton').addEventListener('click', function () {
+  startTime = new Date();
+  document.getElementById('timeDisplay').innerText = ''; // Clear previous time display
+  console.log('Recording started at', startTime);
+});
+
+document.getElementById('stopButton').addEventListener('click', function () {
+  if (startTime) {
+    endTime = new Date();
+    const timeElapsed = ((endTime - startTime) / 1000).toFixed(2); // Time in seconds
+    document.getElementById('timeDisplay').innerText = `Time: ${timeElapsed} seconds`;
+    console.log('Recording stopped at', endTime, 'Elapsed time:', timeElapsed, 'seconds');
+  } else {
+    console.log('Recording not started.');
+  }
+});
+
 // const output = document.getElementById('output');
 // const tabId = chrome.devtools.inspectedWindow.tabId;
 // output.textContent = `Tab ID: ${tabId}`;
