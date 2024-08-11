@@ -3,7 +3,7 @@
 */
 
 var tabId;
-const extensionId = 'mdnleldcmiljblolnjhpnblkcekpdkpa';
+const extensionId = 'mmgodofmgemfldcejapbjjcbphiajiaj';
 
 chrome.action.onClicked.addListener(function (tab) {
     console.log('CLICKED');

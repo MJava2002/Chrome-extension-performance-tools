@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html style="display: flex; background-color: #2b251d;">
+  <head>
+    <meta charset="utf8" />
+    <style>
+      html {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        color: #dcdcdc; /* Set text color to light grey */
+      }
+      body {
+        margin: 0;
+        padding: 20px; /* Add padding to create some space around the content */
+        flex: 1;
+        display: flex;
+        flex-direction: column; /* Arrange children in a column */
+        width: 100%;
+        align-items: flex-start; /* Align children to the start of the flex container */
+      }
+      #output {
+        white-space: pre-wrap;
+        margin-bottom: 20px;
+      }
+      #coverageButton {
+        width: 140px;
+        height: 40px;
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px; /* Create space above the button */
+      }
+      #coverageButton:hover {
+        background-color: #45a049;
+      }
+      #backgroundMessages {
+        position: relative;
+        left: 10px;
+        font-size: 14px;
+        color: white;
+        font-family: monospace;
+        white-space: pre-wrap;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Performance Panel</h1>
+    <button id="coverageButton">&#9679; Run Coverage</button> <!-- Circle symbol for the button -->
+    <div id="output"></div>
+    <div id="backgroundMessages"></div> <!-- Container for background messages -->
+    <script src="panel.js"></script>
+  </body>
+</html>

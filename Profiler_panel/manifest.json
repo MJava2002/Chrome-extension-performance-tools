@@ -1,0 +1,20 @@
+{
+  "name": "ProfilerPanel",
+  "description": "Add bar",
+  "version": "1.0",
+  "manifest_version": 3,
+  "devtools_page": "devtools.html",
+  "permissions": [
+      "debugger",
+      "tabs",
+      "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "https://www.google.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {}
+}

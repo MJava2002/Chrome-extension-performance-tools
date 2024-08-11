@@ -9,7 +9,7 @@
 *   requred, but it's unclear whether this is still supported
 */
 
-const extensionId = "kkkbiiikppgjdiebcabomlbidfodipjg";
+const extensionId = "mmgodofmgemfldcejapbjjcbphiajiaj";
 var tabId;
 
 chrome.action.onClicked.addListener(function (tab) {
