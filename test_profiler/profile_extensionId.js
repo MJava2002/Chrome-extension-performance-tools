@@ -9,40 +9,54 @@
 *   requred, but it's unclear whether this is still supported
 */
 
-const extensionId = "mmgodofmgemfldcejapbjjcbphiajiaj";
+const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
 var tabId;
 
 chrome.action.onClicked.addListener(function (tab) {
     if (tab.url.startsWith('http')) {
         tabId = tab.id;
+        let target;
+
+        chrome.debugger.getTargets((result) => {
+            target = result.find(t => 
+                t.type === 'worker' && t.title.includes(extensionId)
+            );
         
-        chrome.debugger.attach({ extensionId: extensionId}, '1.3', async function () {
-            if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
-                return;
-            }
-            console.log('Debugger attached');
-        
-            // Enable debugger
-            chrome.debugger.sendCommand({ extensionId: extensionId}, 'Debugger.enable', () => {
-                console.log('Debugger enabled');
-            });
-
-            chrome.debugger.sendCommand({ extensionId: extensionId }, 'Profiler.enable', () => {
-                console.log('Profiler enabled');
-            });
-
-            chrome.debugger.sendCommand({ extensionId: extensionId }, 'Profiler.start', () => {
-                console.log('Profiler started');
-            });
-
-            //sleep
-            await new Promise(r => setTimeout(r, 2000));
-
-            chrome.debugger.sendCommand({ extensionId: extensionId }, 'Profiler.stop', (result) => {
-                console.log('Profiler stopped');
-                console.log(result.profile);
-            });
         });
+
+        if (target) {
+            console.log("Found target:", target);
+            chrome.debugger.attach({ extensionId: extensionId}, '1.3', async function () {
+                if (chrome.runtime.lastError) {
+                    console.error(chrome.runtime.lastError.message);
+                    return;
+                }
+                console.log('Debugger attached');
+            
+                // Enable debugger
+                chrome.debugger.sendCommand({ extensionId: extensionId}, 'Debugger.enable', () => {
+                    console.log('Debugger enabled');
+                });
+    
+                chrome.debugger.sendCommand({ extensionId: extensionId }, 'Profiler.enable', () => {
+                    console.log('Profiler enabled');
+                });
+    
+                chrome.debugger.sendCommand({ extensionId: extensionId }, 'Profiler.start', () => {
+                    console.log('Profiler started');
+                });
+    
+                //sleep
+                await new Promise(r => setTimeout(r, 2000));
+    
+                chrome.debugger.sendCommand({ extensionId: extensionId }, 'Profiler.stop', (result) => {
+                    console.log('Profiler stopped');
+                    console.log(result.profile);
+                });
+            });
+        } else {
+            console.log("No matching target found.");
+        }
+        
     }
 });
