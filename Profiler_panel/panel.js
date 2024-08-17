@@ -8,9 +8,39 @@
 *   Based on the docs, the silent-debugger-extension-api flag is
 *   requred, but it's unclear whether this is still supported
 */
-// In your DevTools panel JavaScript file
 const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 let panelWindowId;
+document.addEventListener('DOMContentLoaded', () => {
+  const dropdownContent = document.querySelector('.dropdown-content');
+  const runExtension = document.getElementById('runExtension');
+  const runTab = document.getElementById('runTab');
+
+  // Show dropdown content when clicking the dropdown button
+  document.querySelector('.dropdown-button').addEventListener('click', (event) => {
+    event.stopPropagation(); // Prevent clicks from propagating to the document
+    const isVisible = dropdownContent.style.display === 'block';
+    dropdownContent.style.display = isVisible ? 'none' : 'block';
+  });
+
+  // Log which option was clicked
+  runExtension.addEventListener('click', (event) => {
+    event.preventDefault(); // Prevent default link behavior
+    console.log('Extension clicked');
+    dropdownContent.style.display = 'none'; // Hide the dropdown
+  });
+
+  runTab.addEventListener('click', (event) => {
+    event.preventDefault(); // Prevent default link behavior
+    console.log('Tab clicked');
+    dropdownContent.style.display = 'none'; // Hide the dropdown
+  });
+
+  // Close the dropdown if the user clicks outside of it
+  document.addEventListener('click', () => {
+    dropdownContent.style.display = 'none';
+  });
+});
+
 
 
 document.getElementById("coverageButton").addEventListener("click", function() {
@@ -69,7 +99,6 @@ document.getElementById('stopButton').addEventListener('click', function () {
     console.log('Recording not started.');
   }
 });
-
 // const output = document.getElementById('output');
 // const tabId = chrome.devtools.inspectedWindow.tabId;
 // output.textContent = `Tab ID: ${tabId}`;
