@@ -7,7 +7,7 @@
       "default_icon": "icon.png"
     },
     "background": {
-        "service_worker": "profile_tabId.js"
+        "service_worker": "profile_extensionId.js"
     },
     "permissions": [
         "debugger",
