@@ -10,11 +10,9 @@
 */
 
 const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
-var tabId;
 
 chrome.action.onClicked.addListener(function (tab) {
     if (tab.url.startsWith('http')) {
-        tabId = tab.id;
         let target;
 
         chrome.debugger.getTargets((result) => {
