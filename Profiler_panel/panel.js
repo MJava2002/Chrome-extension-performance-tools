@@ -8,7 +8,7 @@
 *   Based on the docs, the silent-debugger-extension-api flag is
 *   requred, but it's unclear whether this is still supported
 */
-const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
+// const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 
 
 document.getElementById("dropdown").addEventListener("click", function (event) {
