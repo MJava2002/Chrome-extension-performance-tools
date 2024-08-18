@@ -17,7 +17,7 @@ document.getElementById("dropdown").addEventListener("click", function (event) {
 });
 document.addEventListener('click', function(event) {
     const dropdown = document.getElementById('dropdown-content');
-    if (!dropdown.contains(event.target)) {
+    if (dropdown) {
         dropdown.classList.remove('active');
     }
 });
