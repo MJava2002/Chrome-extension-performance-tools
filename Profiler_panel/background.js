@@ -21,55 +21,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === "runExtensionClicked") {
-        sendToDevTools("Extension ID in DevTools panel!");
-        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            let activeTab = tabs[0];
-            sendToDevTools("Active Tab ID: " + activeTab.id);
-            tabId = activeTab.id;
-            chrome.debugger.getTargets((result) => {
-                sendToDevTools(result)
-                let target = result.find(t =>
-                    t.title.includes(extensionId)
-                );
-                if (target) {
-                    tabId = targetTab.id;
-                    chrome.debugger.attach({tabId: tabId}, '1.3', async function () {
-                        if (chrome.runtime.lastError) {
-                            sendToDevTools("Error: " + chrome.runtime.lastError.message);
-                            return;
-                        }
-                        sendToDevTools('Debugger attached');
-
-                        // Enable the debugger and profiler
-                        chrome.debugger.sendCommand({tabId: tabId}, 'Debugger.enable', () => {
-                            sendToDevTools('Debugger enabled');
-                        });
-
-                        chrome.debugger.sendCommand({tabId: tabId}, 'Profiler.enable', () => {
-                            sendToDevTools('Profiler enabled');
-                        });
-
-                        chrome.debugger.sendCommand({tabId: tabId}, 'Profiler.start', () => {
-                            sendToDevTools('Profiler started');
-                        });
-
-                        // Wait for 2 seconds
-                        await new Promise(r => setTimeout(r, 2000));
-
-                        chrome.debugger.sendCommand({tabId: tabId}, 'Profiler.stop', (result) => {
-                            sendToDevTools('Profiler stopped');
-                            sendToDevTools('Profile nodes: ' + JSON.stringify(result.profile.nodes));
-
-                        });
-                    });
-                } else {
-                    sendToDevTools("No HTTP tabs found.");
-                }
-            });
-        });
+        profileWithExtensionID()
     }
     if (request.action === "runTabClicked") {
-        sendToDevTools("Tab ID in DevTools panel!");
+        profileWithTabID()
+    }
+});
+
+function profileWithTabID() {
+    sendToDevTools("Tab ID in DevTools panel!");
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
           let activeTab = tabs[0];
           sendToDevTools("Active Tab ID: " + activeTab.id);
@@ -111,7 +71,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                             }
                             return result;
                         }
-
                         return processNode(profile.nodes[profile.rootNodeId]);
                     }
 
@@ -123,5 +82,49 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 });
           });
         });
-    }
-});
+}
+
+function profileWithExtensionID() {
+    const extensionId = "gighmmpiobklfepjocnamgkkbiglidom"
+    sendToDevTools("Extension ID in DevTools panel!");
+    chrome.debugger.getTargets((result) => {
+        sendToDevTools(result)
+        let target = result.find(t =>
+            t.title.includes(extensionId)
+        );
+        if (target) {
+            targetId = target.id;
+            chrome.debugger.attach({targetId: targetId}, '1.3', async function () {
+                if (chrome.runtime.lastError) {
+                    sendToDevTools("Error: " + chrome.runtime.lastError.message);
+                    return;
+                }
+                sendToDevTools('Debugger attached');
+
+                // Enable the debugger and profiler
+                chrome.debugger.sendCommand({targetId: targetId}, 'Debugger.enable', () => {
+                    sendToDevTools('Debugger enabled');
+                });
+
+                chrome.debugger.sendCommand({targetId: targetId}, 'Profiler.enable', () => {
+                    sendToDevTools('Profiler enabled');
+                });
+
+                chrome.debugger.sendCommand({targetId: targetId}, 'Profiler.start', () => {
+                    sendToDevTools('Profiler started');
+                });
+
+                // Wait for 2 seconds
+                await new Promise(r => setTimeout(r, 2000));
+
+                chrome.debugger.sendCommand({targetId: targetId}, 'Profiler.stop', (result) => {
+                    sendToDevTools('Profiler stopped');
+                    sendToDevTools('Profile nodes: ' + JSON.stringify(result.profile.nodes));
+
+                });
+            });
+        } else {
+            sendToDevTools("Target not found.");
+        }
+    });
+}
