@@ -94,9 +94,32 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 chrome.debugger.sendCommand({ tabId: tabId }, 'Profiler.stop', (result) => {
                     sendToDevTools('Profiler stopped');
                     const profile = result.profile;
-                    sendToDevTools('Profile nodes: ' + JSON.stringify(profile.nodes));
-                    const nodes = profile.nodes.filter(isExtensionNode);
-                    sendToDevTools('Extension nodes: ' + JSON.stringify(nodes));
+
+                    function processProfileData(profile) {
+    // This is a simplified version. You might need to adjust this based on the actual structure of your profile data
+                        function processNode(node) {
+                            let result = {
+                                name: node.callFrame.functionName || '(anonymous)',
+                                value: node.selfSize || 1,
+                                children: []
+                            };
+                            if (node.children) {
+                                node.children.forEach(childId => {
+                                    const childNode = profile.nodes[childId];
+                                    result.children.push(processNode(childNode));
+                                });
+                            }
+                            return result;
+                        }
+
+                        return processNode(profile.nodes[profile.rootNodeId]);
+                    }
+
+                    const flameGraphData = processProfileData(profile);
+                    sendToDevTools({
+                        type: 'flameGraphData',
+                        data: flameGraphData
+                    });
                 });
           });
         });

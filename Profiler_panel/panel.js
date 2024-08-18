@@ -10,7 +10,38 @@
 */
 const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 
+let flameGraph;
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof d3 !== 'undefined' && typeof d3.flamegraph !== 'undefined') {
+        initializeFlameGraph();
+    } else {
+        console.error('D3 or D3 Flame Graph library not loaded');
+    }
+});
 
+function initializeFlameGraph() {
+    flameGraph = d3.flamegraph()
+        .width(960)
+        .cellHeight(18)
+        .transitionDuration(750)
+        .minFrameSize(5)
+        .title("")
+        .label(function(d) { return d.name + " (" + d.value + ")"; });
+
+    // Listen for flame graph data from the background script
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        if (message.type === 'flameGraphData') {
+            renderFlameGraph(message.data);
+        }
+    });
+}
+
+function renderFlameGraph(data) {
+    console.log('D3 version:', d3.version);
+    console.log('D3 Flame Graph:', typeof d3.flamegraph);
+    const chart = d3.select("#flameGraph");
+    chart.datum(data).call(flameGraph);
+}
 document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
   this.classList.toggle('active');

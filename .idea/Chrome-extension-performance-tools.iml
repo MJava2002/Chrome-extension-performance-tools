@@ -6,5 +6,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="d3-flame-graph" level="application" />
     <orderEntry type="library" name="d3" level="application" />
+    <orderEntry type="library" name="d3.v7" level="application" />
   </component>
 </module>
