@@ -104,7 +104,9 @@ async function runCoverage() {
             uniqueFiles.add(fileName)
         }
     });
-
+    uniqueFiles.forEach(fileName => {
+        calculateCoveragePercentage(fileName, coverageData)
+    })
 }
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action === "buttonClicked") {
