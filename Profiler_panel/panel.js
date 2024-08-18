@@ -1,3 +1,4 @@
+
 /*  Collect a profile of an extension's background worker
 *
 *   (!) Attaching to an extension background worker requires
@@ -10,7 +11,58 @@
 */
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 
+let flameGraph;
 
+console.log('Panel.js')
+
+// background.js or a script that triggers script injection
+
+chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+  let tab = tabs[0];
+
+  chrome.scripting.executeScript({
+      target: {tabId: tab.id},
+      files: ['libs/d3.v7.min.js']
+  }, () => {
+      // D3 is now available in the tab's context
+      chrome.scripting.executeScript({
+          target: {tabId: tab.id},
+          func: () => {
+              // Ensure D3 is loaded before using it
+              if (typeof d3 !== 'undefined') {
+                  console.log('D3 version:', d3.version);
+                  // Use d3 library 
+              } else {
+                  console.error('D3 not loaded');
+              }
+          }
+      });
+  });
+});
+
+function initializeFlameGraph() {
+    flameGraph = d3.flamegraph()
+        .width(960)
+        .cellHeight(18)
+        .transitionDuration(750)
+        .minFrameSize(5)
+        .title("")
+        .label(function(d) { return d.name + " (" + d.value + ")"; });
+
+    // Listen for flame graph data from the background script
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        if (message.type === 'flameGraphData') {
+            renderFlameGraph(message.data);
+        }
+    });
+}
+
+function renderFlameGraph(data) {
+    console.log('D3 version:', d3.version);
+    console.log('D3 Flame Graph:', typeof d3.flamegraph);
+    const chart = d3.select("#flameGraph");
+    chart.datum(data).call(flameGraph);
+}
 document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
   this.classList.toggle('active');

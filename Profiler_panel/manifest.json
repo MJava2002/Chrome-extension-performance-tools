@@ -5,16 +5,25 @@
   "manifest_version": 3,
   "devtools_page": "devtools.html",
   "permissions": [
+      "scripting",
       "debugger",
       "tabs",
       "activeTab"
   ],
   "host_permissions": [
-    "<all_urls>",
-    "https://www.google.com/*"
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"
   },
-  "action": {}
+  "action": {},
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["lib/d3.v7.min.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
