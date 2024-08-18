@@ -179,7 +179,6 @@ function profileWithTabID() {
         });
 
     }
-});
 
 
 async function calculateCoveragePercentage(scriptUrl, coverageData) {
