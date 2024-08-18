@@ -1,22 +1,34 @@
-/*  Collect a profile of an extension's background worker
-*
-*   (!) Attaching to an extension background worker requires
-*   the extensions-on-chrome-urls flag to be set
-*   It works, but it shows a warning: "You are using an unsupported
-*   command-line flag. Stability and security will suffer"
-*
-*   Based on the docs, the silent-debugger-extension-api flag is
-*   requred, but it's unclear whether this is still supported
-*/
+
+
 const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 
 let flameGraph;
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof d3 !== 'undefined' && typeof d3.flamegraph !== 'undefined') {
-        initializeFlameGraph();
-    } else {
-        console.error('D3 or D3 Flame Graph library not loaded');
-    }
+
+console.log('Panel.js')
+
+// background.js or a script that triggers script injection
+
+chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+  let tab = tabs[0];
+
+  chrome.scripting.executeScript({
+      target: {tabId: tab.id},
+      files: ['libs/d3.v7.min.js']
+  }, () => {
+      // D3 is now available in the tab's context
+      chrome.scripting.executeScript({
+          target: {tabId: tab.id},
+          func: () => {
+              // Ensure D3 is loaded before using it
+              if (typeof d3 !== 'undefined') {
+                  console.log('D3 version:', d3.version);
+                  // Use d3 library 
+              } else {
+                  console.error('D3 not loaded');
+              }
+          }
+      });
+  });
 });
 
 function initializeFlameGraph() {

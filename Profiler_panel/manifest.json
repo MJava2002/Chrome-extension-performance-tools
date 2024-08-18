@@ -5,6 +5,7 @@
   "manifest_version": 3,
   "devtools_page": "devtools.html",
   "permissions": [
+      "scripting",
       "debugger",
       "tabs",
       "activeTab"
@@ -21,7 +22,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["lib/d3.v7.min.js", "lib/d3-flamegraph.min.js", "styles/d3-flamegraph.css"],
+      "resources": ["lib/d3.v7.min.js"],
       "matches": ["<all_urls>"]
     }
   ]
