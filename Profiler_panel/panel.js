@@ -6,9 +6,13 @@ let flameGraph;
 
 console.log('Panel.js')
 
+
+
+
 // background.js or a script that triggers script injection
 
 chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    console.log("GOT THISSSSSSSSSSSSS FAR")
   let tab = tabs[0];
 
   chrome.scripting.executeScript({
@@ -22,7 +26,34 @@ chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
               // Ensure D3 is loaded before using it
               if (typeof d3 !== 'undefined') {
                   console.log('D3 version:', d3.version);
-                  // Use d3 library 
+
+                  flameGraph = d3.flamegraph()
+                        .width(960)
+                        .height(540)
+                        .cellHeight(18)
+                        .transitionDuration(750)
+                        .minFrameSize(5)
+                        .title("")
+                        .label(function(d) { return d.name + " (" + d.value + " samples)"; });
+
+                    // Listen for messages from the background script
+                    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+                        if (message.target === 'panel' && message.type === 'flameGraphData') {
+
+                            d3.select("#flameGraph").selectAll("*").remove();
+
+                            // Create the flame graph
+                            const chart = d3.select("#flameGraph")
+                                .datum(message.data)
+                                .call(flameGraph);
+
+                            // You can add interactivity here if needed
+                            chart.on('click', function(d) {
+                                console.log('Clicked on:', d);
+                            });
+                        }
+                    });
+
               } else {
                   console.error('D3 not loaded');
               }
@@ -31,29 +62,11 @@ chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
   });
 });
 
-function initializeFlameGraph() {
-    flameGraph = d3.flamegraph()
-        .width(960)
-        .cellHeight(18)
-        .transitionDuration(750)
-        .minFrameSize(5)
-        .title("")
-        .label(function(d) { return d.name + " (" + d.value + ")"; });
 
-    // Listen for flame graph data from the background script
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message.type === 'flameGraphData') {
-            renderFlameGraph(message.data);
-        }
-    });
-}
 
-function renderFlameGraph(data) {
-    console.log('D3 version:', d3.version);
-    console.log('D3 Flame Graph:', typeof d3.flamegraph);
-    const chart = d3.select("#flameGraph");
-    chart.datum(data).call(flameGraph);
-}
+
+
+//dropdowns
 document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
   this.classList.toggle('active');

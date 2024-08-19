@@ -52,33 +52,55 @@ function profileWithTabID() {
                 await new Promise(r => setTimeout(r, 3000));
 
                 chrome.debugger.sendCommand({ tabId: tabId }, 'Profiler.stop', (result) => {
-                    sendToDevTools('Profiler stopped');
+                    sendToDevTools('Profiler stopped HERE');
                     const profile = result.profile;
-
+                    console.log('Raw profile data:', JSON.stringify(profile, null, 2));
                     function processProfileData(profile) {
-    // This is a simplified version. You might need to adjust this based on the actual structure of your profile data
+                        if (!profile || !Array.isArray(profile.nodes) || profile.nodes.length === 0) {
+                            console.error('Invalid profile data');
+                            return null;
+                        }
+
                         function processNode(node) {
+                            if (!node) {
+                                return null;
+                            }
+
                             let result = {
                                 name: node.callFrame.functionName || '(anonymous)',
-                                value: node.selfSize || 1,
+                                value: node.hitCount || 1,
                                 children: []
                             };
+
                             if (node.children) {
                                 node.children.forEach(childId => {
-                                    const childNode = profile.nodes[childId];
-                                    result.children.push(processNode(childNode));
+                                    const childNode = profile.nodes.find(n => n.id === childId);
+                                    const processedChild = processNode(childNode);
+                                    if (processedChild) {
+                                        result.children.push(processedChild);
+                                    }
                                 });
                             }
+
                             return result;
                         }
-                        return processNode(profile.nodes[profile.rootNodeId]);
+
+                        // Assume the root node is the first node in the array
+                        const rootNode = profile.nodes[0];
+                        return processNode(rootNode);
                     }
 
                     const flameGraphData = processProfileData(profile);
-                    sendToDevTools({
-                        type: 'flameGraphData',
-                        data: flameGraphData
-                    });
+                    console.log("flame graph here" + flameGraphData)
+                    if (flameGraphData) {
+                        chrome.runtime.sendMessage({
+                            target: 'panel',
+                            type: 'flameGraphData',
+                            data: flameGraphData
+                        });
+                    } else {
+                        sendToDevTools('Failed to process profile data');
+                    }
                 });
           });
         });
