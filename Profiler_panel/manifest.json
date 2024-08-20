@@ -5,6 +5,9 @@
   "manifest_version": 3,
   "devtools_page": "devtools.html",
   "permissions": [
+    "http://*/*",
+    "https://*/*",
+    "chrome-extension://*/*",
       "scripting",
       "debugger",
       "tabs",
@@ -13,12 +16,16 @@
   "host_permissions": [
     "<all_urls>"
   ],
+
   "background": {
     "service_worker": "background.js"
   },
   "action": {},
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "script-src 'self'; object-src 'self'",
+    "script-src": "self",
+    "object-src": "self",
+    "connect-src": "self chrome-extension://*"
   },
   "web_accessible_resources": [
     {
