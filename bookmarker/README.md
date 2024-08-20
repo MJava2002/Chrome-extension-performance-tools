@@ -15,4 +15,3 @@ Download and upload extension in your chrome browser
 ## Authors
 
 Nino Gogoberishvili
-
