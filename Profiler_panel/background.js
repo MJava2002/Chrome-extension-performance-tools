@@ -65,14 +65,19 @@ async function stopAndCollectExtensionCoverage() {
 
     return coverageData;
 }
+function checkValidUrl(url){
+
+    const urlObj = new URL(url);
+
+    // Check if the URL has the pattern "chrome-extension://<extension-id>/something"
+    return urlObj.protocol === 'chrome-extension:' && urlObj.pathname
+}
 
 function getLastSegmentFromUrl(url) {
-    try {
-        // Create a URL object to parse the URL
-        const urlObj = new URL(url);
+    try {   
+            const urlObj = new URL(url);
 
-        // Check if the URL has the pattern "chrome-extension://<extension-id>/something"
-        if (urlObj.protocol === 'chrome-extension:' && urlObj.pathname) {
+            if (checkValidUrl(url)){
             // Split the pathname by '/' and get the last segment
             const segments = urlObj.pathname.split('/');
             const lastSegment = segments.pop(); // Get the last segment
@@ -88,6 +93,7 @@ function getLastSegmentFromUrl(url) {
 
 function proccessFiles(uniqueFiles, coverageData) {
     uniqueFiles = [...uniqueFiles]
+    console.log(uniqueFiles)
        // Promise.all(fetch(url).then( r => r.text() ).then( t => content += t))
        Promise.all(uniqueFiles.map(url =>
         fetch(url)
@@ -119,7 +125,7 @@ async function runCoverage() {
     await startExtensionCoverage();
     // Collect coverage after a delay or based on some event
     let coverageData;
-    await new Promise(r => setTimeout(r, 7000));
+    await new Promise(r => setTimeout(r, 10000));
     coverageData = await stopAndCollectExtensionCoverage()
     // setTimeout(() => {
     //     stopAndCollectExtensionCoverage().then(coverage => {
@@ -130,7 +136,7 @@ async function runCoverage() {
     // }, 5000);  // Adjust delay as needed
     let uniqueFiles = new Set();
     coverageData.result.forEach(script => {
-        if (!uniqueFiles.has(script.url)) {
+        if (!uniqueFiles.has(script.url) && checkValidUrl(script.url)) {
             uniqueFiles.add(script.url)
         }
     });
