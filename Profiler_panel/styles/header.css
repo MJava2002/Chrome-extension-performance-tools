@@ -1,0 +1,25 @@
+
+.header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #333; /* Example background color */
+}
+
+.header-logo {
+    width: 50px; /* Set desired width */
+    height: auto; /* Maintain aspect ratio */
+    max-width: 100%; /* Ensure it doesn't exceed its container */
+}
+
+.header-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.header-info, #header-icons {
+    display: flex;
+    align-items: center;
+}

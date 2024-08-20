@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/popup.css">
+    <link rel="stylesheet" href="styles/header.css">
+    <title>Popup Menu</title>
+</head>
+<body>
+    <div class="popup-container">
+        <header class="header-wrapper">
+            <button class="header-button" aria-label="logo">
+                <img class="header-logo" src="icons/default_theme/logo.png" alt="Logo">
+            </button>
+            <div class="header-info">
+                <h1 class="header-title">Popup Header</h1>
+            </div>
+        </header>
+        <main class="popup-main">
+            <div>
+                <label for="extensionIdInput">Add or Select Extension ID:</label>
+                <input type="text" id="extensionIdInput" placeholder="Enter new ID">
+                <button id="addIdButton">Add ID</button>
+            </div>
+            <div>
+                <label for="extensionDropdown">Extension IDs:</label>
+                <select id="extensionDropdown">
+                    <!-- Options will be dynamically added here -->
+                </select>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
