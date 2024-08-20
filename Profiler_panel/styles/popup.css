@@ -1,3 +1,5 @@
+/* popup.css */
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -55,15 +57,28 @@ body {
     overflow-y: auto;
 }
 
+.input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Space between input group and next element */
+}
+
 label {
     display: block;
     margin-bottom: 5px;
 }
 
+.input-button-container {
+    display: flex; /* Use flexbox for horizontal alignment */
+    align-items: center; /* Center items vertically */
+    flex: 1; /* Allow it to take up remaining space in .input-group */
+}
+
 input[type="text"] {
-    width: calc(100% - 22px);
+    flex: 1; /* Make input field take up available space */
     padding: 5px;
-    margin-right: 10px;
+    margin-right: 10px; /* Space between input field and button */
+    box-sizing: border-box; /* Include padding in width */
 }
 
 button {
@@ -80,7 +95,7 @@ button:hover {
 }
 
 select {
-    width: calc(100% - 12px);
+    width: 100%; /* Full width for the select element */
     padding: 5px;
     box-sizing: border-box;
 }
