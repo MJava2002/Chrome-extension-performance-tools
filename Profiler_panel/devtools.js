@@ -1,8 +1,3 @@
-// chrome.devtools.panels.create('Performance', 'icons/icon.png', 'panel.html', () => {
-//     console.log('on this panel');
-//   });
-// devtools.js
-
 // Create a custom panel in DevTools
 chrome.devtools.panels.create(
   'Performance',                   // Title of the panel

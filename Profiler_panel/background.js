@@ -12,6 +12,21 @@ function sendToDevTools(message) {
     });
 }
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'openDevTools') {
+        // Ensure DevTools panel is created by the devtools page itself
+        // Opening a DevTools page directly might not be supported
+        chrome.windows.create({
+            url: chrome.runtime.getURL('devtools.html'), // This opens the DevTools page in a new window
+            type: 'popup',
+            width: 400,
+            height: 500
+        }, (window) => {
+            console.log('DevTools window created', window);
+        });
+    }
+});
+
 // Function to start coverage for the extension's background page
 async function startExtensionCoverage() {
     // Get the background page target for your extension

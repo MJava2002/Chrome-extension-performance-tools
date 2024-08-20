@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const extensionDropdown = document.getElementById('extensionDropdown');
     const extensionIdInput = document.getElementById('extensionIdInput');
     const addIdButton = document.getElementById('addIdButton');
-
+    const detailsLink = document.getElementById('detailsLink');
     // Initialize dropdown with IDs from storage
     chrome.storage.local.get('extensionIds', (result) => {
         const ids = result.extensionIds || [];
@@ -18,6 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add new ID when button is clicked
     addIdButton.addEventListener('click', () => {
         addExtensionId();
+    });
+
+    // Open DevTools panel when link is clicked
+    detailsLink.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent the default link behavior
+        chrome.runtime.sendMessage({ action: 'openDevTools' });
     });
 
     // Add new ID on Enter key press
