@@ -61,6 +61,8 @@ async function stopAndCollectExtensionCoverage() {
     await chrome.debugger.detach({ targetId: backgroundPage.id });
 
     console.log("Coverage data collected for the extension's background page:", coverageData);
+
+    return coverageData;
 }
 
 function getLastSegmentFromUrl(url) {
@@ -86,27 +88,55 @@ function getLastSegmentFromUrl(url) {
     }
 }
 
+function proccessFiles(uniqueFiles, coverageData) {
+    uniqueFiles = [...uniqueFiles]
+       // Promise.all(fetch(url).then( r => r.text() ).then( t => content += t))
+       Promise.all(uniqueFiles.map(url =>
+        fetch(url)
+            .then(async response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${url}. Status: ${response.status}`);
+                }
+                const content = await response.text();
+                return ({ url, content });
+            })
+            .catch(error => {
+                console.error(`Error fetching ${url}:`, error.message);
+                return { url, content: '' }; // Return the URL with an empty content string on failure
+            })
+    )).then(data => {
+        console.log(data);
+    
+        // Now you can iterate through the data array and pass both the url and content length
+        data.forEach(fileData => {
+            const { url, content } = fileData;
+            calculateCoveragePercentage(content.length, coverageData, url);
+        });
+    }).catch(e => {
+        console.error('Error during Promise.all:', e);
+    });
+}
 
 async function runCoverage() {
-    startExtensionCoverage();
+    await startExtensionCoverage();
     // Collect coverage after a delay or based on some event
     let coverageData;
-    setTimeout(() => {
-        stopAndCollectExtensionCoverage().then(coverage => {
-            console.log("Final Coverage Data:", coverage);
-            coverageData = coverage;
-        });
-    }, 5000);  // Adjust delay as needed
-    const uniqueFiles = new Set();
+    await new Promise(r => setTimeout(r, 7000));
+    coverageData = await stopAndCollectExtensionCoverage()
+    // setTimeout(() => {
+    //     stopAndCollectExtensionCoverage().then(coverage => {
+    //         console.log("Final Coverage Data:", coverage);
+    //         console.log(coverage)
+    //         coverageData = coverage;
+    //     });
+    // }, 5000);  // Adjust delay as needed
+    let uniqueFiles = new Set();
     coverageData.result.forEach(script => {
-        const fileName = getLastSegmentFromUrl(script.url);
-        if (!uniqueFiles.has(fileName)) {
-            uniqueFiles.add(fileName)
+        if (!uniqueFiles.has(script.url)) {
+            uniqueFiles.add(script.url)
         }
     });
-    uniqueFiles.forEach(fileName => {
-        calculateCoveragePercentage(fileName, coverageData)
-    })
+    proccessFiles(uniqueFiles, coverageData)
 }
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action === "buttonClicked") {
@@ -183,19 +213,7 @@ function profileWithTabID() {
     }
 
 
-async function calculateCoveragePercentage(scriptUrl, coverageData) {
-    try {
-        // Fetch the content of the script from the URL
-        const response = await fetch(scriptUrl);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch script content from ${scriptUrl}`);
-        }
-        const scriptContent = await response.text();
-
-        // Get the total script size
-        const totalScriptSize = scriptContent.length;
-
-        // Sum the covered bytes
+async function calculateCoveragePercentage(totalScriptSize, coverageData, scriptUrl) {
         let coveredBytes = 0;
         coverageData.result.forEach(script => {
             if (script.url === scriptUrl) {
@@ -217,11 +235,6 @@ async function calculateCoveragePercentage(scriptUrl, coverageData) {
 
         // Return the percentage for further use
         return coveragePercentage;
-
-    } catch (error) {
-        console.error('Error calculating coverage percentage:', error);
-        throw error; // Re-throw the error to handle it externally if needed
-    }
 }
 
 function profileWithExtensionID() {
