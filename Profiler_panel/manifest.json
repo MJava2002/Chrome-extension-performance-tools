@@ -20,7 +20,10 @@
   "background": {
     "service_worker": "background.js"
   },
-  "action": {},
+  "action": {
+     "default_popup": "popup.html",
+     "default_icon": "icons/default_theme/logo.png"
+  },
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'",
     "script-src": "self",
