@@ -4,13 +4,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px;
-    background-color: #333; /* Example background color */
+    background-color: #333;
 }
 
 .header-logo {
-    width: 50px; /* Set desired width */
-    height: auto; /* Maintain aspect ratio */
-    max-width: 100%; /* Ensure it doesn't exceed its container */
+    width: 50px;
+    height: auto;
+    max-width: 100%;
 }
 
 .header-button {

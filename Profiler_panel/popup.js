@@ -3,13 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const extensionIdInput = document.getElementById('extensionIdInput');
     const addIdButton = document.getElementById('addIdButton');
 
-    // Load stored extension IDs and populate dropdown
     chrome.storage.local.get('extensionIds', (result) => {
         const ids = result.extensionIds || [];
         populateDropdown(ids);
     });
 
-    // Add new ID on button click
     addIdButton.addEventListener('click', () => {
         addExtensionId();
     });

@@ -1,5 +1,5 @@
 body {
-    margin: 0; /* Remove default margin */
+    margin: 0;
     font-family: Arial, sans-serif;
 }
 
@@ -15,18 +15,18 @@ body {
 }
 
 .header-wrapper {
-    height: 10%; /* 10% of the popup's height */
+    height: 10%;
     display: flex;
     align-items: center;
     padding: 10px;
-    background-color: #333; /* Example background color */
+    background-color: #333;
     box-sizing: border-box;
 }
 
 .header-logo {
-    width: 50px; /* Set desired width */
-    height: auto; /* Maintain aspect ratio */
-    max-width: 100%; /* Ensure it doesn't exceed its container */
+    width: 50px;
+    height: auto;
+    max-width: 100%;
 }
 
 .header-button {
@@ -39,20 +39,20 @@ body {
     flex: 1;
     display: flex;
     align-items: center;
-    justify-content: center; /* Center title horizontally */
+    justify-content: center;
 }
 
 .header-title {
-    color: #fff; /* White text color for the header */
+    color: #fff;
     margin: 0;
     font-size: 1.2em;
 }
 
 .popup-main {
-    flex: 1; /* Take up the remaining space */
+    flex: 1;
     padding: 10px;
     box-sizing: border-box;
-    overflow-y: auto; /* Scroll if content exceeds */
+    overflow-y: auto;
 }
 
 label {
@@ -61,7 +61,7 @@ label {
 }
 
 input[type="text"] {
-    width: calc(100% - 22px); /* Adjust width based on padding and border */
+    width: calc(100% - 22px);
     padding: 5px;
     margin-right: 10px;
 }
@@ -80,7 +80,7 @@ button:hover {
 }
 
 select {
-    width: calc(100% - 12px); /* Adjust width based on padding and border */
+    width: calc(100% - 12px);
     padding: 5px;
     box-sizing: border-box;
 }
