@@ -1,5 +1,7 @@
-console.log("Service worker loaded");
+import { runContentScriptCoverage } from "tab_coverage.js";
 
+console.log("Service worker loaded");
+const TAB = true;
 const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
 var tabId;
 function isExtensionNode(node) {
@@ -14,10 +16,9 @@ function sendToDevTools(message) {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "openDevTools") {
-
     chrome.windows.create(
       {
-        url: chrome.runtime.getURL("devtools.html"), 
+        url: chrome.runtime.getURL("devtools.html"),
         type: "popup",
         width: 400,
         height: 500,
@@ -29,9 +30,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-
 async function startExtensionCoverage() {
-
   const targets = await chrome.debugger.getTargets();
   const backgroundPage = targets.find(
     (target) => target.type === "worker" && target.url.includes(extensionId),
@@ -42,17 +41,14 @@ async function startExtensionCoverage() {
     return;
   }
 
-  // Attach the debugger to the background page
   console.log(backgroundPage.id);
   await chrome.debugger.attach({ targetId: backgroundPage.id }, "1.3");
 
-  // Enable the profiler
   await chrome.debugger.sendCommand(
     { targetId: backgroundPage.id },
     "Profiler.enable",
   );
 
-  // Start precise coverage
   await chrome.debugger.sendCommand(
     { targetId: backgroundPage.id },
     "Profiler.startPreciseCoverage",
@@ -77,25 +73,25 @@ async function stopAndCollectExtensionCoverage() {
     return;
   }
 
-  // Collect the coverage data
+  // Collect data
   const coverageData = await chrome.debugger.sendCommand(
     { targetId: backgroundPage.id },
     "Profiler.takePreciseCoverage",
   );
 
-  // Stop precise coverage
+  // Stop
   await chrome.debugger.sendCommand(
     { targetId: backgroundPage.id },
     "Profiler.stopPreciseCoverage",
   );
 
-  // Disable the profiler
+  // Disable
   await chrome.debugger.sendCommand(
     { targetId: backgroundPage.id },
     "Profiler.disable",
   );
 
-  // Detach the debugger
+  // Detach
   await chrome.debugger.detach({ targetId: backgroundPage.id });
 
   console.log(
@@ -105,81 +101,37 @@ async function stopAndCollectExtensionCoverage() {
 
   return coverageData;
 }
-function checkValidUrl(url) {
-  const urlObj = new URL(url);
-  return urlObj.protocol === "chrome-extension:" && urlObj.pathname;
-}
 
-// i will use this in graphs
-function getLastSegmentFromUrl(url) {
-  try {
-    const urlObj = new URL(url);
-
-    if (checkValidUrl(url)) {
-      const segments = urlObj.pathname.split("/");
-      const lastSegment = segments.pop();
-      return lastSegment;
-    }
-  } catch (error) {
-    console.error("Invalid URL:", error);
-    return url; 
+async function runCoverage() {
+  if (TAB) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      let activeTab = tabs[0];
+      sendToDevTools("Active Tab ID: " + activeTab.id);
+      tabId = activeTab.id;
+      runContentScriptCoverage(tabId);
+    });
+  } else {
+    await startExtensionCoverage();
+    let coverageData;
+    await new Promise((r) => setTimeout(r, 10000));
+    coverageData = await stopAndCollectExtensionCoverage();
+    // setTimeout(() => {
+    //     stopAndCollectExtensionCoverage().then(coverage => {
+    //         console.log("Final Coverage Data:", coverage);
+    //         console.log(coverage)
+    //         coverageData = coverage;
+    //     });
+    // }, 5000);  // Adjust delay as needed
+    let uniqueFiles = new Set();
+    coverageData.result.forEach((script) => {
+      if (!uniqueFiles.has(script.url) && checkValidUrl(script.url)) {
+        uniqueFiles.add(script.url);
+      }
+    });
+    proccessFiles(uniqueFiles, coverageData);
   }
 }
 
-function proccessFiles(uniqueFiles, coverageData) {
-  uniqueFiles = [...uniqueFiles];
-  console.log(uniqueFiles);
-  // Promise.all(fetch(url).then( r => r.text() ).then( t => content += t))
-  Promise.all(
-    uniqueFiles.map((url) =>
-      fetch(url)
-        .then(async (response) => {
-          if (!response.ok) {
-            throw new Error(
-              `Failed to fetch ${url}. Status: ${response.status}`,
-            );
-          }
-          const content = await response.text();
-          return { url, content };
-        })
-        .catch((error) => {
-          console.error(`Error fetching ${url}:`, error.message);
-          return { url, content: "" }; 
-        }),
-    ),
-  )
-    .then((data) => {
-      console.log(data);
-      data.forEach((fileData) => {
-        const { url, content } = fileData;
-        calculateCoveragePercentage(content.length, coverageData, url);
-      });
-    })
-    .catch((e) => {
-      console.error("Error during Promise.all:", e);
-    });
-}
-
-async function runCoverage() {
-  await startExtensionCoverage();
-  let coverageData;
-  await new Promise((r) => setTimeout(r, 10000));
-  coverageData = await stopAndCollectExtensionCoverage();
-  // setTimeout(() => {
-  //     stopAndCollectExtensionCoverage().then(coverage => {
-  //         console.log("Final Coverage Data:", coverage);
-  //         console.log(coverage)
-  //         coverageData = coverage;
-  //     });
-  // }, 5000);  // Adjust delay as needed
-  let uniqueFiles = new Set();
-  coverageData.result.forEach((script) => {
-    if (!uniqueFiles.has(script.url) && checkValidUrl(script.url)) {
-      uniqueFiles.add(script.url);
-    }
-  });
-  proccessFiles(uniqueFiles, coverageData);
-}
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "buttonClicked") {
     console.log("Run coverage button clicked");
@@ -253,30 +205,6 @@ function profileWithTabID() {
       );
     });
   });
-}
-
-async function calculateCoveragePercentage(
-  totalScriptSize,
-  coverageData,
-  scriptUrl,
-) {
-  let coveredBytes = 0;
-  coverageData.result.forEach((script) => {
-    if (script.url === scriptUrl) {
-      script.functions.forEach((func) => {
-        func.ranges.forEach((range) => {
-          coveredBytes += range.endOffset - range.startOffset;
-        });
-      });
-    }
-  });
-
-  const coveragePercentage = (coveredBytes / totalScriptSize) * 100;
-  console.log(`Total Script Size: ${totalScriptSize} bytes`);
-  console.log(`Covered Bytes: ${coveredBytes} bytes`);
-  console.log(`Coverage Percentage: ${coveragePercentage.toFixed(2)}%`);
-
-  return coveragePercentage;
 }
 
 function profileWithExtensionID() {
