@@ -24,6 +24,7 @@ async function startExtensionCoverage() {
     }
 
     // Attach the debugger to the background page
+    console.log(backgroundPage.id)
     await chrome.debugger.attach({ targetId: backgroundPage.id }, "1.3");
 
     // Enable the profiler
@@ -78,9 +79,6 @@ function getLastSegmentFromUrl(url) {
 
             // Return the last segment
             return lastSegment;
-        } else {
-            // Return the original URL if it does not match the pattern
-            return url;
         }
     } catch (error) {
         console.error('Invalid URL:', error);
