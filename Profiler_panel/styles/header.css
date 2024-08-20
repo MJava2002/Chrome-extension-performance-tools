@@ -1,3 +1,4 @@
+/* header.css */
 
 .header-wrapper {
     display: flex;
@@ -19,7 +20,7 @@
     cursor: pointer;
 }
 
-.header-info, #header-icons {
+.header-info {
     display: flex;
     align-items: center;
 }

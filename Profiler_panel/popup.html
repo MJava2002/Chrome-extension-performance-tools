@@ -18,11 +18,14 @@
             </div>
         </header>
         <main class="popup-main">
-            <div>
+            <div class="input-group">
                 <label for="extensionIdInput">Add or Select Extension ID:</label>
-                <input type="text" id="extensionIdInput" placeholder="Enter new ID">
-                <button id="addIdButton">Add ID</button>
+                <div class="input-button-container">
+                    <input type="text" id="extensionIdInput" placeholder="Enter new ID">
+                    <button id="addIdButton">Add ID</button>
+                </div>
             </div>
+
             <div>
                 <label for="extensionDropdown">Extension IDs:</label>
                 <select id="extensionDropdown">
@@ -31,5 +34,6 @@
             </div>
         </main>
     </div>
+<script src="popup.js"></script>
 </body>
 </html>

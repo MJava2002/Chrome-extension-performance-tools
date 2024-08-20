@@ -1,13 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Ensure chrome.storage is available
+    if (!chrome || !chrome.storage) {
+        console.error('Chrome storage API is not available.');
+        return;
+    }
+
     const extensionDropdown = document.getElementById('extensionDropdown');
     const extensionIdInput = document.getElementById('extensionIdInput');
     const addIdButton = document.getElementById('addIdButton');
 
+    // Initialize dropdown with IDs from storage
     chrome.storage.local.get('extensionIds', (result) => {
         const ids = result.extensionIds || [];
         populateDropdown(ids);
     });
 
+    // Add new ID when button is clicked
     addIdButton.addEventListener('click', () => {
         addExtensionId();
     });
@@ -28,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ids.push(newId);
                     chrome.storage.local.set({ extensionIds: ids }, () => {
                         populateDropdown(ids);
-                        extensionIdInput.value = '';
+                        extensionIdInput.value = ''; // Clear input field after adding
                     });
                 }
             });
