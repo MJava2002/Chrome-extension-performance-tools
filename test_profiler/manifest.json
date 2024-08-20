@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "Test Profiler",
+    "description": "Base Level Extension",
+    "version": "1.0",
+    "action": {
+      "default_icon": "icon.png"
+    },
+    "background": {
+        "service_worker": "profile_extensionId.js"
+    },
+    "permissions": [
+        "debugger",
+        "tabs",
+        "activeTab"
+    ]
+  }

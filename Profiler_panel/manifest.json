@@ -1,0 +1,39 @@
+{
+  "name": "ProfilerPanel",
+  "description": "Add bar",
+  "version": "1.0",
+  "manifest_version": 3,
+  "devtools_page": "devtools.html",
+  "permissions": [
+    "http://*/*",
+    "https://*/*",
+    "chrome-extension://*/*",
+      "scripting",
+      "debugger",
+      "tabs",
+      "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+     "default_popup": "popup.html",
+     "default_icon": "icons/default_theme/logo.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'",
+    "script-src": "self",
+    "object-src": "self",
+    "connect-src": "self chrome-extension://*"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["lib/d3.v7.min.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

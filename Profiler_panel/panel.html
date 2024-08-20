@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Performance Panel</title>
+    <script src="libs/d3.v7.min.js"></script>
+    <script src="libs/d3-flamegraph.min.js"></script>
+<!--    <link rel="stylesheet" type="text/css" href="styles/d3-flamegraph.css">-->
+    <link rel="stylesheet" type="text/css" href="styles/panel_styles.css">
+    <meta charset="utf8" />
+  </head>
+  <body>
+    <h1>Performance Panel</h1>
+    <div class="button-container">
+      <button id="coverageButton" class="main-button">Run Coverage</button>
+      <div class="dropdown" id="dropdown">
+        <button class="dropdown-button"></button>
+        <div class="dropdown-content">
+            <a href="#" id="runExtension">Extension</a>
+            <a href="#" id="runTab">Tab</a>
+        </div>
+      </div>
+      <button id="recordButton" class="button" style="margin-left: 10px;">Record</button>
+      <button id="stopButton" class="button" style="margin-left: 10px;">Stop</button>
+      <span id="timeDisplay"></span>
+    </div>
+    <div id="output"></div>
+
+    <div id="backgroundMessages"></div> <!-- Container for background messages -->
+    <div id="flameGraph"></div>
+    <script src="panel.js"></script>
+  </body>
+</html>
