@@ -2,11 +2,22 @@
 <html>
   <head>
     <title>Performance Panel</title>
-<!--    <script src="libs/d3.v7.min.js"></script>-->
-<!--    <script src="libs/d3-flamegraph.min.js"></script>-->
-<!--    <link rel="stylesheet" type="text/css" href="styles/d3-flamegraph.css">-->
+    <script src="libs/d3.v7.min.js"></script>
+    <script src="libs/d3-flamegraph.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/d3-flamegraph.css">
     <link rel="stylesheet" type="text/css" href="styles/panel_styles.css" />
     <meta charset="utf8" />
+    <style>
+      #flameGraph {
+        width: 100%; /* Or a specific width if preferred */
+        height: 500px; /* Or a specific height if preferred */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+      }
+    </style>
   </head>
   <body>
     <h1>Performance Panel</h1>

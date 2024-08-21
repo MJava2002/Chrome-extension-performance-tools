@@ -27,25 +27,33 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           // Ensure D3 is loaded before using it
           if (typeof d3 !== "undefined") {
             console.log("D3 version:", d3.version);
-
-            // panel.js
-            console.log('D3 version:', d3.version); // Should log the D3 version
-
-            var chart = flamegraph()
-                .width(960);
-
-            const dataUrl = chrome.runtime.getURL("data.json");
-
-            d3.json(dataUrl)
-                .then((data) => {
-                    console.log('Loaded data:', data); // To confirm data is loaded
-                    d3.select("#flameGraph")
-                        .datum(data)
-                        .call(chart);
-                })
-                .catch(error => {
-                    console.warn("Error loading JSON:", error);
+            const chart = flamegraph()
+                .width(960)
+                .cellHeight(18)
+                .transitionDuration(750)
+                .minFrameSize(5)
+                .title("HERE LIES MY HOPES AND DREAMS")
+                .label(function (d) {
+                  return d.name + " (" + d.value + ")";
                 });
+            console.log("HERE's my chart " + chart)
+            const dataUrl = chrome.runtime.getURL("data.json");
+            d3.json(dataUrl, function(error, data) {
+                  if (error) return console.warn(error);
+                  d3.select("#flameGraph")
+                      .datum(data)
+                      .call(flameGraph);
+                });
+            // d3.json(dataUrl)
+            //     .then((data) => {
+            //         console.log('Loaded data HERE:', data); // To confirm data is loaded
+            //         d3.select("#flameGraph")
+            //             .datum(data)
+            //             .call(chart);
+            //         })
+            //     .catch(error => {
+            //         console.warn("Error loading JSON:", error);
+            //     });
           } else {
             console.error("D3 not loaded");
           }
