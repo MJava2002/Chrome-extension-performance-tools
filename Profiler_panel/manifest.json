@@ -6,13 +6,11 @@
   "devtools_page": "devtools.html",
   "permissions": [
     "storage",
-    "http://*/*",
-    "https://*/*",
-    "chrome-extension://*/*",
     "scripting",
     "debugger",
     "tabs",
-    "activeTab"
+    "activeTab",
+    "scripting"
   ],
   "host_permissions": ["<all_urls>"],
 
@@ -31,7 +29,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["lib/d3.v7.min.js"],
+      "resources": ["data.json", "libs/*.js", "styles/*.css"],
       "matches": ["<all_urls>"]
     }
   ]

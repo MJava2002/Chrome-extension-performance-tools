@@ -1,0 +1,16 @@
+{
+  "name": "root",
+  "value": 100,
+  "children": [
+    {
+      "name": "child1",
+      "value": 50,
+      "children": []
+    },
+    {
+      "name": "child2",
+      "value": 50,
+      "children": []
+    }
+  ]
+}

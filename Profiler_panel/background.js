@@ -12,24 +12,6 @@ function sendToDevTools(message) {
   });
 }
 
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//   if (message.action === "openDevTools") {
-//
-//     chrome.windows.create(
-//       {
-//         url: chrome.runtime.getURL("devtools.html"),
-//         type: "popup",
-//         width: 400,
-//         height: 500,
-//       },
-//       (window) => {
-//         console.log("DevTools window created", window);
-//       },
-//     );
-//   }
-// });
-
-
 async function startExtensionCoverage() {
 
   const targets = await chrome.debugger.getTargets();
@@ -223,53 +205,17 @@ function profileWithTabID() {
         sendToDevTools("Profiler stopped");
         const profile = result.profile;
         console.log("PROOOOOOFILE", profile)
-        function processProfileData(profile) {
-    if (!profile || !Array.isArray(profile.nodes) || profile.nodes.length === 0) {
-        console.error('Invalid profile data');
-        return null;
-    }
 
-    function processNode(node) {
-        if (!node) {
-            return null;
-        }
-
-        let result = {
-            name: node.callFrame.functionName || '(anonymous)',
-            value: node.hitCount || 1,
-            children: []
-        };
-
-        if (node.children) {
-            node.children.forEach(childId => {
-                const childNode = profile.nodes.find(n => n.id === childId);
-                const processedChild = processNode(childNode);
-                if (processedChild) {
-                    result.children.push(processedChild);
-                }
-            });
-        }
-
-        return result;
-    }
-
-    // Assume the root node is the first node in the array
-    const rootNode = profile.nodes[0];
-    return processNode(rootNode);
-}
-
-        const flameGraphData = processProfileData(profile);
         chrome.runtime.sendMessage({
           target: 'panel',
           type: 'flameGraphData',
-          data: flameGraphData,
+          data: profile,
         });
         },
       );
     });
   });
 }
-
 async function calculateCoveragePercentage(
   totalScriptSize,
   coverageData,

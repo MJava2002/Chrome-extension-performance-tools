@@ -10,10 +10,6 @@
  */
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 
-let flameGraph;
-
-console.log("Panel.js");
-
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   let tab = tabs[0];
@@ -21,7 +17,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   chrome.scripting.executeScript(
     {
       target: { tabId: tab.id },
-      files: ["libs/d3.v7.min.js"],
+      files: ["libs/d3.v7.min.js", "libs/d3-flamegraph.min.js", "libs/d3-tip.min.js"],
     },
     () => {
       // D3 is now available in the tab's context
@@ -31,31 +27,24 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           // Ensure D3 is loaded before using it
           if (typeof d3 !== "undefined") {
             console.log("D3 version:", d3.version);
-            flameGraph = d3.flamegraph()
-                        .width(960)
-                        .height(540)
-                        .cellHeight(18)
-                        .transitionDuration(750)
-                        .minFrameSize(5)
-                        .title("")
-                        .label(function(d) { return d.name + " (" + d.value + " samples)"; });
 
-                // Listen for messages from the background script
-                chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-                    if (message.target === 'panel' && message.type === 'flameGraphData') {
-                        console.log("GOT THIIIIIIIIIIIIIIIIIIIIIIIIIIS FAR")
-                        d3.select("#flameGraph").selectAll("*").remove();
+            // panel.js
+            console.log('D3 version:', d3.version); // Should log the D3 version
 
-                        // Create the flame graph
-                        const chart = d3.select("#flameGraph")
-                            .datum(message.data)
-                            .call(flameGraph);
+            var chart = flamegraph()
+                .width(960);
 
-                        // You can add interactivity here if needed
-                        chart.on('click', function(d) {
-                            console.log('Clicked on:', d);
-                        });
-                    }
+            const dataUrl = chrome.runtime.getURL("data.json");
+
+            d3.json(dataUrl)
+                .then((data) => {
+                    console.log('Loaded data:', data); // To confirm data is loaded
+                    d3.select("#flameGraph")
+                        .datum(data)
+                        .call(chart);
+                })
+                .catch(error => {
+                    console.warn("Error loading JSON:", error);
                 });
           } else {
             console.error("D3 not loaded");
@@ -66,32 +55,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   );
 });
 
-function initializeFlameGraph() {
-  flameGraph = d3
-    .flamegraph()
-    .width(960)
-    .cellHeight(18)
-    .transitionDuration(750)
-    .minFrameSize(5)
-    .title("")
-    .label(function (d) {
-      return d.name + " (" + d.value + ")";
-    });
 
-  // Listen for flame graph data from the background script
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.target === 'panel' && message.type === 'flameGraphData') {
-    renderFlameGraph(message.data);
-  }
-});
-}
-
-function renderFlameGraph(data) {
-  console.log("D3 version:", d3.version);
-  console.log("D3 Flame Graph:", typeof d3.flamegraph);
-  const chart = d3.select("#flameGraph");
-  chart.datum(data).call(flameGraph);
-}
 document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
   this.classList.toggle("active");
