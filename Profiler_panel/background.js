@@ -1,11 +1,11 @@
 import { runContentScriptCoverage} from './tab_coverage.js'
-// import { checkValidUrl } from "./helpers";
-// import { proccessFiles } from "./helpers";
+import { checkValidUrl } from "./helpers.js";
+import { proccessFiles } from "./helpers.js";
 
 
 console.log("Service worker loaded");
 const TAB = true;
-const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
+const extensionId = "nkbihfbeogaeaoehlefnkodbefgpgknn";
 var tabId;
 function isExtensionNode(node) {
   return node.callFrame.url.includes(extensionId);
