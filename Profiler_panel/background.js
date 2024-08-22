@@ -13,7 +13,6 @@ function sendToDevTools(message) {
 }
 
 async function startExtensionCoverage() {
-
   const targets = await chrome.debugger.getTargets();
   const backgroundPage = targets.find(
     (target) => target.type === "worker" && target.url.includes(extensionId),
@@ -104,7 +103,7 @@ function getLastSegmentFromUrl(url) {
     }
   } catch (error) {
     console.error("Invalid URL:", error);
-    return url; 
+    return url;
   }
 }
 
@@ -126,7 +125,7 @@ function proccessFiles(uniqueFiles, coverageData) {
         })
         .catch((error) => {
           console.error(`Error fetching ${url}:`, error.message);
-          return { url, content: "" }; 
+          return { url, content: "" };
         }),
     ),
   )
@@ -201,16 +200,19 @@ function profileWithTabID() {
 
       await new Promise((r) => setTimeout(r, 3000));
 
-      chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.stop", (result) => {
-        sendToDevTools("Profiler stopped");
-        const profile = result.profile;
-        console.log("PROOOOOOFILE", profile)
+      chrome.debugger.sendCommand(
+        { tabId: tabId },
+        "Profiler.stop",
+        (result) => {
+          sendToDevTools("Profiler stopped");
+          const profile = result.profile;
+          console.log("PROOOOOOFILE", profile);
 
-        chrome.runtime.sendMessage({
-          target: 'panel',
-          type: 'flameGraphData',
-          data: profile,
-        });
+          chrome.runtime.sendMessage({
+            target: "panel",
+            type: "flameGraphData",
+            data: profile,
+          });
         },
       );
     });

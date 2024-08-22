@@ -10,54 +10,50 @@
  */
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 
-console.log("THIS IS THE END" + chrome.devtools.inspectedWindow.tabId)
-
+console.log("THIS IS THE END" + chrome.devtools.inspectedWindow.tabId);
 
 console.log("Panel script loaded");
 
 function initializeFlameGraph() {
-    if (typeof d3 !== "undefined") {
-        console.log("D3 version:", d3.version);
+  if (typeof d3 !== "undefined") {
+    console.log("D3 version:", d3.version);
 
-        const chart = flamegraph()
-            .width(960)
-            .cellHeight(18)
-            .transitionDuration(750)
-            .minFrameSize(5)
-            .title("HERE LIES MY HOPES AND DREAMS")
-            .label(function (d) {
-                return d.name + " (" + d.value + ")";
-            });
+    const chart = flamegraph()
+      .width(960)
+      .cellHeight(18)
+      .transitionDuration(750)
+      .minFrameSize(5)
+      .title("HERE LIES MY HOPES AND DREAMS")
+      .label(function (d) {
+        return d.name + " (" + d.value + ")";
+      });
 
-        console.log("Flame graph object created");
+    console.log("Flame graph object created");
 
-        const dataUrl = chrome.runtime.getURL("data.json");
-        d3.json(dataUrl)
-            .then((data) => {
-                console.log("Data loaded:", data);
-                d3.select("#flameGraph")
-                    .datum(data)
-                    .call(chart);
-                console.log("Flame graph should now be rendered");
-            })
-            .catch(error => {
-                console.warn("Error loading JSON:", error);
-            });
-    } else {
-        console.error("D3 not loaded");
-    }
+    const dataUrl = chrome.runtime.getURL("data.json");
+    d3.json(dataUrl)
+      .then((data) => {
+        console.log("Data loaded:", data);
+        d3.select("#flameGraph").datum(data).call(chart);
+        console.log("Flame graph should now be rendered");
+      })
+      .catch((error) => {
+        console.warn("Error loading JSON:", error);
+      });
+  } else {
+    console.error("D3 not loaded");
+  }
 }
 
 // Wait for the DOM to be fully loaded before initializing the flame graph
-document.addEventListener('DOMContentLoaded', initializeFlameGraph);
+document.addEventListener("DOMContentLoaded", initializeFlameGraph);
 
 // If you need to interact with the inspected window, you can use:
 chrome.devtools.inspectedWindow.eval(
-    "console.log('This is logged in the inspected page');",
-    function(result, isException) {
-        if (isException)
-            console.log("Error:", isException);
-    }
+  "console.log('This is logged in the inspected page');",
+  function (result, isException) {
+    if (isException) console.log("Error:", isException);
+  },
 );
 // document.addEventListener('DOMContentLoaded', function() {
 //   console.log('DevTools Panel loaded');
@@ -178,7 +174,6 @@ chrome.devtools.inspectedWindow.eval(
 //     },
 //   );
 // });
-
 
 document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document

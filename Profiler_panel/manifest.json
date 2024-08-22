@@ -25,7 +25,12 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["data.json", "node_modules/d3/d3.v7.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.css"],
+      "resources": [
+        "data.json",
+        "node_modules/d3/d3.v7.js",
+        "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js",
+        "node_modules/d3-flame-graph/dist/d3-flamegraph.css"
+      ],
       "matches": ["<all_urls>"]
     }
   ]

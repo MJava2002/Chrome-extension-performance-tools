@@ -9,7 +9,7 @@ chrome.devtools.panels.create(
 
     // Optional: You can set up additional functionality here
     panel.onShown.addListener(function (window) {
-        console.log("Panel shown");
+      console.log("Panel shown");
     });
 
     panel.onHidden.addListener(function () {
@@ -17,6 +17,3 @@ chrome.devtools.panels.create(
     });
   },
 );
-
-
-
