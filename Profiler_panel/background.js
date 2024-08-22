@@ -1,4 +1,7 @@
-import { runContentScriptCoverage } from "tab_coverage.js";
+import { runContentScriptCoverage} from './tab_coverage.js'
+// import { checkValidUrl } from "./helpers";
+// import { proccessFiles } from "./helpers";
+
 
 console.log("Service worker loaded");
 const TAB = true;

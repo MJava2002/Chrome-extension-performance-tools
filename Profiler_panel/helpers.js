@@ -1,4 +1,4 @@
-function proccessFiles(uniqueFiles, coverageData) {
+export function proccessFiles(uniqueFiles, coverageData) {
   uniqueFiles = [...uniqueFiles];
   console.log(uniqueFiles);
   // Promise.all(fetch(url).then( r => r.text() ).then( t => content += t))
@@ -33,7 +33,7 @@ function proccessFiles(uniqueFiles, coverageData) {
 }
 
 // i will use this in graphs
-function getLastSegmentFromUrl(url) {
+export function getLastSegmentFromUrl(url) {
   try {
     const urlObj = new URL(url);
 
@@ -48,12 +48,12 @@ function getLastSegmentFromUrl(url) {
   }
 }
 
-function checkValidUrl(url) {
+export function checkValidUrl(url) {
   const urlObj = new URL(url);
   return urlObj.protocol === "chrome-extension:" && urlObj.pathname;
 }
 
-async function calculateCoveragePercentage(
+export async function calculateCoveragePercentage(
   totalScriptSize,
   coverageData,
   scriptUrl,
