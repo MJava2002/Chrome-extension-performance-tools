@@ -39,16 +39,16 @@ export async function runContentScriptCoverage(tabId, extensionId) {
       // Now that the debugger is attached, start profiling
       await startProfilerForCoverage(tabId);
       await new Promise((resolve) => setTimeout(resolve, 40000));
-      console.log("here1")
       const coverageData = await stopProfilerAndCollectCoverage(tabId);
-      console.log("here2")
       let uniqueFiles = new Set();
       coverageData.result.forEach((script) => {
       if (script.url != '' && !uniqueFiles.has(script.url) && checkValidUrl(script.url, extensionId)) {
         uniqueFiles.add(script.url);
       }
     });
+    console.log(coverageData)
     console.log(uniqueFiles)
+    console.log(extensionId)
     proccessFiles(uniqueFiles, coverageData);
     // Example usage:
   });

@@ -33,11 +33,11 @@ export function proccessFiles(uniqueFiles, coverageData) {
 }
 
 // i will use this in graphs
-export function getLastSegmentFromUrl(url) {
+export function getLastSegmentFromUrl(url, extensionId) {
   try {
     const urlObj = new URL(url);
 
-    if (checkValidUrl(url)) {
+    if (checkValidUrl(url, extensionId)) {
       const segments = urlObj.pathname.split("/");
       const lastSegment = segments.pop();
       return lastSegment;
@@ -50,13 +50,11 @@ export function getLastSegmentFromUrl(url) {
 
 export function checkValidUrl(url, id) {
   try {
+    const containsId = url.includes(id);
+    
     const urlObj = new URL(url);
     // Check if the protocol is chrome-extension:
     const isValidProtocol = urlObj.protocol === "chrome-extension:";
-    
-    // Check if the URL pathname contains the ID
-    const containsId = urlObj.pathname.includes(id);
-    
     // Return true if both conditions are met
     return isValidProtocol && containsId;
   } catch (error) {
