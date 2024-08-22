@@ -26,7 +26,7 @@ async function stopProfilerAndCollectCoverage(tabId) {
   return coverageData;
 }
 
-export async function runContentScriptCoverage(tabId) {
+export async function runContentScriptCoverage(tabId, extensionId) {
   try {
     await chrome.debugger.attach({ tabId: tabId }, '1.3', async () => {
       if (chrome.runtime.lastError) {
@@ -38,46 +38,24 @@ export async function runContentScriptCoverage(tabId) {
   
       // Now that the debugger is attached, start profiling
       await startProfilerForCoverage(tabId);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 40000));
       console.log("here1")
       const coverageData = await stopProfilerAndCollectCoverage(tabId);
       console.log("here2")
       let uniqueFiles = new Set();
       coverageData.result.forEach((script) => {
-      if (script.url != '' && !uniqueFiles.has(script.url) && checkValidUrl(script.url)) {
+      if (script.url != '' && !uniqueFiles.has(script.url) && checkValidUrl(script.url, extensionId)) {
         uniqueFiles.add(script.url);
       }
     });
     console.log(uniqueFiles)
-    //proccessFiles(uniqueFiles, coverageData);
+    proccessFiles(uniqueFiles, coverageData);
     // Example usage:
-    let fetchRes = fetch(
-      "chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/scripts/inpage.js");
-          
-      // FetchRes is the promise to resolve
-      // it by using.then() method
-      fetchRes.then(res =>
-          res.json()).then(d => {
-              console.log(d)
-          })
   });
+
   } catch (error) {
     console.error("Error during coverage analysis:", error);
   }
 }
 
 
-function getFileCharacterCount(filePath, callback) {
-  chrome.runtime.getPackageDirectoryEntry(function(directoryEntry) {
-      directoryEntry.getFile(filePath, {}, function(fileEntry) {
-          fileEntry.file(function(file) {
-              const reader = new FileReader();
-              reader.onloadend = function() {
-                  const content = reader.result;
-                  callback(content.length);
-              };
-              reader.readAsText(file);
-          });
-      });
-  });
-}

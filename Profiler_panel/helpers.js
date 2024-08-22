@@ -48,9 +48,21 @@ export function getLastSegmentFromUrl(url) {
   }
 }
 
-export function checkValidUrl(url) {
-  const urlObj = new URL(url);
-  return urlObj.protocol === "chrome-extension:" && urlObj.pathname;
+export function checkValidUrl(url, id) {
+  try {
+    const urlObj = new URL(url);
+    // Check if the protocol is chrome-extension:
+    const isValidProtocol = urlObj.protocol === "chrome-extension:";
+    
+    // Check if the URL pathname contains the ID
+    const containsId = urlObj.pathname.includes(id);
+    
+    // Return true if both conditions are met
+    return isValidProtocol && containsId;
+  } catch (error) {
+    console.error('Invalid URL:', error);
+    return false;
+  }
 }
 
 export async function calculateCoveragePercentage(

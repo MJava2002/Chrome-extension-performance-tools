@@ -5,7 +5,7 @@ import { proccessFiles } from "./helpers.js";
 
 console.log("Service worker loaded");
 const TAB = true;
-const extensionId = "nkbihfbeogaeaoehlefnkodbefgpgknn";
+const ExtensionId = "nkbihfbeogaeaoehlefnkodbefgpgknn";
 var tabId;
 function isExtensionNode(node) {
   return node.callFrame.url.includes(extensionId);
@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-async function startExtensionCoverage() {
+async function startExtensionCoverage(extensionId) {
   const targets = await chrome.debugger.getTargets();
   const backgroundPage = targets.find(
     (target) => target.type === "worker" && target.url.includes(extensionId),
@@ -65,7 +65,7 @@ async function startExtensionCoverage() {
 }
 
 // Function to stop and collect coverage data
-async function stopAndCollectExtensionCoverage() {
+async function stopAndCollectExtensionCoverage(extensionId) {
   const targets = await chrome.debugger.getTargets();
   const backgroundPage = targets.find(
     (target) => target.type === "worker" && target.url.includes(extensionId),
@@ -105,19 +105,19 @@ async function stopAndCollectExtensionCoverage() {
   return coverageData;
 }
 
-async function runCoverage() {
+async function runCoverage(extensionId) {
   if (TAB) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       let activeTab = tabs[0];
       sendToDevTools("Active Tab ID: " + activeTab.id);
       tabId = activeTab.id;
-      runContentScriptCoverage(tabId);
+      runContentScriptCoverage(tabId, extensionId);
     });
   } else {
-    await startExtensionCoverage();
+    await startExtensionCoverage(extensionId);
     let coverageData;
     await new Promise((r) => setTimeout(r, 10000));
-    coverageData = await stopAndCollectExtensionCoverage();
+    coverageData = await stopAndCollectExtensionCoverage(extensionId);
     // setTimeout(() => {
     //     stopAndCollectExtensionCoverage().then(coverage => {
     //         console.log("Final Coverage Data:", coverage);
@@ -127,7 +127,7 @@ async function runCoverage() {
     // }, 5000);  // Adjust delay as needed
     let uniqueFiles = new Set();
     coverageData.result.forEach((script) => {
-      if (!uniqueFiles.has(script.url) && checkValidUrl(script.url)) {
+      if (!uniqueFiles.has(script.url) && checkValidUrl(script.url, extensionId)) {
         uniqueFiles.add(script.url);
       }
     });
@@ -138,7 +138,8 @@ async function runCoverage() {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "buttonClicked") {
     console.log("Run coverage button clicked");
-    runCoverage();
+    const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
+    runCoverage(extensionId);
   }
 });
 
