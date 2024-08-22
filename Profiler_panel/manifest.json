@@ -10,7 +10,8 @@
     "debugger",
     "tabs",
     "activeTab",
-    "scripting"
+    "scripting",
+    "webNavigation"
   ],
   "host_permissions": ["<all_urls>"],
 
@@ -21,15 +22,10 @@
     "default_popup": "popup.html",
     "default_icon": "icons/default_theme/logo.png"
   },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'",
-    "script-src": "self",
-    "object-src": "self",
-    "connect-src": "self chrome-extension://*"
-  },
+
   "web_accessible_resources": [
     {
-      "resources": ["data.json", "libs/*.js", "styles/*.css"],
+      "resources": ["data.json", "node_modules/d3/d3.v7.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.css"],
       "matches": ["<all_urls>"]
     }
   ]

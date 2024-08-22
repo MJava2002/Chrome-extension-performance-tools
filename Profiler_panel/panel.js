@@ -17,7 +17,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   chrome.scripting.executeScript(
     {
       target: { tabId: tab.id },
-      files: ["libs/d3.v7.min.js", "libs/d3-flamegraph.min.js", "libs/d3-tip.min.js"],
+      files: ["node_modules/d3/d3.v7.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js"],
     },
     () => {
       // D3 is now available in the tab's context
@@ -36,10 +36,15 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 .label(function (d) {
                   return d.name + " (" + d.value + ")";
                 });
-            console.log("D3 version:", d3.version);
-            console.log("Flamegraph function:", typeof flamegraph === "function");
+            // const a = document.getElementById("flameGraph")
+            const newDiv = document.createElement('div');
+            newDiv.id = 'flameGraph';
+            newDiv.style.width = '960px';
+            newDiv.style.height = '500px';
+            newDiv.style.border = '1px solid black'; // Example styling
+            document.body.appendChild(newDiv);
+            console.log("aaaaaaaaaaaaaaaaa" + newDiv)
 
-            console.log("HERE's my chart " + chart)
             const dataUrl = chrome.runtime.getURL("data.json");
             d3.json(dataUrl)
             .then((data) => {
