@@ -36,24 +36,25 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 .label(function (d) {
                   return d.name + " (" + d.value + ")";
                 });
+            console.log("D3 version:", d3.version);
+            console.log("Flamegraph function:", typeof flamegraph === "function");
+
             console.log("HERE's my chart " + chart)
             const dataUrl = chrome.runtime.getURL("data.json");
-            d3.json(dataUrl, function(error, data) {
-                  if (error) return console.warn(error);
-                  d3.select("#flameGraph")
-                      .datum(data)
-                      .call(flameGraph);
-                });
-            // d3.json(dataUrl)
-            //     .then((data) => {
-            //         console.log('Loaded data HERE:', data); // To confirm data is loaded
-            //         d3.select("#flameGraph")
-            //             .datum(data)
-            //             .call(chart);
-            //         })
-            //     .catch(error => {
-            //         console.warn("Error loading JSON:", error);
-            //     });
+            d3.json(dataUrl)
+            .then((data) => {
+              console.log("Data loaded:", data);  // Check if data is loaded correctly
+              d3.select("#flameGraph")
+                .datum(data)
+                .call(chart);
+              console.log("Flame graph should now be rendered");
+            })
+            .catch(error => {
+              console.warn("Error loading JSON:", error);
+            });
+            // const svgElement = document.querySelector("#flameGraph svg");
+            // console.log("SVG Width:", svgElement.getAttribute("width"));
+            // console.log("SVG Height:", svgElement.getAttribute("height"));
           } else {
             console.error("D3 not loaded");
           }

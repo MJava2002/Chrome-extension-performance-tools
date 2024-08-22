@@ -6,6 +6,7 @@
 .d3-flame-graph rect:hover {
   stroke: #474747;
   stroke-width: 0.5;
+
   cursor: pointer;
 }
 
