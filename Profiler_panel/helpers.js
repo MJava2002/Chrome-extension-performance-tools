@@ -51,7 +51,7 @@ export function getLastSegmentFromUrl(url, extensionId) {
 export function checkValidUrl(url, id) {
   try {
     const containsId = url.includes(id);
-    
+
     const urlObj = new URL(url);
     // Check if the protocol is chrome-extension:
     const isValidProtocol = urlObj.protocol === "chrome-extension:";
@@ -73,7 +73,9 @@ export async function calculateCoveragePercentage(
     if (script.url === scriptUrl) {
       script.functions.forEach((func) => {
         func.ranges.forEach((range) => {
-          coveredBytes += range.endOffset - range.startOffset;
+          if (range.count){
+            coveredBytes += range.endOffset - range.startOffset;  
+          }  
         });
       });
     }
