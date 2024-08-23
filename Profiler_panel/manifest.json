@@ -6,13 +6,12 @@
   "devtools_page": "devtools.html",
   "permissions": [
     "storage",
-    "http://*/*",
-    "https://*/*",
-    "chrome-extension://*/*",
     "scripting",
     "debugger",
     "tabs",
-    "activeTab"
+    "activeTab",
+    "scripting",
+    "webNavigation"
   ],
   "host_permissions": ["<all_urls>"],
 
@@ -23,15 +22,15 @@
     "default_popup": "popup.html",
     "default_icon": "icons/default_theme/logo.png"
   },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'",
-    "script-src": "self",
-    "object-src": "self",
-    "connect-src": "self chrome-extension://*"
-  },
+
   "web_accessible_resources": [
     {
-      "resources": ["lib/d3.v7.min.js"],
+      "resources": [
+        "data.json",
+        "node_modules/d3/d3.v7.js",
+        "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js",
+        "node_modules/d3-flame-graph/dist/d3-flamegraph.css"
+      ],
       "matches": ["<all_urls>"]
     }
   ]

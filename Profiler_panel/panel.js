@@ -10,64 +10,171 @@
  */
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 
-let flameGraph;
+console.log("THIS IS THE END" + chrome.devtools.inspectedWindow.tabId);
 
-console.log("Panel.js");
-
-// background.js or a script that triggers script injection
-
-chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  let tab = tabs[0];
-
-  chrome.scripting.executeScript(
-    {
-      target: { tabId: tab.id },
-      files: ["libs/d3.v7.min.js"],
-    },
-    () => {
-      // D3 is now available in the tab's context
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: () => {
-          // Ensure D3 is loaded before using it
-          if (typeof d3 !== "undefined") {
-            console.log("D3 version:", d3.version);
-            // Use d3 library
-          } else {
-            console.error("D3 not loaded");
-          }
-        },
-      });
-    },
-  );
-});
+console.log("Panel script loaded");
 
 function initializeFlameGraph() {
-  flameGraph = d3
-    .flamegraph()
-    .width(960)
-    .cellHeight(18)
-    .transitionDuration(750)
-    .minFrameSize(5)
-    .title("")
-    .label(function (d) {
-      return d.name + " (" + d.value + ")";
-    });
+  if (typeof d3 !== "undefined") {
+    console.log("D3 version:", d3.version);
 
-  // Listen for flame graph data from the background script
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.type === "flameGraphData") {
-      renderFlameGraph(message.data);
-    }
-  });
+    const chart = flamegraph()
+      .width(960)
+      .cellHeight(18)
+      .transitionDuration(750)
+      .minFrameSize(5)
+      .title("HERE LIES MY HOPES AND DREAMS")
+      .label(function (d) {
+        return d.name + " (" + d.value + ")";
+      });
+
+    console.log("Flame graph object created");
+
+    const dataUrl = chrome.runtime.getURL("data.json");
+    d3.json(dataUrl)
+      .then((data) => {
+        console.log("Data loaded:", data);
+        d3.select("#flameGraph").datum(data).call(chart);
+        console.log("Flame graph should now be rendered");
+      })
+      .catch((error) => {
+        console.warn("Error loading JSON:", error);
+      });
+  } else {
+    console.error("D3 not loaded");
+  }
 }
 
-function renderFlameGraph(data) {
-  console.log("D3 version:", d3.version);
-  console.log("D3 Flame Graph:", typeof d3.flamegraph);
-  const chart = d3.select("#flameGraph");
-  chart.datum(data).call(flameGraph);
-}
+// Wait for the DOM to be fully loaded before initializing the flame graph
+document.addEventListener("DOMContentLoaded", initializeFlameGraph);
+
+// If you need to interact with the inspected window, you can use:
+chrome.devtools.inspectedWindow.eval(
+  "console.log('This is logged in the inspected page');",
+  function (result, isException) {
+    if (isException) console.log("Error:", isException);
+  },
+);
+// document.addEventListener('DOMContentLoaded', function() {
+//   console.log('DevTools Panel loaded');
+//
+// chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//   let tab = tabs[0];
+//
+//   chrome.scripting.executeScript(
+//     {
+//       target: { tabId: chrome.devtools.inspectedWindow.tabId },
+//       files: ["node_modules/d3/d3.v7.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js"],
+//     },
+//     () => {
+//       // D3 is now available in the tab's context
+//       chrome.scripting.executeScript({
+//         target: { tabId: chrome.devtools.inspectedWindow.tabId },
+//         func: () => {
+//           // Ensure D3 is loaded before using it
+//           if (typeof d3 !== "undefined") {
+//             console.log("D3 version:", d3.version);
+//             const chart = flamegraph()
+//                 .width(960)
+//                 .cellHeight(18)
+//                 .transitionDuration(750)
+//                 .minFrameSize(5)
+//                 .title("HERE LIES MY HOPES AND DREAMS")
+//                 .label(function (d) {
+//                   return d.name + " (" + d.value + ")";
+//                 });
+//             // const a = document.getElementById("flameGraph")
+//             const newDiv = document.createElement('div');
+//             newDiv.id = 'flameGraph';
+//             newDiv.style.width = '960px';
+//             newDiv.style.height = '500px';
+//             newDiv.style.border = '1px solid black'; // Example styling
+//             document.body.appendChild(newDiv);
+//             console.log("aaaaaaaaaaaaaaaaa" + newDiv)
+//
+//             const dataUrl = chrome.runtime.getURL("data.json");
+//             d3.json(dataUrl)
+//             .then((data) => {
+//               console.log("Data loaded:", data);  // Check if data is loaded correctly
+//               d3.select("#flameGraph")
+//                 .datum(data)
+//                 .call(chart);
+//               console.log("Flame graph should now be rendered");
+//             })
+//             .catch(error => {
+//               console.warn("Error loading JSON:", error);
+//             });
+//             // const svgElement = document.querySelector("#flameGraph svg");
+//             // console.log("SVG Width:", svgElement.getAttribute("width"));
+//             // console.log("SVG Height:", svgElement.getAttribute("height"));
+//           } else {
+//             console.error("D3 not loaded");
+//           }
+//         },
+//       });
+//     },
+//   );
+// });
+// });
+//
+// chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//   let tab = tabs[0];
+//
+//   chrome.scripting.executeScript(
+//     {
+//       target: { tabId: chrome.devtools.inspectedWindow.tabId },
+//       files: ["node_modules/d3/d3.v7.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js"],
+//     },
+//     () => {
+//       // D3 is now available in the tab's context
+//       chrome.scripting.executeScript({
+//         target: { tabId: chrome.devtools.inspectedWindow.tabId },
+//         func: () => {
+//           // Ensure D3 is loaded before using it
+//           if (typeof d3 !== "undefined") {
+//             console.log("D3 version:", d3.version);
+//             const chart = flamegraph()
+//                 .width(960)
+//                 .cellHeight(18)
+//                 .transitionDuration(750)
+//                 .minFrameSize(5)
+//                 .title("HERE LIES MY HOPES AND DREAMS")
+//                 .label(function (d) {
+//                   return d.name + " (" + d.value + ")";
+//                 });
+//             // const a = document.getElementById("flameGraph")
+//             const newDiv = document.createElement('div');
+//             newDiv.id = 'flameGraph';
+//             newDiv.style.width = '960px';
+//             newDiv.style.height = '500px';
+//             newDiv.style.border = '1px solid black'; // Example styling
+//             document.body.appendChild(newDiv);
+//             console.log("aaaaaaaaaaaaaaaaa" + newDiv)
+//
+//             const dataUrl = chrome.runtime.getURL("data.json");
+//             d3.json(dataUrl)
+//             .then((data) => {
+//               console.log("Data loaded:", data);  // Check if data is loaded correctly
+//               d3.select("#flameGraph")
+//                 .datum(data)
+//                 .call(chart);
+//               console.log("Flame graph should now be rendered");
+//             })
+//             .catch(error => {
+//               console.warn("Error loading JSON:", error);
+//             });
+//             // const svgElement = document.querySelector("#flameGraph svg");
+//             // console.log("SVG Width:", svgElement.getAttribute("width"));
+//             // console.log("SVG Height:", svgElement.getAttribute("height"));
+//           } else {
+//             console.error("D3 not loaded");
+//           }
+//         },
+//       });
+//     },
+//   );
+// });
+
 document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
   this.classList.toggle("active");

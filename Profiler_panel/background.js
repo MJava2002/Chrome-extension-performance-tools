@@ -12,26 +12,7 @@ function sendToDevTools(message) {
   });
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "openDevTools") {
-
-    chrome.windows.create(
-      {
-        url: chrome.runtime.getURL("devtools.html"), 
-        type: "popup",
-        width: 400,
-        height: 500,
-      },
-      (window) => {
-        console.log("DevTools window created", window);
-      },
-    );
-  }
-});
-
-
 async function startExtensionCoverage() {
-
   const targets = await chrome.debugger.getTargets();
   const backgroundPage = targets.find(
     (target) => target.type === "worker" && target.url.includes(extensionId),
@@ -122,7 +103,7 @@ function getLastSegmentFromUrl(url) {
     }
   } catch (error) {
     console.error("Invalid URL:", error);
-    return url; 
+    return url;
   }
 }
 
@@ -144,7 +125,7 @@ function proccessFiles(uniqueFiles, coverageData) {
         })
         .catch((error) => {
           console.error(`Error fetching ${url}:`, error.message);
-          return { url, content: "" }; 
+          return { url, content: "" };
         }),
     ),
   )
@@ -225,36 +206,18 @@ function profileWithTabID() {
         (result) => {
           sendToDevTools("Profiler stopped");
           const profile = result.profile;
+          console.log("PROOOOOOFILE", profile);
 
-          function processProfileData(profile) {
-            function processNode(node) {
-              let result = {
-                name: node.callFrame.functionName || "(anonymous)",
-                value: node.selfSize || 1,
-                children: [],
-              };
-              if (node.children) {
-                node.children.forEach((childId) => {
-                  const childNode = profile.nodes[childId];
-                  result.children.push(processNode(childNode));
-                });
-              }
-              return result;
-            }
-            return processNode(profile.nodes[profile.rootNodeId]);
-          }
-
-          const flameGraphData = processProfileData(profile);
-          sendToDevTools({
+          chrome.runtime.sendMessage({
+            target: "panel",
             type: "flameGraphData",
-            data: flameGraphData,
+            data: profile,
           });
         },
       );
     });
   });
 }
-
 async function calculateCoveragePercentage(
   totalScriptSize,
   coverageData,
