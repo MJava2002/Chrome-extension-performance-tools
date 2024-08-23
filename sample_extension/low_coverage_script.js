@@ -1,5 +1,6 @@
 /*
 A script to test out the code coverage feature on, with a bunch of unused functions
+In its current state, coverage should show around 200 bytes (length of lines 61-70)
 */
 
 
@@ -62,14 +63,20 @@ function executeFunction() {
     console.log("This function is called: executeFunction");
 }
 
-// Sleep to give some time 
-await new Promise((r) => setTimeout(r, 3000));
+chrome.runtime.sendMessage({ action: 'doSomething', data: 'someData' }, function(response) {
+    console.log('Response from background:', response);
+});
 
-// Call only one function
-executeFunction();
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "iconClicked") {
+        console.log("Extension icon clicked - recognized in content script");
+        // call only one function
+        executeFunction();
 
-// Uncomment for more nuanced testing
-// waitForNonExistentEvent();
+        // Uncomment for more nuanced testing
+        // waitForNonExistentEvent();
 
-// Uncomment if we need block coverage
-// conditionalLogic();
+        // Uncomment if we need to look at block coverage
+        // conditionalLogic();
+    }
+});

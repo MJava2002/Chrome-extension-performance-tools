@@ -1,16 +1,19 @@
 {
   "manifest_version": 3,
-  "name": "Test Extension",
-  "description": "Base Level Extension",
+  "name": "Sample Extension",
+  "description": "Extension to test the coverage feature",
   "version": "1.0",
   "action": {
     "default_icon": "icon.png"
   },
+  "background": {
+        "service_worker": "background.js"
+  },
   "content_scripts": [
         {
             "matches": ["*://*.nytimes.com/*"],
-            "js": ["content_script.js"]
+            "js": ["low_coverage_script.js"]
         }
     ],
-  "permissions": []
+  "permissions": ["tabs", "activeTab"]
 }
