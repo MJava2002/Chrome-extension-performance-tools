@@ -138,7 +138,7 @@ async function runCoverage(extensionId) {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "buttonClicked") {
     console.log("Run coverage button clicked");
-    const extensionId = "bmpknceehpgjajlnajokmikpknfffgmj";
+    const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
     runCoverage(extensionId);
   }
 });
