@@ -2,11 +2,14 @@
 <html>
   <head>
     <title>Performance Panel</title>
-    <script src="libs/d3.v7.min.js"></script>
-    <script src="libs/d3-flamegraph.min.js"></script>
-    <!--    <link rel="stylesheet" type="text/css" href="styles/d3-flamegraph.css">-->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="node_modules/d3-flame-graph/dist/d3-flamegraph.css"
+    />
     <link rel="stylesheet" type="text/css" href="styles/panel_styles.css" />
     <meta charset="utf8" />
+    <style></style>
   </head>
   <body>
     <h1>Performance Panel</h1>
@@ -31,7 +34,12 @@
 
     <div id="backgroundMessages"></div>
     <!-- Container for background messages -->
-    <div id="flameGraph"></div>
+    <div
+      id="flameGraph"
+      style="width: 960px; height: 500px; border: 1px solid black"
+    ></div>
+    <script src="node_modules/d3/d3.v7.js"></script>
+    <script src="node_modules/d3-flame-graph/dist/d3-flamegraph.min.js"></script>
     <script src="panel.js"></script>
   </body>
 </html>

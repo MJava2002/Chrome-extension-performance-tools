@@ -181,29 +181,12 @@ function profileWithTabID() {
         (result) => {
           sendToDevTools("Profiler stopped");
           const profile = result.profile;
+          console.log("PROOOOOOFILE", profile);
 
-          function processProfileData(profile) {
-            function processNode(node) {
-              let result = {
-                name: node.callFrame.functionName || "(anonymous)",
-                value: node.selfSize || 1,
-                children: [],
-              };
-              if (node.children) {
-                node.children.forEach((childId) => {
-                  const childNode = profile.nodes[childId];
-                  result.children.push(processNode(childNode));
-                });
-              }
-              return result;
-            }
-            return processNode(profile.nodes[profile.rootNodeId]);
-          }
-
-          const flameGraphData = processProfileData(profile);
-          sendToDevTools({
+          chrome.runtime.sendMessage({
+            target: "panel",
             type: "flameGraphData",
-            data: flameGraphData,
+            data: profile,
           });
         },
       );
