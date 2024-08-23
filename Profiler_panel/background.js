@@ -5,7 +5,7 @@ import { proccessFiles } from "./helpers.js";
 
 console.log("Service worker loaded");
 const TAB = true;
-const ExtensionId = "nkbihfbeogaeaoehlefnkodbefgpgknn";
+const ExtensionId = "bmpknceehpgjajlnajokmikpknfffgmj";
 var tabId;
 function isExtensionNode(node) {
   return node.callFrame.url.includes(extensionId);
@@ -138,7 +138,7 @@ async function runCoverage(extensionId) {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "buttonClicked") {
     console.log("Run coverage button clicked");
-    const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
+    const extensionId = "bmpknceehpgjajlnajokmikpknfffgmj";
     runCoverage(extensionId);
   }
 });

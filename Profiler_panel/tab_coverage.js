@@ -38,7 +38,7 @@ export async function runContentScriptCoverage(tabId, extensionId) {
   
       // Now that the debugger is attached, start profiling
       await startProfilerForCoverage(tabId);
-      await new Promise((resolve) => setTimeout(resolve, 40000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const coverageData = await stopProfilerAndCollectCoverage(tabId);
       let uniqueFiles = new Set();
       coverageData.result.forEach((script) => {
@@ -49,6 +49,7 @@ export async function runContentScriptCoverage(tabId, extensionId) {
     console.log(coverageData)
     console.log(uniqueFiles)
     console.log(extensionId)
+    uniqueFiles = ['chrome-extension://bmpknceehpgjajlnajokmikpknfffgmj/low_coverage_script.js']
     proccessFiles(uniqueFiles, coverageData);
     // Example usage:
   });

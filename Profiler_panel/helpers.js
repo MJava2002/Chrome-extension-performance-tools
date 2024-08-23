@@ -74,6 +74,8 @@ export async function calculateCoveragePercentage(
       script.functions.forEach((func) => {
         func.ranges.forEach((range) => {
           if (range.count){
+            console.log(func)
+            console.log(range)
             coveredBytes += range.endOffset - range.startOffset;  
           }  
         });
@@ -88,3 +90,51 @@ export async function calculateCoveragePercentage(
 
   return coveragePercentage;
 }
+
+// ranges is a list of [start,end] numbers
+export function countCoveredNumbers(ranges) {
+  let events = [];
+
+ranges.forEach(([start, end]) => {
+    events.push([start, 1]);
+    events.push([end + 1, -1]);
+});
+
+events.sort((a, b) => a[0] - b[0]);
+let count = 0;
+let activeRanges = 0;
+let totalCovered = 0;
+
+for (const [point, eventType] of events) {
+    if (activeRanges > 0) {
+        totalCovered += point - count;
+    }
+
+    activeRanges += eventType;
+    count = point;
+}
+
+return totalCovered;
+}
+
+// def count_covered_numbers(ranges):
+//     events = []
+//     for start, end in ranges:
+//         events.append((start, 1))
+//         events.append((end + 1, -1))
+    
+//     events.sort()
+    
+//     count = 0
+//     active_ranges = 0
+//     total_covered = 0
+    
+//     for point, event_type in events:
+//         if active_ranges > 0:
+//             total_covered += point - count
+        
+//         active_ranges += event_type
+//         count = point
+    
+//     return total_covered
+

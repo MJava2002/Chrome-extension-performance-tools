@@ -11,9 +11,28 @@
   },
   "content_scripts": [
         {
-            "matches": ["*://*.nytimes.com/*"],
+            "matches": ["http://*/*",
+        "https://*/*"],
             "js": ["low_coverage_script.js"]
         }
     ],
-  "permissions": ["tabs", "activeTab"]
+  "permissions": ["activeTab",  "declarativeNetRequestWithHostAccess",
+  "scripting",
+  "storage",
+  "tabs",
+  "unlimitedStorage",
+  "webNavigation",
+  "webRequest"],
+  "optional_permissions": [
+    "management"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+},
+  "web_accessible_resources": [
+    {
+      "matches": ["*://*/*"],
+      "resources": ["sample_extension/low_coverage_script.js"]
+    }
+  ]
 }
