@@ -7,28 +7,28 @@
     "default_icon": "icon.png"
   },
   "background": {
-        "service_worker": "background.js"
+    "service_worker": "background.js"
   },
   "content_scripts": [
-        {
-            "matches": ["http://*/*",
-        "https://*/*"],
-            "js": ["low_coverage_script.js"]
-        }
-    ],
-  "permissions": ["activeTab",  "declarativeNetRequestWithHostAccess",
-  "scripting",
-  "storage",
-  "tabs",
-  "unlimitedStorage",
-  "webNavigation",
-  "webRequest"],
-  "optional_permissions": [
-    "management"
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["low_coverage_script.js"]
+    }
   ],
+  "permissions": [
+    "activeTab",
+    "declarativeNetRequestWithHostAccess",
+    "scripting",
+    "storage",
+    "tabs",
+    "unlimitedStorage",
+    "webNavigation",
+    "webRequest"
+  ],
+  "optional_permissions": ["management"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
-},
+  },
   "web_accessible_resources": [
     {
       "matches": ["*://*/*"],

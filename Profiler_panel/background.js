@@ -1,7 +1,6 @@
-import { runContentScriptCoverage} from './tab_coverage.js'
+import { runContentScriptCoverage } from "./tab_coverage.js";
 import { checkValidUrl } from "./helpers.js";
 import { proccessFiles } from "./helpers.js";
-
 
 console.log("Service worker loaded");
 const TAB = true;
@@ -127,7 +126,10 @@ async function runCoverage(extensionId) {
     // }, 5000);  // Adjust delay as needed
     let uniqueFiles = new Set();
     coverageData.result.forEach((script) => {
-      if (!uniqueFiles.has(script.url) && checkValidUrl(script.url, extensionId)) {
+      if (
+        !uniqueFiles.has(script.url) &&
+        checkValidUrl(script.url, extensionId)
+      ) {
         uniqueFiles.add(script.url);
       }
     });

@@ -58,7 +58,7 @@ export function checkValidUrl(url, id) {
     // Return true if both conditions are met
     return isValidProtocol && containsId;
   } catch (error) {
-    console.error('Invalid URL:', error);
+    console.error("Invalid URL:", error);
     return false;
   }
 }
@@ -73,11 +73,11 @@ export async function calculateCoveragePercentage(
     if (script.url === scriptUrl) {
       script.functions.forEach((func) => {
         func.ranges.forEach((range) => {
-          if (range.count){
-            console.log(func)
-            console.log(range)
-            coveredBytes += range.endOffset - range.startOffset;  
-          }  
+          if (range.count) {
+            console.log(func);
+            console.log(range);
+            coveredBytes += range.endOffset - range.startOffset;
+          }
         });
       });
     }
@@ -95,26 +95,26 @@ export async function calculateCoveragePercentage(
 export function countCoveredNumbers(ranges) {
   let events = [];
 
-ranges.forEach(([start, end]) => {
+  ranges.forEach(([start, end]) => {
     events.push([start, 1]);
     events.push([end + 1, -1]);
-});
+  });
 
-events.sort((a, b) => a[0] - b[0]);
-let count = 0;
-let activeRanges = 0;
-let totalCovered = 0;
+  events.sort((a, b) => a[0] - b[0]);
+  let count = 0;
+  let activeRanges = 0;
+  let totalCovered = 0;
 
-for (const [point, eventType] of events) {
+  for (const [point, eventType] of events) {
     if (activeRanges > 0) {
-        totalCovered += point - count;
+      totalCovered += point - count;
     }
 
     activeRanges += eventType;
     count = point;
-}
+  }
 
-return totalCovered;
+  return totalCovered;
 }
 
 // def count_covered_numbers(ranges):
@@ -122,19 +122,18 @@ return totalCovered;
 //     for start, end in ranges:
 //         events.append((start, 1))
 //         events.append((end + 1, -1))
-    
+
 //     events.sort()
-    
+
 //     count = 0
 //     active_ranges = 0
 //     total_covered = 0
-    
+
 //     for point, event_type in events:
 //         if active_ranges > 0:
 //             total_covered += point - count
-        
+
 //         active_ranges += event_type
 //         count = point
-    
-//     return total_covered
 
+//     return total_covered
