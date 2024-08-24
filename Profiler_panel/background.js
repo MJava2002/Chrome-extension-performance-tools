@@ -1,7 +1,7 @@
 import { runContentScriptCoverage } from "./tab_coverage.js";
 import { checkValidUrl } from "./helpers.js";
 import { proccessFiles } from "./helpers.js";
-import { startNetwork } from "./network.js";
+import { startNetwork, startNetworkWithTabID } from "./network.js";
 
 console.log("Service worker loaded");
 const TAB = true;
@@ -290,9 +290,9 @@ chrome.debugger.onDetach.addListener(function(source, reason) {
 
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  const extensionId = "eillpajpafkjenplkofjfimdipclffpk";
   if (request.action === "networkButtonClicked") {
+    const extensionId = "eillpajpafkjenplkofjfimdipclffpk";
     console.log("Network button clicked");
-    startNetwork(extensionId);
+    startNetworkWithTabID(extensionId);
   }
 });

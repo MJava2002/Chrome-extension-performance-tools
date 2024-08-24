@@ -1,13 +1,19 @@
+let id;
+
 function startRequestMonitoring() {
     let requestTimes = {};
 
     chrome.debugger.onEvent.addListener(function(debuggeeId, message, params) {
+        const pattern = `chrome-extension://${id}`
         if (message === "Network.requestWillBeSent") {
-            console.log("Request intercepted: ", params.request);
-            requestTimes[params.requestId] = {
-                startTime: params.timestamp,
-                url: params.request.url
-            };
+            console.log("Request intercepted: ", params);
+            if (params.initiator.stack && params.initiator.stack.callFrames[0].url.startsWith(pattern)) {
+                console.log("Extension request: ", params.request);
+                requestTimes[params.requestId] = {
+                    startTime: params.timestamp,
+                    url: params.request.url
+                };
+            }
         }
     });
 
@@ -21,7 +27,7 @@ function startRequestMonitoring() {
                 const latency = endTime - startTime;
 
                 // Log latency
-                console.log(`Latency of request to ${requestTimes[params.requestId].url}: ${latency} seconds`);
+                console.log(`Latency of request to ${requestTimes[params.requestId].url}: ${latency.toFixed(4)} seconds`);
             }
         }
     });
@@ -29,6 +35,7 @@ function startRequestMonitoring() {
 
 
 export function startNetwork(extensionId) {
+    id = extensionId;
     chrome.debugger.getTargets((result) => {
         console.log(result);
         let target = result.find((t) => t.title.includes(extensionId));
@@ -72,5 +79,35 @@ export function startNetwork(extensionId) {
       });
 }
 
+export function startNetworkWithTabID(extensionId) {
+    id = extensionId;
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        let activeTab = tabs[0];
+        const tabId = activeTab.id;
+        chrome.debugger.attach({ tabId: tabId }, "1.3", async function () {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+                return;
+            }
+            // Enable debugger
+            chrome.debugger.sendCommand(
+                { tabId: tabId },
+                "Debugger.enable",
+                () => {
+                  console.log("Debugger enabled");
+                },
+              );
 
+              chrome.debugger.sendCommand(
+                { tabId: tabId },
+                "Network.enable",
+                () => {
+                  console.log("Network enabled");
+                },
+              );
+  
+              startRequestMonitoring();
+        });
+    });
+}
 
