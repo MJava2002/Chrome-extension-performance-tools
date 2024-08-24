@@ -247,23 +247,39 @@ const profileData = {
   "profile": {
     "nodes": [
       {
-        "callFrame": { "functionName": "function1" },
+        "callFrame": { "functionName": "root" },
         "hitcount": 100,
         "children": [1, 2]
       },
       {
-        "callFrame": { "functionName": "function2" },
+        "callFrame": { "functionName": "function1" },
         "hitcount": 50,
+        "children": [3]
+      },
+      {
+        "callFrame": { "functionName": "function2" },
+        "hitcount": 30,
         "children": []
       },
       {
         "callFrame": { "functionName": "function3" },
-        "hitcount": 30,
+        "hitcount": 20,
+        "children": [4, 5]
+      },
+      {
+        "callFrame": { "functionName": "function4" },
+        "hitcount": 10,
+        "children": []
+      },
+      {
+        "callFrame": { "functionName": "function5" },
+        "hitcount": 5,
         "children": []
       }
     ]
   }
 }
+
 
 function profileWithTabID() {
   sendToDevTools("Tab ID in DevTools panel!");

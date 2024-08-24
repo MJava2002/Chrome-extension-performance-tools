@@ -1,16 +1,33 @@
 {
   "children": [
     {
-      "children": [],
-      "name": "function2",
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "function4",
+              "value": 10
+            },
+            {
+              "children": [],
+              "name": "function5",
+              "value": 5
+            }
+          ],
+          "name": "function3",
+          "value": 20
+        }
+      ],
+      "name": "function1",
       "value": 50
     },
     {
       "children": [],
-      "name": "function3",
+      "name": "function2",
       "value": 30
     }
   ],
-  "name": "function1",
+  "name": "root",
   "value": 100
 }
