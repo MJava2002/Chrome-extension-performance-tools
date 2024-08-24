@@ -274,29 +274,6 @@ document.getElementById("networkButton").addEventListener("click", function () {
   chrome.runtime.sendMessage({ action: "networkButtonClicked" });
 });
 
-chrome.devtools.network.onRequestFinished.addListener((request) => {
-  console.log('hi');
-  // if (request.request){
-  //     console.log('hii');
-  //     console.log(request.request);
-  //     // Calculate latency
-  //     const startTime = request.startedDateTime;
-  //     const endTime = new Date().getTime();
-  //     const latency = endTime - new Date(startTime).getTime();
-
-  //     const refererHeader = request.request.headers.find(header => header.name.toLowerCase() === 'referer');
-  //     const originHeader = request.request.headers.find(header => header.name.toLowerCase() === 'origin');
-  // }
-  chrome.devtools.network.onRequestFinished.addListener(
-    function(request) {
-      if (request) {
-        chrome.devtools.inspectedWindow.eval(
-            'console.log("Req: " + unescape("' +
-            escape(request.request.url) + '"))');
-      }
-    }
-  );
-});
 
 document.getElementById("stopButton").addEventListener("click", function () {
   chrome.runtime.sendMessage({ action: "stopButtonClicked" });
