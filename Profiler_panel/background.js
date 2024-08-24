@@ -203,7 +203,7 @@ function profileWithExtensionID() {
     sendToDevTools(result);
     let target = result.find((t) => t.title.includes(extensionId));
     if (target) {
-      targetId = target.id;
+      const targetId = target.id;
       chrome.debugger.attach({ targetId: targetId }, "1.3", async function () {
         if (chrome.runtime.lastError) {
           sendToDevTools("Error: " + chrome.runtime.lastError.message);
