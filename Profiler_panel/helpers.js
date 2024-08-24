@@ -68,21 +68,17 @@ export async function calculateCoveragePercentage(
   coverageData,
   scriptUrl,
 ) {
-  let coveredBytes = 0;
+  let ranges = []
   coverageData.result.forEach((script) => {
     if (script.url === scriptUrl) {
       script.functions.forEach((func) => {
-        func.ranges.forEach((range) => {
-          if (range.count) {
-            console.log(func);
-            console.log(range);
-            coveredBytes += range.endOffset - range.startOffset;
-          }
-        });
+        // [...list1, ...list2];
+        const tmp = func.ranges.map(({ startOffset, endOffset }) => [startOffset, endOffset])
+        ranges = [...ranges, ...tmp]
       });
     }
   });
-
+  const coveredBytes = countCoveredNumbers(ranges)
   const coveragePercentage = (coveredBytes / totalScriptSize) * 100;
   console.log(`Total Script Size: ${totalScriptSize} bytes`);
   console.log(`Covered Bytes: ${coveredBytes} bytes`);
