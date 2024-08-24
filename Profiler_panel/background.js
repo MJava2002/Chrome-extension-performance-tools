@@ -1,6 +1,5 @@
-import { runContentScriptCoverage } from "./tab_coverage.js";
-import { checkValidUrl } from "./helpers.js";
-import { proccessFiles } from "./helpers.js";
+import {runContentScriptCoverage} from "./tab_coverage.js";
+import {checkValidUrl, proccessFiles} from "./helpers.js";
 
 console.log("Service worker loaded");
 const TAB = true;
@@ -152,7 +151,119 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "runTabClicked") {
     profileWithTabID();
   }
+  if (request.action === "flamegraphClicked") {
+    profileForFlameGraph()
+  }
+
 });
+function profileForFlameGraph() {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    let activeTab = tabs[0];
+    sendToDevTools("Active Tab ID: " + activeTab.id);
+    tabId = activeTab.id;
+    chrome.debugger.attach({ tabId: tabId }, "1.3", async function () {
+      if (chrome.runtime.lastError) {
+        sendToDevTools("Error: " + chrome.runtime.lastError.message);
+        return;
+      }
+      sendToDevTools("Debugger attached");
+
+      chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.enable", () => {
+        sendToDevTools("Profiler enabled");
+      });
+
+      chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.start", () => {
+        sendToDevTools("Profiler started");
+      });
+
+      await new Promise((r) => setTimeout(r, 3000));
+
+      chrome.debugger.sendCommand(
+        { tabId: tabId },
+        "Profiler.stop",
+        (result) => {
+          sendToDevTools("Profiler stopped");
+          const profile = result.profile;
+          console.log("Profiler result:", profile);
+
+          // Example usage:
+          // Assuming `profileData` is the entire JSON object from profile.json
+          const transformedData = transformProfile(profileData);
+          console.log(JSON.stringify(transformedData, null, 2));
+
+          /*  save result of json*/
+          // const blob = new Blob([JSON.stringify(profile, null, 2)], { type: 'application/json' });
+          // const reader = new FileReader();
+          //
+          // reader.onload = function() {
+          //   chrome.downloads.download({
+          //     url: reader.result,
+          //     filename: 'profile.json',
+          //     conflictAction: 'overwrite' // Change this as needed
+          //   }, (downloadId) => {
+          //     console.log(`Download started with ID: ${downloadId}`);
+          //   });
+          // };
+          //
+          // reader.readAsDataURL(blob);
+        }
+      );
+    });
+  });
+}
+
+function transformNode(node, allNodes) {
+    // Create the transformed node with children first
+    const transformedNode = {
+        // Initialize an empty children array
+        children: []
+    };
+
+    // If the node has children, transform them recursively
+    if (node.children && node.children.length > 0) {
+        transformedNode.children = node.children.map(index => transformNode(allNodes[index], allNodes));
+    }
+
+    // After children are processed, add name and value
+    transformedNode.name = node.callFrame.functionName;
+    transformedNode.value = node.hitcount;
+
+    return transformedNode;
+}
+function transformProfile(profileData) {
+  console.log("profile", profileData)
+  console.log("First", profileData.profile.nodes[0])
+  return transformNode(profileData.profile.nodes[0],profileData.profile.nodes);
+}
+
+
+
+
+
+
+
+
+const profileData = {
+  "profile": {
+    "nodes": [
+      {
+        "callFrame": { "functionName": "function1" },
+        "hitcount": 100,
+        "children": [1, 2]
+      },
+      {
+        "callFrame": { "functionName": "function2" },
+        "hitcount": 50,
+        "children": []
+      },
+      {
+        "callFrame": { "functionName": "function3" },
+        "hitcount": 30,
+        "children": []
+      }
+    ]
+  }
+}
 
 function profileWithTabID() {
   sendToDevTools("Tab ID in DevTools panel!");

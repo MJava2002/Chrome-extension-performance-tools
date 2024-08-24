@@ -52,7 +52,7 @@ function initializeFlameGraph() {
 }
 
 // Wait for the DOM to be fully loaded before initializing the flame graph
-document.addEventListener("DOMContentLoaded", initializeFlameGraph);
+document.getElementById("flamegraphButton").addEventListener("click", initializeFlameGraph);
 
 // If you need to interact with the inspected window, you can use:
 chrome.devtools.inspectedWindow.eval(
@@ -96,6 +96,12 @@ document
   .getElementById("coverageButton")
   .addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "buttonClicked" });
+  });
+
+document
+  .getElementById("flamegraphButton")
+  .addEventListener("click", function () {
+    chrome.runtime.sendMessage({ action: "flamegraphClicked" });
   });
 
 function updateDisplay(containerId, message) {
