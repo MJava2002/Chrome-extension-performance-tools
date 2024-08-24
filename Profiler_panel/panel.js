@@ -297,3 +297,7 @@ chrome.devtools.network.onRequestFinished.addListener((request) => {
     }
   );
 });
+
+document.getElementById("stopButton").addEventListener("click", function () {
+  chrome.runtime.sendMessage({ action: "stopButtonClicked" });
+});

@@ -1,4 +1,5 @@
 let id;
+let debugee;
 
 function startRequestMonitoring() {
     let requestTimes = {};
@@ -42,6 +43,7 @@ export function startNetwork(extensionId) {
   
         if (target) {
           const targetId = target.id;
+          debugee = {targetId: targetId};
           console.log("Found target:", target);
           chrome.debugger.attach(
             { targetId: targetId },
@@ -84,6 +86,7 @@ export function startNetworkWithTabID(extensionId) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         let activeTab = tabs[0];
         const tabId = activeTab.id;
+        debugee = {tabId: tabId};
         chrome.debugger.attach({ tabId: tabId }, "1.3", async function () {
             if (chrome.runtime.lastError) {
                 console.error(chrome.runtime.lastError.message);
@@ -111,3 +114,17 @@ export function startNetworkWithTabID(extensionId) {
     });
 }
 
+export function stopNetwork() {
+    if (debugee) {
+        chrome.debugger.sendCommand(
+            debugee,
+            "Network.disable",
+            () => {
+              console.log("Network disabled");
+              chrome.debugger.detach(debugee);
+              console.log("Debugger detached");
+              debugee = null;
+            },
+        );
+    }
+}
