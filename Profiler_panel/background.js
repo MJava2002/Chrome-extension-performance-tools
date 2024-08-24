@@ -185,10 +185,10 @@ function profileForFlameGraph() {
           sendToDevTools("Profiler stopped");
           const profile = result.profile;
           console.log("Profiler result:", profile);
-
+          console.log(JSON.stringify(profile, null, 2));
           // Example usage:
           // Assuming `profileData` is the entire JSON object from profile.json
-          const transformedData = transformProfile(profile);
+          const transformedData = transformProfileData(profile);
           console.log(JSON.stringify(transformedData, null, 2));
 
           /*  save result of json*/
@@ -211,29 +211,61 @@ function profileForFlameGraph() {
     });
   });
 }
-function transformNode(node, allNodes) {
-    // Create the transformed node with children first
-    const transformedNode = {
-        // Initialize an empty children array
-        children: []
-    };
-    console.log("NODE CHILDREN", node.children)
-    // If the node has children, transform them recursively
-    if (node.children && node.children.length > 0) {
-        transformedNode.children = node.children.map(index => transformNode(allNodes[index], allNodes));
+function transformProfileData(profile) {
+  if (!profile || !profile.nodes || !profile.nodes.length) {
+    console.error('Invalid profile data');
+    return null;
+  }
+
+  const nodes = profile.nodes;
+  const sampleTimes = profile.timeDeltas || [];
+  let totalTime = sampleTimes.reduce((sum, time) => sum + time, 0);
+
+  // Create a map of node IDs to their children
+  const childrenMap = new Map();
+  nodes.forEach(node => {
+    if (node.children) {
+      childrenMap.set(node.id, node.children);
     }
+  });
 
-    // After children are processed, add name and value
-    transformedNode.name = node.callFrame.functionName;
-    transformedNode.value = node.hitcount;
+  function processNode(nodeId) {
+    const node = nodes[nodeId];
+    if (!node) return null;
 
-    return transformedNode;
+    const result = {
+      name: node.callFrame.functionName || `(${node.callFrame.url})`,
+      value: node.selfTime || 1,
+      children: []
+    };
+
+    const children = childrenMap.get(nodeId) || [];
+    children.forEach(childId => {
+      const childNode = processNode(childId);
+      if (childNode) {
+        result.children.push(childNode);
+        result.value += childNode.value; // Accumulate time from children
+      }
+    });
+
+    return result;
+  }
+
+  // Start from the root node (usually the first node)
+  const rootNode = processNode(nodes[0].id);
+
+  // Normalize values to percentages of total time
+  function normalizeValues(node) {
+    node.value = (node.value / totalTime) * 100;
+    node.children.forEach(normalizeValues);
+  }
+  normalizeValues(rootNode);
+
+  return rootNode;
 }
-function transformProfile(profileData) {
-  console.log("profile", profileData)
-  console.log("First", profileData.nodes[0])
-  return transformNode(profileData.nodes[0],profileData.nodes);
-}
+// Count nodes
+
+
 // function transformNode(node, allNodes) {
 //     // Create the transformed node with children first
 //     const transformedNode = {
