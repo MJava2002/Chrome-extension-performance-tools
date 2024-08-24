@@ -1,6 +1,7 @@
 import { runContentScriptCoverage } from "./tab_coverage.js";
 import { checkValidUrl } from "./helpers.js";
 import { proccessFiles } from "./helpers.js";
+import { startNetwork } from "./network.js";
 
 console.log("Service worker loaded");
 const TAB = true;
@@ -263,26 +264,35 @@ chrome.webRequest.onBeforeRequest.addListener(
 );
 
 // Attach to a specific tab or extension background page
-chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  const tabId = tabs[0].id;
+// chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+//   const tabId = tabs[0].id;
   
-  // Attach debugger to the tab
-  chrome.debugger.attach({ tabId: tabId }, "1.3", function() {
-    console.log("Debugger attached to tab " + tabId);
+//   // Attach debugger to the tab
+//   chrome.debugger.attach({ tabId: tabId }, "1.3", function() {
+//     console.log("Debugger attached to tab " + tabId);
 
-    // Enable the network domain
-    chrome.debugger.sendCommand({ tabId: tabId }, "Network.enable");
+//     // Enable the network domain
+//     chrome.debugger.sendCommand({ tabId: tabId }, "Network.enable");
 
-    // Listen for network requests
-    chrome.debugger.onEvent.addListener(function(debuggeeId, message, params) {
-      if (message === "Network.requestWillBeSent") {
-        console.log("Request intercepted: ", params.request);
-      }
-    });
-  });
-});
+//     // Listen for network requests
+//     chrome.debugger.onEvent.addListener(function(debuggeeId, message, params) {
+//       if (message === "Network.requestWillBeSent") {
+//         console.log("Request intercepted: ", params.request);
+//       }
+//     });
+//   });
+// });
 
 // Handle debugger detachment
 chrome.debugger.onDetach.addListener(function(source, reason) {
   console.log("Debugger detached: ", reason);
+});
+
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  const extensionId = "eillpajpafkjenplkofjfimdipclffpk";
+  if (request.action === "networkButtonClicked") {
+    console.log("Network button clicked");
+    startNetwork(extensionId);
+  }
 });

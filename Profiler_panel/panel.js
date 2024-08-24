@@ -270,6 +270,9 @@ document.getElementById("stopButton").addEventListener("click", function () {
   }
 });
 
+document.getElementById("networkButton").addEventListener("click", function () {
+  chrome.runtime.sendMessage({ action: "networkButtonClicked" });
+});
 
 chrome.devtools.network.onRequestFinished.addListener((request) => {
   console.log('hi');
