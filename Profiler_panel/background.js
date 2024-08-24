@@ -254,3 +254,35 @@ function profileWithExtensionID() {
     }
   });
 }
+
+chrome.webRequest.onBeforeRequest.addListener(
+  function(details) {
+    // console.log('Request captured:', details);
+  },
+  { urls: ["<all_urls>"] }
+);
+
+// Attach to a specific tab or extension background page
+chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  const tabId = tabs[0].id;
+  
+  // Attach debugger to the tab
+  chrome.debugger.attach({ tabId: tabId }, "1.3", function() {
+    console.log("Debugger attached to tab " + tabId);
+
+    // Enable the network domain
+    chrome.debugger.sendCommand({ tabId: tabId }, "Network.enable");
+
+    // Listen for network requests
+    chrome.debugger.onEvent.addListener(function(debuggeeId, message, params) {
+      if (message === "Network.requestWillBeSent") {
+        console.log("Request intercepted: ", params.request);
+      }
+    });
+  });
+});
+
+// Handle debugger detachment
+chrome.debugger.onDetach.addListener(function(source, reason) {
+  console.log("Debugger detached: ", reason);
+});
