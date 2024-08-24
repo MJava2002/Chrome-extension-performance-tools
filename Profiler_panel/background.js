@@ -188,7 +188,7 @@ function profileForFlameGraph() {
 
           // Example usage:
           // Assuming `profileData` is the entire JSON object from profile.json
-          const transformedData = transformProfile(profileData);
+          const transformedData = transformProfile(profile);
           console.log(JSON.stringify(transformedData, null, 2));
 
           /*  save result of json*/
@@ -211,14 +211,13 @@ function profileForFlameGraph() {
     });
   });
 }
-
 function transformNode(node, allNodes) {
     // Create the transformed node with children first
     const transformedNode = {
         // Initialize an empty children array
         children: []
     };
-
+    console.log("NODE CHILDREN", node.children)
     // If the node has children, transform them recursively
     if (node.children && node.children.length > 0) {
         transformedNode.children = node.children.map(index => transformNode(allNodes[index], allNodes));
@@ -232,15 +231,32 @@ function transformNode(node, allNodes) {
 }
 function transformProfile(profileData) {
   console.log("profile", profileData)
-  console.log("First", profileData.profile.nodes[0])
-  return transformNode(profileData.profile.nodes[0],profileData.profile.nodes);
+  console.log("First", profileData.nodes[0])
+  return transformNode(profileData.nodes[0],profileData.nodes);
 }
-
-
-
-
-
-
+// function transformNode(node, allNodes) {
+//     // Create the transformed node with children first
+//     const transformedNode = {
+//         // Initialize an empty children array
+//         children: []
+//     };
+//
+//     // If the node has children, transform them recursively
+//     if (node.children && node.children.length > 0) {
+//         transformedNode.children = node.children.map(index => transformNode(allNodes[index], allNodes));
+//     }
+//
+//     // After children are processed, add name and value
+//     transformedNode.name = node.callFrame.functionName;
+//     transformedNode.value = node.hitcount;
+//
+//     return transformedNode;
+// }
+// function transformProfile(profileData) {
+//   console.log("profile", profileData)
+//   console.log("First", profileData.profile.nodes[0])
+//   return transformNode(profileData.profile.nodes[0],profileData.profile.nodes);
+// }
 
 
 const profileData = {
