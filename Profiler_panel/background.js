@@ -186,7 +186,7 @@ function profileWithTabID() {
           console.log("PROOOOOOFILE", profile);
 
           chrome.runtime.sendMessage({
-            target: "panel",
+            target: "panel.js",
             type: "flameGraphData",
             data: profile,
           });

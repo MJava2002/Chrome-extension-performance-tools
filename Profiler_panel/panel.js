@@ -14,6 +14,12 @@ console.log("THIS IS THE END" + chrome.devtools.inspectedWindow.tabId);
 
 console.log("Panel script loaded");
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.target === "panel" && message.type === "flameGraphData") {
+        console.log("Received flame graph data:", message.data);
+
+    }
+});
 function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
     console.log("D3 version:", d3.version);
@@ -55,125 +61,6 @@ chrome.devtools.inspectedWindow.eval(
     if (isException) console.log("Error:", isException);
   },
 );
-// document.addEventListener('DOMContentLoaded', function() {
-//   console.log('DevTools Panel loaded');
-//
-// chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//   let tab = tabs[0];
-//
-//   chrome.scripting.executeScript(
-//     {
-//       target: { tabId: chrome.devtools.inspectedWindow.tabId },
-//       files: ["node_modules/d3/d3.v7.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js"],
-//     },
-//     () => {
-//       // D3 is now available in the tab's context
-//       chrome.scripting.executeScript({
-//         target: { tabId: chrome.devtools.inspectedWindow.tabId },
-//         func: () => {
-//           // Ensure D3 is loaded before using it
-//           if (typeof d3 !== "undefined") {
-//             console.log("D3 version:", d3.version);
-//             const chart = flamegraph()
-//                 .width(960)
-//                 .cellHeight(18)
-//                 .transitionDuration(750)
-//                 .minFrameSize(5)
-//                 .title("HERE LIES MY HOPES AND DREAMS")
-//                 .label(function (d) {
-//                   return d.name + " (" + d.value + ")";
-//                 });
-//             // const a = document.getElementById("flameGraph")
-//             const newDiv = document.createElement('div');
-//             newDiv.id = 'flameGraph';
-//             newDiv.style.width = '960px';
-//             newDiv.style.height = '500px';
-//             newDiv.style.border = '1px solid black'; // Example styling
-//             document.body.appendChild(newDiv);
-//             console.log("aaaaaaaaaaaaaaaaa" + newDiv)
-//
-//             const dataUrl = chrome.runtime.getURL("data.json");
-//             d3.json(dataUrl)
-//             .then((data) => {
-//               console.log("Data loaded:", data);  // Check if data is loaded correctly
-//               d3.select("#flameGraph")
-//                 .datum(data)
-//                 .call(chart);
-//               console.log("Flame graph should now be rendered");
-//             })
-//             .catch(error => {
-//               console.warn("Error loading JSON:", error);
-//             });
-//             // const svgElement = document.querySelector("#flameGraph svg");
-//             // console.log("SVG Width:", svgElement.getAttribute("width"));
-//             // console.log("SVG Height:", svgElement.getAttribute("height"));
-//           } else {
-//             console.error("D3 not loaded");
-//           }
-//         },
-//       });
-//     },
-//   );
-// });
-// });
-//
-// chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//   let tab = tabs[0];
-//
-//   chrome.scripting.executeScript(
-//     {
-//       target: { tabId: chrome.devtools.inspectedWindow.tabId },
-//       files: ["node_modules/d3/d3.v7.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js"],
-//     },
-//     () => {
-//       // D3 is now available in the tab's context
-//       chrome.scripting.executeScript({
-//         target: { tabId: chrome.devtools.inspectedWindow.tabId },
-//         func: () => {
-//           // Ensure D3 is loaded before using it
-//           if (typeof d3 !== "undefined") {
-//             console.log("D3 version:", d3.version);
-//             const chart = flamegraph()
-//                 .width(960)
-//                 .cellHeight(18)
-//                 .transitionDuration(750)
-//                 .minFrameSize(5)
-//                 .title("HERE LIES MY HOPES AND DREAMS")
-//                 .label(function (d) {
-//                   return d.name + " (" + d.value + ")";
-//                 });
-//             // const a = document.getElementById("flameGraph")
-//             const newDiv = document.createElement('div');
-//             newDiv.id = 'flameGraph';
-//             newDiv.style.width = '960px';
-//             newDiv.style.height = '500px';
-//             newDiv.style.border = '1px solid black'; // Example styling
-//             document.body.appendChild(newDiv);
-//             console.log("aaaaaaaaaaaaaaaaa" + newDiv)
-//
-//             const dataUrl = chrome.runtime.getURL("data.json");
-//             d3.json(dataUrl)
-//             .then((data) => {
-//               console.log("Data loaded:", data);  // Check if data is loaded correctly
-//               d3.select("#flameGraph")
-//                 .datum(data)
-//                 .call(chart);
-//               console.log("Flame graph should now be rendered");
-//             })
-//             .catch(error => {
-//               console.warn("Error loading JSON:", error);
-//             });
-//             // const svgElement = document.querySelector("#flameGraph svg");
-//             // console.log("SVG Width:", svgElement.getAttribute("width"));
-//             // console.log("SVG Height:", svgElement.getAttribute("height"));
-//           } else {
-//             console.error("D3 not loaded");
-//           }
-//         },
-//       });
-//     },
-//   );
-// });
 
 document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
