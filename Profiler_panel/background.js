@@ -238,7 +238,7 @@ function transformProfileData(profile) {
   });
 
   function processNode(nodeId) {
-    const node = nodes[nodeId];
+    const node = nodes[nodeId-1];
     if (!node) return null;
 
     const result = {
