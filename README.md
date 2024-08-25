@@ -11,4 +11,5 @@ Few extensions that were done as part of the research for the project
 feature/api testing phase:
 
 - test_profiler
-- Etension Coverage
+- Extension Coverage
+- FlameGraph

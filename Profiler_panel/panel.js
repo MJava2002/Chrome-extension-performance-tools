@@ -14,12 +14,7 @@ console.log("THIS IS THE END" + chrome.devtools.inspectedWindow.tabId);
 
 console.log("Panel script loaded");
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.target === "panel" && message.type === "flameGraphData") {
-        console.log("Received flame graph data:", message.data);
 
-    }
-});
 function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
     console.log("D3 version:", d3.version);
@@ -64,25 +59,6 @@ function initializeFlameGraph() {
         }
     });
     console.log("Flame graph object created");
-  //   chrome.storage.local.get(['myJsonData'], function(result) {
-  //     if (result.myJsonData) {
-  //         // Parse the JSON string back to an object
-  //         const retrievedData = JSON.parse(result.myJsonData);
-  //         console.log('Retrieved JSON data:', retrievedData);
-  //     } else {
-  //         console.log('No data found.');
-  //     }
-  // });
-  //   const dataUrl = chrome.runtime.getURL("data.json");
-  //   d3.json(dataUrl)
-  //     .then((data) => {
-  //       console.log("Data loaded:", data);
-  //       d3.select("#flameGraph").datum(data).call(chart);
-  //       console.log("Flame graph should now be rendered");
-  //     })
-  //     .catch((error) => {
-  //       console.warn("Error loading JSON:", error);
-  //     });
   } else {
     console.error("D3 not loaded");
   }
