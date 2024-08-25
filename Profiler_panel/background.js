@@ -152,7 +152,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     profileWithTabID();
   }
   if (request.action === "flamegraphClicked") {
-    tabProfileForFlameGraph()
+    //tabProfileForFlameGraph()
     extensionProfileForFlameGraph()
   }
 });
