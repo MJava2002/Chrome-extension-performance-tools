@@ -145,3 +145,12 @@ document.getElementById("stopButton").addEventListener("click", function () {
     console.log("Recording not started.");
   }
 });
+
+document.getElementById("networkButton").addEventListener("click", function () {
+  chrome.runtime.sendMessage({ action: "networkButtonClicked" });
+});
+
+
+document.getElementById("stopButton").addEventListener("click", function () {
+  chrome.runtime.sendMessage({ action: "stopButtonClicked" });
+});

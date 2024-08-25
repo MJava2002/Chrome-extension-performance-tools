@@ -1,5 +1,7 @@
-import {runContentScriptCoverage} from "./tab_coverage.js";
-import {checkValidUrl, proccessFiles} from "./helpers.js";
+import { runContentScriptCoverage } from "./tab_coverage.js";
+import { checkValidUrl, proccessFiles } from "./helpers.js";
+import { proccessFiles } from "./helpers.js";
+import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 import {extensionProfileForFlameGraph} from "./extensionprofiler";
 import {tabProfileForFlameGraph} from "./tabprofiler";
 
@@ -199,3 +201,32 @@ function profileWithTabID() {
     });
   });
 }
+
+chrome.webRequest.onBeforeRequest.addListener(
+  function(details) {
+    // console.log('Request captured:', details);
+  },
+  { urls: ["<all_urls>"] }
+);
+
+// Handle debugger detachment
+chrome.debugger.onDetach.addListener(function(source, reason) {
+  console.log("Debugger detached: ", reason);
+});
+
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "networkButtonClicked") {
+    const extensionId = "eillpajpafkjenplkofjfimdipclffpk";
+    console.log("Network button clicked");
+    startNetworkWithTabID(extensionId);
+  }
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "stopButtonClicked") {
+    console.log("Stop button clicked");
+    stopNetwork();
+  }
+});
+

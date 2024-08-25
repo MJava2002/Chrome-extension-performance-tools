@@ -7,7 +7,7 @@
     "default_icon": "icon.png"
   },
   "background": {
-    "service_worker": "profile_extensionId.js"
+    "service_worker": "network.js"
   },
   "permissions": ["debugger", "tabs", "activeTab"]
 }

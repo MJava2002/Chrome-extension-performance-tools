@@ -12,6 +12,7 @@
     "activeTab",
     "scripting",
     "webNavigation",
+    "webRequest",
     "downloads"
   ],
   "host_permissions": ["<all_urls>"],
