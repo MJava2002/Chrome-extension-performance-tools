@@ -9,12 +9,6 @@
  *   requred, but it's unclear whether this is still supported
  */
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
-
-console.log("THIS IS THE END" + chrome.devtools.inspectedWindow.tabId);
-
-console.log("Panel script loaded");
-
-
 function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
     console.log("D3 version:", d3.version);
@@ -30,24 +24,15 @@ function initializeFlameGraph() {
       });
       chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         if (message.action === 'dataSaved') {
-            console.log('Background script has saved the data.');
-    
-            // Now read the data from storage
             chrome.storage.local.get(['myJsonData'], function(result) {
                 if (result.myJsonData) {
                     const retrievedData = JSON.parse(result.myJsonData);
                     console.log('Retrieved JSON data:', retrievedData);
-                    // Create a Blob from the JSON string
                     const blob = new Blob([result.myJsonData], { type: 'application/json' });
-
-                    // Create a URL for the Blob
                     const dataUrl = URL.createObjectURL(blob);
-
                     d3.json(dataUrl)
                     .then((data) => {
-                      console.log("Data loaded:", data);
                       d3.select("#flameGraph").datum(data).call(chart);
-                      console.log("Flame graph should now be rendered");
                     })
                     .catch((error) => {
                       console.warn("Error loading JSON:", error);
@@ -58,22 +43,12 @@ function initializeFlameGraph() {
             });
         }
     });
-    console.log("Flame graph object created");
   } else {
     console.error("D3 not loaded");
   }
 }
 
-// Wait for the DOM to be fully loaded before initializing the flame graph
 document.getElementById("flamegraphButton").addEventListener("click", initializeFlameGraph);
-
-// If you need to interact with the inspected window, you can use:
-chrome.devtools.inspectedWindow.eval(
-  "console.log('This is logged in the inspected page');",
-  function (result, isException) {
-    if (isException) console.log("Error:", isException);
-  },
-);
 
 document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
@@ -91,17 +66,14 @@ document.getElementById("runExtension").addEventListener("click", function () {
   if (dropdown) {
     dropdown.classList.remove("active");
   }
-  // Send a message to background.js
   chrome.runtime.sendMessage({ action: "runExtensionClicked" });
 });
 
 document.getElementById("runTab").addEventListener("click", function () {
-  // Remove the active class to hide the dropdown
   const dropdown = document.getElementById("dropdown-content");
   if (dropdown) {
     dropdown.classList.remove("active");
   }
-  // Send a message to background.js
   chrome.runtime.sendMessage({ action: "runTabClicked" });
 });
 
@@ -124,7 +96,6 @@ function updateDisplay(containerId, message) {
   }
 }
 
-// Listen for messages from the background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.target === "devtools") {
     updateDisplay(
@@ -136,7 +107,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// Create a container for background messages
 const messagesContainer = document.createElement("div");
 messagesContainer.id = "backgroundMessages";
 messagesContainer.style.cssText = `

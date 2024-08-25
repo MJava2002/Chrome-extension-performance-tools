@@ -1,13 +1,9 @@
-// Create a custom panel in DevTools
+// Create a new panel in the Chrome DevTools
 chrome.devtools.panels.create(
-  "Performance", // Title of the panel
-  "icons/icon.png", // Icon for the panel
-  "panel.html", // HTML file for the panel's content
+  "Performance",
+  "icons/icon.png",
+  "panel.html",
   function (panel) {
-    // Callback function when the panel is created
-    console.log("Custom DevTools panel created");
-
-    // Optional: You can set up additional functionality here
     panel.onShown.addListener(function (window) {
       console.log("Panel shown");
     });
