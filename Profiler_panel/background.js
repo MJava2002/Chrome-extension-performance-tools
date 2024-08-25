@@ -146,34 +146,36 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "runExtensionClicked") {
-    profileWithExtensionID();
+    extensionProfileForFlameGraph();
   }
   if (request.action === "runTabClicked") {
     profileWithTabID();
   }
   if (request.action === "flamegraphClicked") {
-    profileForFlameGraph()
+    // tabProfileForFlameGraph()
+    extensionProfileForFlameGraph()
   }
 
 });
-function profileForFlameGraph() {
+
+function tabProfileForFlameGraph() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let activeTab = tabs[0];
-    sendToDevTools("Active Tab ID: " + activeTab.id);
+    console.log("Active Tab ID: " + activeTab.id);
     tabId = activeTab.id;
     chrome.debugger.attach({ tabId: tabId }, "1.3", async function () {
       if (chrome.runtime.lastError) {
-        sendToDevTools("Error: " + chrome.runtime.lastError.message);
+        console.log("Error: " + chrome.runtime.lastError.message);
         return;
       }
-      sendToDevTools("Debugger attached");
+      console.log("Debugger attached");
 
       chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.enable", () => {
-        sendToDevTools("Profiler enabled");
+        console.log("Profiler enabled");
       });
 
       chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.start", () => {
-        sendToDevTools("Profiler started");
+        console.log("Profiler started");
       });
 
       await new Promise((r) => setTimeout(r, 3000));
@@ -182,16 +184,12 @@ function profileForFlameGraph() {
         { tabId: tabId },
         "Profiler.stop",
         (result) => {
-          sendToDevTools("Profiler stopped");
+          console.log("Profiler stopped");
           const profile = result.profile;
           console.log("Profiler result:", profile);
           console.log(JSON.stringify(profile, null, 2));
-          // Example usage:
-          // Assuming `profileData` is the entire JSON object from profile.json
           const transformedData = transformProfileData(profile);
           console.log("Before saving", profile);
-
-          // Serialize JSON object to a string
           const jsonData = JSON.stringify(transformedData, null, 2)
 
           // Save the stringified JSON using chrome.storage.local
@@ -199,21 +197,6 @@ function profileForFlameGraph() {
               console.log('JSON data has been saved.');
               chrome.runtime.sendMessage({ action: 'dataSaved' });
           });
-          /*  save result of json*/
-          // const blob = new Blob([JSON.stringify(profile, null, 2)], { type: 'application/json' });
-          // const reader = new FileReader();
-          //
-          // reader.onload = function() {
-          //   chrome.downloads.download({
-          //     url: reader.result,
-          //     filename: 'profile.json',
-          //     conflictAction: 'overwrite' // Change this as needed
-          //   }, (downloadId) => {
-          //     console.log(`Download started with ID: ${downloadId}`);
-          //   });
-          // };
-          //
-          // reader.readAsDataURL(blob);
         }
       );
     });
@@ -246,8 +229,6 @@ function transformProfileData(profile) {
     const idx = idMap.get(nodeId);
     const node = nodes[idx];
 
-    // console.log("Node:", node);
-    // console.log(`id: ${nodeId}, idx: ${idx}`);
     if (!node) return null;
 
     const result = {
@@ -280,91 +261,26 @@ function transformProfileData(profile) {
 
   return rootNode;
 }
-// Count nodes
-
-
-// function transformNode(node, allNodes) {
-//     // Create the transformed node with children first
-//     const transformedNode = {
-//         // Initialize an empty children array
-//         children: []
-//     };
-//
-//     // If the node has children, transform them recursively
-//     if (node.children && node.children.length > 0) {
-//         transformedNode.children = node.children.map(index => transformNode(allNodes[index], allNodes));
-//     }
-//
-//     // After children are processed, add name and value
-//     transformedNode.name = node.callFrame.functionName;
-//     transformedNode.value = node.hitcount;
-//
-//     return transformedNode;
-// }
-// function transformProfile(profileData) {
-//   console.log("profile", profileData)
-//   console.log("First", profileData.profile.nodes[0])
-//   return transformNode(profileData.profile.nodes[0],profileData.profile.nodes);
-// }
-
-
-const profileData = {
-  "profile": {
-    "nodes": [
-      {
-        "callFrame": { "functionName": "root" },
-        "hitcount": 100,
-        "children": [1, 2]
-      },
-      {
-        "callFrame": { "functionName": "function1" },
-        "hitcount": 50,
-        "children": [3]
-      },
-      {
-        "callFrame": { "functionName": "function2" },
-        "hitcount": 30,
-        "children": []
-      },
-      {
-        "callFrame": { "functionName": "function3" },
-        "hitcount": 20,
-        "children": [4, 5]
-      },
-      {
-        "callFrame": { "functionName": "function4" },
-        "hitcount": 10,
-        "children": []
-      },
-      {
-        "callFrame": { "functionName": "function5" },
-        "hitcount": 5,
-        "children": []
-      }
-    ]
-  }
-}
-
 
 function profileWithTabID() {
-  sendToDevTools("Tab ID in DevTools panel!");
+  console.log("Tab ID in DevTools panel!");
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let activeTab = tabs[0];
-    sendToDevTools("Active Tab ID: " + activeTab.id);
+    console.log("Active Tab ID: " + activeTab.id);
     tabId = activeTab.id;
     chrome.debugger.attach({ tabId: tabId }, "1.3", async function () {
       if (chrome.runtime.lastError) {
-        sendToDevTools("Error: " + chrome.runtime.lastError.message);
+        console.log("Error: " + chrome.runtime.lastError.message);
         return;
       }
-      sendToDevTools("Debugger attached");
+      console.log("Debugger attached");
 
       chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.enable", () => {
-        sendToDevTools("Profiler enabled");
+        console.log("Profiler enabled");
       });
 
       chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.start", () => {
-        sendToDevTools("Profiler started");
+        console.log("Profiler started");
       });
 
       await new Promise((r) => setTimeout(r, 3000));
@@ -373,7 +289,7 @@ function profileWithTabID() {
         { tabId: tabId },
         "Profiler.stop",
         (result) => {
-          sendToDevTools("Profiler stopped");
+          console.log("Profiler stopped");
           const profile = result.profile;
           console.log("PROOOOOOFILE", profile);
 
@@ -388,27 +304,26 @@ function profileWithTabID() {
   });
 }
 
-function profileWithExtensionID() {
+function extensionProfileForFlameGraph() {
   const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
-  sendToDevTools("Extension ID in DevTools panel!");
+  // sendToDevTools("Extension ID in DevTools panel!");
   chrome.debugger.getTargets((result) => {
-    sendToDevTools(result);
+    // sendToDevTools(result);
     let target = result.find((t) => t.title.includes(extensionId));
     if (target) {
       const targetId = target.id;
       chrome.debugger.attach({ targetId: targetId }, "1.3", async function () {
         if (chrome.runtime.lastError) {
-          sendToDevTools("Error: " + chrome.runtime.lastError.message);
+          console.log("Error: " + chrome.runtime.lastError.message);
           return;
         }
-        sendToDevTools("Debugger attached");
-
+        console.log("Debugger attached");
         // Enable the debugger and profiler
         chrome.debugger.sendCommand(
           { targetId: targetId },
           "Debugger.enable",
           () => {
-            sendToDevTools("Debugger enabled");
+            console.log("Debugger enabled");
           },
         );
 
@@ -416,7 +331,7 @@ function profileWithExtensionID() {
           { targetId: targetId },
           "Profiler.enable",
           () => {
-            sendToDevTools("Profiler enabled");
+            console.log("Profiler enabled");
           },
         );
 
@@ -424,20 +339,31 @@ function profileWithExtensionID() {
           { targetId: targetId },
           "Profiler.start",
           () => {
-            sendToDevTools("Profiler started");
+            console.log("Profiler started");
           },
         );
 
-        await new Promise((r) => setTimeout(r, 2000));
+        await new Promise((r) => setTimeout(r, 5000));
 
         chrome.debugger.sendCommand(
           { targetId: targetId },
           "Profiler.stop",
           (result) => {
-            sendToDevTools("Profiler stopped");
-            sendToDevTools(
-              "Profile nodes: " + JSON.stringify(result.profile.nodes),
-            );
+            console.log("RESULT IS", result)
+            const profile = result.profile;
+            console.log("PROFILERRR:", profile);
+            console.log(JSON.stringify(profile, null, 2));
+            const transformedData = transformProfileData(profile);
+            console.log("BEFORRRRRRRRRRRE", profile);
+
+            // Serialize JSON object to a string
+            const jsonData = JSON.stringify(transformedData, null, 2)
+            console.log(jsonData)
+            // Save the stringified JSON using chrome.storage.local
+            chrome.storage.local.set({ myJsonData: jsonData }, function() {
+              console.log('JSON data has been saved.');
+              chrome.runtime.sendMessage({ action: 'dataSaved' });
+            });
           },
         );
       });
@@ -446,3 +372,5 @@ function profileWithExtensionID() {
     }
   });
 }
+
+
