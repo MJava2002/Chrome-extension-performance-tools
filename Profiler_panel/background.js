@@ -231,14 +231,23 @@ function transformProfileData(profile) {
 
   // Create a map of node IDs to their children
   const childrenMap = new Map();
-  nodes.forEach(node => {
-    if (node.children) {
-      childrenMap.set(node.id, node.children);
-    }
+  const idMap = new Map();
+  // Map from id to index
+
+  nodes.forEach((node, index) => {
+      if (node.children) {
+          childrenMap.set(node.id, node.children); // Map id to children
+      }
+      idMap.set(node.id, index); // Map id to index
   });
 
+  console.log(idMap);
   function processNode(nodeId) {
-    const node = nodes[nodeId-1];
+    const idx = idMap.get(nodeId);
+    const node = nodes[idx];
+
+    // console.log("Node:", node);
+    // console.log(`id: ${nodeId}, idx: ${idx}`);
     if (!node) return null;
 
     const result = {
