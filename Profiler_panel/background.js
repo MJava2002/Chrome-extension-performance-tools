@@ -189,8 +189,16 @@ function profileForFlameGraph() {
           // Example usage:
           // Assuming `profileData` is the entire JSON object from profile.json
           const transformedData = transformProfileData(profile);
-          console.log(JSON.stringify(transformedData, null, 2));
+          console.log("Before saving", profile);
 
+          // Serialize JSON object to a string
+          const jsonData = JSON.stringify(transformedData, null, 2)
+
+          // Save the stringified JSON using chrome.storage.local
+          chrome.storage.local.set({ myJsonData: jsonData }, function() {
+              console.log('JSON data has been saved.');
+              chrome.runtime.sendMessage({ action: 'dataSaved' });
+          });
           /*  save result of json*/
           // const blob = new Blob([JSON.stringify(profile, null, 2)], { type: 'application/json' });
           // const reader = new FileReader();

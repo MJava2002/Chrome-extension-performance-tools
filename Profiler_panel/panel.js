@@ -33,19 +33,56 @@ function initializeFlameGraph() {
       .label(function (d) {
         return d.name + " (" + d.value + ")";
       });
+      chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+        if (message.action === 'dataSaved') {
+            console.log('Background script has saved the data.');
+    
+            // Now read the data from storage
+            chrome.storage.local.get(['myJsonData'], function(result) {
+                if (result.myJsonData) {
+                    const retrievedData = JSON.parse(result.myJsonData);
+                    console.log('Retrieved JSON data:', retrievedData);
+                    // Create a Blob from the JSON string
+                    const blob = new Blob([result.myJsonData], { type: 'application/json' });
 
+                    // Create a URL for the Blob
+                    const dataUrl = URL.createObjectURL(blob);
+
+                    d3.json(dataUrl)
+                    .then((data) => {
+                      console.log("Data loaded:", data);
+                      d3.select("#flameGraph").datum(data).call(chart);
+                      console.log("Flame graph should now be rendered");
+                    })
+                    .catch((error) => {
+                      console.warn("Error loading JSON:", error);
+                    });
+                } else {
+                    console.log('No data found.');
+                }
+            });
+        }
+    });
     console.log("Flame graph object created");
-
-    const dataUrl = chrome.runtime.getURL("data.json");
-    d3.json(dataUrl)
-      .then((data) => {
-        console.log("Data loaded:", data);
-        d3.select("#flameGraph").datum(data).call(chart);
-        console.log("Flame graph should now be rendered");
-      })
-      .catch((error) => {
-        console.warn("Error loading JSON:", error);
-      });
+  //   chrome.storage.local.get(['myJsonData'], function(result) {
+  //     if (result.myJsonData) {
+  //         // Parse the JSON string back to an object
+  //         const retrievedData = JSON.parse(result.myJsonData);
+  //         console.log('Retrieved JSON data:', retrievedData);
+  //     } else {
+  //         console.log('No data found.');
+  //     }
+  // });
+  //   const dataUrl = chrome.runtime.getURL("data.json");
+  //   d3.json(dataUrl)
+  //     .then((data) => {
+  //       console.log("Data loaded:", data);
+  //       d3.select("#flameGraph").datum(data).call(chart);
+  //       console.log("Flame graph should now be rendered");
+  //     })
+  //     .catch((error) => {
+  //       console.warn("Error loading JSON:", error);
+  //     });
   } else {
     console.error("D3 not loaded");
   }
