@@ -14,7 +14,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         console.error("Error while setting up onMessage listener:", chrome.runtime.lastError);
         return;  // Exit early if there's an error
       }
-      chrome.runtime.sendMessage({ action: "iconClicked" });
+      chrome.action.onClicked.addListener((tab) => {
+        chrome.tabs.sendMessage(tab.id, { action: "iconClicked" });
+      });
       sendWebRequests();
     });
     sendResponse({result: 'Nope'});
