@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Ensure chrome.storage is available
   if (!chrome || !chrome.storage) {
     console.error("Chrome storage API is not available.");
     return;
@@ -42,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ids.push(newId);
           chrome.storage.local.set({ extensionIds: ids }, () => {
             populateDropdown(ids);
-            extensionIdInput.value = ""; // Clear input field after adding
+            extensionIdInput.value = "";
           });
         }
       });
@@ -50,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function populateDropdown(ids) {
-    extensionDropdown.innerHTML = ""; // Clear existing options
+    extensionDropdown.innerHTML = "";
     ids.forEach((id) => {
       const option = document.createElement("option");
       option.value = id;
