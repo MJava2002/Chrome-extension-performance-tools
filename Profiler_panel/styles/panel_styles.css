@@ -121,6 +121,14 @@ body {
 #stopButton:hover {
   background-color: #757575;
 }
+
+#flamegraphButton {
+  background: linear-gradient(135deg, #FFFF00, #FF6F00, #FF4500, #B22222);
+}
+
+#flamegraphButton:hover {
+  background-color: #757575;
+}
 #timeDisplay {
   font-size: 16px;
   color: #dcdcdc;

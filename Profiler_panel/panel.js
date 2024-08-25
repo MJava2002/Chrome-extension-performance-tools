@@ -14,6 +14,7 @@ console.log("THIS IS THE END" + chrome.devtools.inspectedWindow.tabId);
 
 console.log("Panel script loaded");
 
+
 function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
     console.log("D3 version:", d3.version);
@@ -27,26 +28,44 @@ function initializeFlameGraph() {
       .label(function (d) {
         return d.name + " (" + d.value + ")";
       });
+      chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+        if (message.action === 'dataSaved') {
+            console.log('Background script has saved the data.');
+    
+            // Now read the data from storage
+            chrome.storage.local.get(['myJsonData'], function(result) {
+                if (result.myJsonData) {
+                    const retrievedData = JSON.parse(result.myJsonData);
+                    console.log('Retrieved JSON data:', retrievedData);
+                    // Create a Blob from the JSON string
+                    const blob = new Blob([result.myJsonData], { type: 'application/json' });
 
+                    // Create a URL for the Blob
+                    const dataUrl = URL.createObjectURL(blob);
+
+                    d3.json(dataUrl)
+                    .then((data) => {
+                      console.log("Data loaded:", data);
+                      d3.select("#flameGraph").datum(data).call(chart);
+                      console.log("Flame graph should now be rendered");
+                    })
+                    .catch((error) => {
+                      console.warn("Error loading JSON:", error);
+                    });
+                } else {
+                    console.log('No data found.');
+                }
+            });
+        }
+    });
     console.log("Flame graph object created");
-
-    const dataUrl = chrome.runtime.getURL("data.json");
-    d3.json(dataUrl)
-      .then((data) => {
-        console.log("Data loaded:", data);
-        d3.select("#flameGraph").datum(data).call(chart);
-        console.log("Flame graph should now be rendered");
-      })
-      .catch((error) => {
-        console.warn("Error loading JSON:", error);
-      });
   } else {
     console.error("D3 not loaded");
   }
 }
 
 // Wait for the DOM to be fully loaded before initializing the flame graph
-document.addEventListener("DOMContentLoaded", initializeFlameGraph);
+document.getElementById("flamegraphButton").addEventListener("click", initializeFlameGraph);
 
 // If you need to interact with the inspected window, you can use:
 chrome.devtools.inspectedWindow.eval(
@@ -55,125 +74,6 @@ chrome.devtools.inspectedWindow.eval(
     if (isException) console.log("Error:", isException);
   },
 );
-// document.addEventListener('DOMContentLoaded', function() {
-//   console.log('DevTools Panel loaded');
-//
-// chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//   let tab = tabs[0];
-//
-//   chrome.scripting.executeScript(
-//     {
-//       target: { tabId: chrome.devtools.inspectedWindow.tabId },
-//       files: ["node_modules/d3/d3.v7.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js"],
-//     },
-//     () => {
-//       // D3 is now available in the tab's context
-//       chrome.scripting.executeScript({
-//         target: { tabId: chrome.devtools.inspectedWindow.tabId },
-//         func: () => {
-//           // Ensure D3 is loaded before using it
-//           if (typeof d3 !== "undefined") {
-//             console.log("D3 version:", d3.version);
-//             const chart = flamegraph()
-//                 .width(960)
-//                 .cellHeight(18)
-//                 .transitionDuration(750)
-//                 .minFrameSize(5)
-//                 .title("HERE LIES MY HOPES AND DREAMS")
-//                 .label(function (d) {
-//                   return d.name + " (" + d.value + ")";
-//                 });
-//             // const a = document.getElementById("flameGraph")
-//             const newDiv = document.createElement('div');
-//             newDiv.id = 'flameGraph';
-//             newDiv.style.width = '960px';
-//             newDiv.style.height = '500px';
-//             newDiv.style.border = '1px solid black'; // Example styling
-//             document.body.appendChild(newDiv);
-//             console.log("aaaaaaaaaaaaaaaaa" + newDiv)
-//
-//             const dataUrl = chrome.runtime.getURL("data.json");
-//             d3.json(dataUrl)
-//             .then((data) => {
-//               console.log("Data loaded:", data);  // Check if data is loaded correctly
-//               d3.select("#flameGraph")
-//                 .datum(data)
-//                 .call(chart);
-//               console.log("Flame graph should now be rendered");
-//             })
-//             .catch(error => {
-//               console.warn("Error loading JSON:", error);
-//             });
-//             // const svgElement = document.querySelector("#flameGraph svg");
-//             // console.log("SVG Width:", svgElement.getAttribute("width"));
-//             // console.log("SVG Height:", svgElement.getAttribute("height"));
-//           } else {
-//             console.error("D3 not loaded");
-//           }
-//         },
-//       });
-//     },
-//   );
-// });
-// });
-//
-// chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//   let tab = tabs[0];
-//
-//   chrome.scripting.executeScript(
-//     {
-//       target: { tabId: chrome.devtools.inspectedWindow.tabId },
-//       files: ["node_modules/d3/d3.v7.js", "node_modules/d3-flame-graph/dist/d3-flamegraph.min.js"],
-//     },
-//     () => {
-//       // D3 is now available in the tab's context
-//       chrome.scripting.executeScript({
-//         target: { tabId: chrome.devtools.inspectedWindow.tabId },
-//         func: () => {
-//           // Ensure D3 is loaded before using it
-//           if (typeof d3 !== "undefined") {
-//             console.log("D3 version:", d3.version);
-//             const chart = flamegraph()
-//                 .width(960)
-//                 .cellHeight(18)
-//                 .transitionDuration(750)
-//                 .minFrameSize(5)
-//                 .title("HERE LIES MY HOPES AND DREAMS")
-//                 .label(function (d) {
-//                   return d.name + " (" + d.value + ")";
-//                 });
-//             // const a = document.getElementById("flameGraph")
-//             const newDiv = document.createElement('div');
-//             newDiv.id = 'flameGraph';
-//             newDiv.style.width = '960px';
-//             newDiv.style.height = '500px';
-//             newDiv.style.border = '1px solid black'; // Example styling
-//             document.body.appendChild(newDiv);
-//             console.log("aaaaaaaaaaaaaaaaa" + newDiv)
-//
-//             const dataUrl = chrome.runtime.getURL("data.json");
-//             d3.json(dataUrl)
-//             .then((data) => {
-//               console.log("Data loaded:", data);  // Check if data is loaded correctly
-//               d3.select("#flameGraph")
-//                 .datum(data)
-//                 .call(chart);
-//               console.log("Flame graph should now be rendered");
-//             })
-//             .catch(error => {
-//               console.warn("Error loading JSON:", error);
-//             });
-//             // const svgElement = document.querySelector("#flameGraph svg");
-//             // console.log("SVG Width:", svgElement.getAttribute("width"));
-//             // console.log("SVG Height:", svgElement.getAttribute("height"));
-//           } else {
-//             console.error("D3 not loaded");
-//           }
-//         },
-//       });
-//     },
-//   );
-// });
 
 document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
@@ -209,6 +109,12 @@ document
   .getElementById("coverageButton")
   .addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "buttonClicked" });
+  });
+
+document
+  .getElementById("flamegraphButton")
+  .addEventListener("click", function () {
+    chrome.runtime.sendMessage({ action: "flamegraphClicked" });
   });
 
 function updateDisplay(containerId, message) {
