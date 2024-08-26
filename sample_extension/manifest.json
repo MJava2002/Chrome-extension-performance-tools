@@ -12,7 +12,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["low_coverage_script.js"]
+      "js": ["requests.js"]
     }
   ],
   "permissions": [
@@ -29,10 +29,5 @@
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
-  "web_accessible_resources": [
-    {
-      "matches": ["*://*/*"],
-      "resources": ["sample_extension/low_coverage_script.js"]
-    }
-  ]
+  "web_accessible_resources": []
 }

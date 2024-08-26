@@ -1,5 +1,6 @@
-export function proccessFiles(uniqueFiles, coverageData) {
+function proccessFiles(uniqueFiles, coverageData) {
   uniqueFiles = [...uniqueFiles];
+  const percentPerFile = new Map();
   console.log(uniqueFiles);
   // Promise.all(fetch(url).then( r => r.text() ).then( t => content += t))
   Promise.all(
@@ -24,16 +25,22 @@ export function proccessFiles(uniqueFiles, coverageData) {
       console.log(data);
       data.forEach((fileData) => {
         const { url, content } = fileData;
-        calculateCoveragePercentage(content.length, coverageData, url);
+        const covered = calculateCoveragePercentage(
+          content.length,
+          coverageData,
+          url,
+        );
+        percentPerFile.set(getLastSegmentFromUrl(url), covered);
       });
     })
     .catch((e) => {
       console.error("Error during Promise.all:", e);
     });
+  return percentPerFile;
 }
 
 // i will use this in graphs
-export function getLastSegmentFromUrl(url, extensionId) {
+function getLastSegmentFromUrl(url, extensionId) {
   try {
     const urlObj = new URL(url);
 
@@ -48,7 +55,7 @@ export function getLastSegmentFromUrl(url, extensionId) {
   }
 }
 
-export function checkValidUrl(url, id) {
+function checkValidUrl(url, id) {
   try {
     const containsId = url.includes(id);
 
@@ -63,26 +70,25 @@ export function checkValidUrl(url, id) {
   }
 }
 
-export async function calculateCoveragePercentage(
+async function calculateCoveragePercentage(
   totalScriptSize,
   coverageData,
   scriptUrl,
 ) {
-  let coveredBytes = 0;
+  let ranges = [];
   coverageData.result.forEach((script) => {
     if (script.url === scriptUrl) {
       script.functions.forEach((func) => {
-        func.ranges.forEach((range) => {
-          if (range.count) {
-            console.log(func);
-            console.log(range);
-            coveredBytes += range.endOffset - range.startOffset;
-          }
-        });
+        // [...list1, ...list2];
+        const tmp = func.ranges.map(({ startOffset, endOffset }) => [
+          startOffset,
+          endOffset,
+        ]);
+        ranges = [...ranges, ...tmp];
       });
     }
   });
-
+  const coveredBytes = countCoveredNumbers(ranges);
   const coveragePercentage = (coveredBytes / totalScriptSize) * 100;
   console.log(`Total Script Size: ${totalScriptSize} bytes`);
   console.log(`Covered Bytes: ${coveredBytes} bytes`);
@@ -92,7 +98,7 @@ export async function calculateCoveragePercentage(
 }
 
 // ranges is a list of [start,end] numbers
-export function countCoveredNumbers(ranges) {
+function countCoveredNumbers(ranges) {
   let events = [];
 
   ranges.forEach(([start, end]) => {
@@ -116,6 +122,13 @@ export function countCoveredNumbers(ranges) {
 
   return totalCovered;
 }
+module.exports = {
+  proccessFiles,
+  countCoveredNumbers,
+  getLastSegmentFromUrl,
+  checkValidUrl,
+  calculateCoveragePercentage,
+};
 
 // def count_covered_numbers(ranges):
 //     events = []

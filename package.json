@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "@types/progressbar.js": "^1.1.7",
+    "prettier": "3.3.3"
+  },
+  "dependencies": {
+    "progressbar.js": "^1.1.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}
