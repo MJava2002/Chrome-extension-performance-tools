@@ -3,6 +3,7 @@ const {
   countCoveredNumbers,
   checkValidUrl,
   getLastSegmentFromUrl,
+  calculateCoveragePercentage,
 } = require("../Profiler_panel/helpers");
 
 //countCoveredNumbers
@@ -148,6 +149,7 @@ describe("Validate URL", function () {
   });
 });
 
+//getLastSegmentFromUrl
 describe("Get file name", function () {
   describe("basic test", function () {
     it("", function () {
@@ -212,6 +214,136 @@ describe("Get file name", function () {
           id,
         ),
         undefined,
+      );
+    });
+  });
+});
+
+const mockCoverageData = {
+  result: [
+    {
+      scriptId: "1",
+      url: "chrome-extension://abcd1234/background.js",
+      functions: [
+        {
+          functionName: "initialize",
+          isBlockCoverage: true,
+          ranges: [
+            {
+              startOffset: 0,
+              endOffset: 50,
+              count: 1,
+            },
+            {
+              startOffset: 100,
+              endOffset: 200,
+              count: 2,
+            },
+          ],
+        },
+        {
+          functionName: "handleMessage",
+          isBlockCoverage: true,
+          ranges: [
+            {
+              startOffset: 250,
+              endOffset: 300,
+              count: 0,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      scriptId: "2",
+      url: "chrome-extension://abcd1234/content.js",
+      functions: [
+        {
+          functionName: "addEventListeners",
+          isBlockCoverage: false,
+          ranges: [
+            {
+              startOffset: 0,
+              endOffset: 120,
+              count: 3,
+            },
+          ],
+        },
+      ],
+    },
+    {scriptId: "3",
+      url: "chrome-extension://abcd1234/script/background.js",
+      functions: [
+        {
+          functionName: "init",
+          isBlockCoverage: true,
+          ranges: [
+            {
+              startOffset: 5,
+              endOffset: 50,
+              count: 1,
+            },
+            {
+              startOffset: 10,
+              endOffset: 40,
+              count: 2,
+            },
+            {
+              startOffset: 0,
+              endOffset: 80,
+              count: 4,
+            },
+          ],
+        },
+        {
+          functionName: "handleEvent",
+          isBlockCoverage: true,
+          ranges: [
+            {
+              startOffset: 900,
+              endOffset: 1000,
+              count: 0,
+            },
+            {
+              startOffset: 700,
+              endOffset: 900,
+              count: 0,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+// calculateCoveragePercentage
+describe("Get file name", function () {
+  describe("basic test", function () {
+    it("", async function () {
+      assert.equal(
+        await calculateCoveragePercentage(
+          1000, mockCoverageData, "chrome-extension://abcd1234/background.js"),
+        20.3,
+      );
+    });
+  });
+
+  describe("different file", function () {
+    it("", async function () {
+      assert.equal(
+        await calculateCoveragePercentage(
+          1000, mockCoverageData, "chrome-extension://abcd1234/content.js"),
+        12.1,
+      );
+    });
+  });
+
+  describe("complex ranges", function () {
+    it("", async function () {
+      assert.equal(
+        await calculateCoveragePercentage(
+          10000, mockCoverageData, "chrome-extension://abcd1234/script/background.js"),
+        3.82,
       );
     });
   });
