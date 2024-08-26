@@ -10,7 +10,7 @@ export function extensionProfileForFlameGraph() {
           console.log("Error: " + chrome.runtime.lastError.message);
           return;
         }
-        console.log("Debugger attached");
+
         // Enable the debugger and profiler
         chrome.debugger.sendCommand(
           { targetId: targetId },

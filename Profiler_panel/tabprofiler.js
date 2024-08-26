@@ -26,17 +26,12 @@ export function tabProfileForFlameGraph() {
         { tabId: tabId },
         "Profiler.stop",
         (result) => {
-          console.log("Profiler stopped");
           const profile = result.profile;
-          console.log("Profiler result:", profile);
-          console.log(JSON.stringify(profile, null, 2));
           const transformedData = transformProfileData(profile);
           console.log("Before saving", profile);
           const jsonData = JSON.stringify(transformedData, null, 2);
 
-          // Save the stringified JSON using chrome.storage.local
           chrome.storage.local.set({ myJsonData: jsonData }, function () {
-            console.log("JSON data has been saved.");
             chrome.runtime.sendMessage({ action: "dataSaved" });
           });
         },
