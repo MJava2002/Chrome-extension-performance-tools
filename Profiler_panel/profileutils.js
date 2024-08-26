@@ -1,7 +1,6 @@
-
 function transformProfileData(profile) {
   if (!profile || !profile.nodes || !profile.nodes.length) {
-    console.error('Invalid profile data');
+    console.error("Invalid profile data");
     return null;
   }
 
@@ -15,10 +14,10 @@ function transformProfileData(profile) {
   // Map from id to index
 
   nodes.forEach((node, index) => {
-      if (node.children) {
-          childrenMap.set(node.id, node.children); // Map id to children
-      }
-      idMap.set(node.id, index); // Map id to index
+    if (node.children) {
+      childrenMap.set(node.id, node.children); // Map id to children
+    }
+    idMap.set(node.id, index); // Map id to index
   });
 
   console.log(idMap);
@@ -31,11 +30,11 @@ function transformProfileData(profile) {
     const result = {
       name: node.callFrame.functionName || `(${node.callFrame.url})`,
       value: node.selfTime || 1,
-      children: []
+      children: [],
     };
 
     const children = childrenMap.get(nodeId) || [];
-    children.forEach(childId => {
+    children.forEach((childId) => {
       const childNode = processNode(childId);
       if (childNode) {
         result.children.push(childNode);
@@ -60,5 +59,5 @@ function transformProfileData(profile) {
 }
 
 module.exports = {
-  transformProfileData
-}
+  transformProfileData,
+};
