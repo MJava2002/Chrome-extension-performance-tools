@@ -1,5 +1,6 @@
 export function proccessFiles(uniqueFiles, coverageData) {
   uniqueFiles = [...uniqueFiles];
+  const percentPerFile = new Map();
   console.log(uniqueFiles);
   // Promise.all(fetch(url).then( r => r.text() ).then( t => content += t))
   Promise.all(
@@ -24,12 +25,14 @@ export function proccessFiles(uniqueFiles, coverageData) {
       console.log(data);
       data.forEach((fileData) => {
         const { url, content } = fileData;
-        calculateCoveragePercentage(content.length, coverageData, url);
+        const covered = calculateCoveragePercentage(content.length, coverageData, url);
+        percentPerFile.set(getLastSegmentFromUrl(url), covered)
       });
     })
     .catch((e) => {
       console.error("Error during Promise.all:", e);
     });
+  return percentPerFile
 }
 
 // i will use this in graphs
