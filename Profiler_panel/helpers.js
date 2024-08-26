@@ -1,5 +1,6 @@
 export function proccessFiles(uniqueFiles, coverageData) {
   uniqueFiles = [...uniqueFiles];
+  const percentPerFile = new Map();
   console.log(uniqueFiles);
   // Promise.all(fetch(url).then( r => r.text() ).then( t => content += t))
   Promise.all(
@@ -24,12 +25,18 @@ export function proccessFiles(uniqueFiles, coverageData) {
       console.log(data);
       data.forEach((fileData) => {
         const { url, content } = fileData;
-        calculateCoveragePercentage(content.length, coverageData, url);
+        const covered = calculateCoveragePercentage(
+          content.length,
+          coverageData,
+          url,
+        );
+        percentPerFile.set(getLastSegmentFromUrl(url), covered);
       });
     })
     .catch((e) => {
       console.error("Error during Promise.all:", e);
     });
+  return percentPerFile;
 }
 
 // i will use this in graphs
@@ -68,21 +75,20 @@ export async function calculateCoveragePercentage(
   coverageData,
   scriptUrl,
 ) {
-  let coveredBytes = 0;
+  let ranges = [];
   coverageData.result.forEach((script) => {
     if (script.url === scriptUrl) {
       script.functions.forEach((func) => {
-        func.ranges.forEach((range) => {
-          if (range.count) {
-            console.log(func);
-            console.log(range);
-            coveredBytes += range.endOffset - range.startOffset;
-          }
-        });
+        // [...list1, ...list2];
+        const tmp = func.ranges.map(({ startOffset, endOffset }) => [
+          startOffset,
+          endOffset,
+        ]);
+        ranges = [...ranges, ...tmp];
       });
     }
   });
-
+  const coveredBytes = countCoveredNumbers(ranges);
   const coveragePercentage = (coveredBytes / totalScriptSize) * 100;
   console.log(`Total Script Size: ${totalScriptSize} bytes`);
   console.log(`Covered Bytes: ${coveredBytes} bytes`);
