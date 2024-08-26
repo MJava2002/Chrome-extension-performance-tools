@@ -1,5 +1,5 @@
 
-export function transformProfileData(profile) {
+function transformProfileData(profile) {
   if (!profile || !profile.nodes || !profile.nodes.length) {
     console.error('Invalid profile data');
     return null;
@@ -57,4 +57,8 @@ export function transformProfileData(profile) {
   normalizeValues(rootNode);
 
   return rootNode;
+}
+
+module.exports = {
+  transformProfileData
 }
