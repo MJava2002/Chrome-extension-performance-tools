@@ -127,6 +127,7 @@ module.exports = {
   countCoveredNumbers,
   getLastSegmentFromUrl,
   checkValidUrl,
+  calculateCoveragePercentage,
 };
 
 // def count_covered_numbers(ranges):

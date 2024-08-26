@@ -1,3 +1,4 @@
+
 function transformProfileData(profile) {
   if (!profile || !profile.nodes || !profile.nodes.length) {
     console.error("Invalid profile data");
