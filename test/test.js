@@ -271,7 +271,8 @@ const mockCoverageData = {
         },
       ],
     },
-    {scriptId: "3",
+    {
+      scriptId: "3",
       url: "chrome-extension://abcd1234/script/background.js",
       functions: [
         {
@@ -322,7 +323,10 @@ describe("Get file name", function () {
     it("", async function () {
       assert.equal(
         await calculateCoveragePercentage(
-          1000, mockCoverageData, "chrome-extension://abcd1234/background.js"),
+          1000,
+          mockCoverageData,
+          "chrome-extension://abcd1234/background.js",
+        ),
         20.3,
       );
     });
@@ -332,7 +336,10 @@ describe("Get file name", function () {
     it("", async function () {
       assert.equal(
         await calculateCoveragePercentage(
-          1000, mockCoverageData, "chrome-extension://abcd1234/content.js"),
+          1000,
+          mockCoverageData,
+          "chrome-extension://abcd1234/content.js",
+        ),
         12.1,
       );
     });
@@ -342,7 +349,10 @@ describe("Get file name", function () {
     it("", async function () {
       assert.equal(
         await calculateCoveragePercentage(
-          10000, mockCoverageData, "chrome-extension://abcd1234/script/background.js"),
+          10000,
+          mockCoverageData,
+          "chrome-extension://abcd1234/script/background.js",
+        ),
         3.82,
       );
     });
