@@ -2,8 +2,10 @@ var assert = require("assert");
 const {
   countCoveredNumbers,
   checkValidUrl,
+  getLastSegmentFromUrl,
 } = require("../Profiler_panel/helpers");
 
+//countCoveredNumbers
 describe("CoveredBytes", function () {
   describe("one byte", function () {
     it("", function () {
@@ -58,6 +60,8 @@ describe("CoveredBytes", function () {
     });
   });
 });
+
+// checkValidUrl
 const id = "gighmmpiobklfepjocnamgkkbiglidom";
 describe("Validate URL", function () {
   describe("basic test", function () {
@@ -139,6 +143,75 @@ describe("Validate URL", function () {
           id,
         ),
         true,
+      );
+    });
+  });
+});
+
+describe("Get file name", function () {
+  describe("basic test", function () {
+    it("", function () {
+      assert.equal(
+        getLastSegmentFromUrl(
+          "chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/script.js",
+          id,
+        ),
+        "script.js",
+      );
+    });
+  });
+  describe("nested directories", function () {
+    it("", function () {
+      assert.equal(
+        getLastSegmentFromUrl(
+          "chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/scripts/dir/extension/script.js",
+          id,
+        ),
+        "script.js",
+      );
+    });
+  });
+  describe("json file", function () {
+    it("", function () {
+      assert.equal(
+        getLastSegmentFromUrl(
+          "chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/scripts/dir/extension/manifest.json",
+          id,
+        ),
+        "manifest.json",
+      );
+    });
+  });
+  describe("wrong id", function () {
+    it("", function () {
+      assert.equal(
+        getLastSegmentFromUrl(
+          "chrome-extension://gighmmpwobklfepjocnamgkkbiglidom/scripts/manifest.json",
+          id,
+        ),
+        undefined,
+      );
+    });
+  });
+  describe("wrong format", function () {
+    it("", function () {
+      assert.equal(
+        getLastSegmentFromUrl(
+          "https://chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/scripts/manifest.json",
+          id,
+        ),
+        undefined,
+      );
+    });
+  });
+  describe("wrong webpage", function () {
+    it("", function () {
+      assert.equal(
+        getLastSegmentFromUrl(
+          "https://i.pinimg.com/564x/46/c1/58/46c1589a4e1ea86c042f982af0cc74c7.jpg",
+          id,
+        ),
+        undefined,
       );
     });
   });
