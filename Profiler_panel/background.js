@@ -1,6 +1,5 @@
 import { runContentScriptCoverage } from "./tab_coverage.js";
 import { checkValidUrl, proccessFiles } from "./helpers.js";
-import { proccessFiles } from "./helpers.js";
 import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 import { extensionProfileForFlameGraph } from "./extensionprofiler";
 import { tabProfileForFlameGraph } from "./tabprofiler";
