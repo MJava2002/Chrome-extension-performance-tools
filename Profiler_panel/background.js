@@ -1,5 +1,5 @@
-import {runContentScriptCoverage} from "./tab_coverage.js";
-import {checkValidUrl, proccessFiles} from "./helpers.js";
+import { runContentScriptCoverage } from "./tab_coverage.js";
+import { checkValidUrl, proccessFiles } from "./helpers.js";
 
 console.log("Service worker loaded");
 const TAB = true;
@@ -152,9 +152,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     profileWithTabID();
   }
   if (request.action === "flamegraphClicked") {
-    profileForFlameGraph()
+    profileForFlameGraph();
   }
-
 });
 function profileForFlameGraph() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -192,12 +191,12 @@ function profileForFlameGraph() {
           console.log("Before saving", profile);
 
           // Serialize JSON object to a string
-          const jsonData = JSON.stringify(transformedData, null, 2)
+          const jsonData = JSON.stringify(transformedData, null, 2);
 
           // Save the stringified JSON using chrome.storage.local
-          chrome.storage.local.set({ myJsonData: jsonData }, function() {
-              console.log('JSON data has been saved.');
-              chrome.runtime.sendMessage({ action: 'dataSaved' });
+          chrome.storage.local.set({ myJsonData: jsonData }, function () {
+            console.log("JSON data has been saved.");
+            chrome.runtime.sendMessage({ action: "dataSaved" });
           });
           /*  save result of json*/
           // const blob = new Blob([JSON.stringify(profile, null, 2)], { type: 'application/json' });
@@ -214,14 +213,14 @@ function profileForFlameGraph() {
           // };
           //
           // reader.readAsDataURL(blob);
-        }
+        },
       );
     });
   });
 }
 function transformProfileData(profile) {
   if (!profile || !profile.nodes || !profile.nodes.length) {
-    console.error('Invalid profile data');
+    console.error("Invalid profile data");
     return null;
   }
 
@@ -235,10 +234,10 @@ function transformProfileData(profile) {
   // Map from id to index
 
   nodes.forEach((node, index) => {
-      if (node.children) {
-          childrenMap.set(node.id, node.children); // Map id to children
-      }
-      idMap.set(node.id, index); // Map id to index
+    if (node.children) {
+      childrenMap.set(node.id, node.children); // Map id to children
+    }
+    idMap.set(node.id, index); // Map id to index
   });
 
   console.log(idMap);
@@ -253,11 +252,11 @@ function transformProfileData(profile) {
     const result = {
       name: node.callFrame.functionName || `(${node.callFrame.url})`,
       value: node.selfTime || 1,
-      children: []
+      children: [],
     };
 
     const children = childrenMap.get(nodeId) || [];
-    children.forEach(childId => {
+    children.forEach((childId) => {
       const childNode = processNode(childId);
       if (childNode) {
         result.children.push(childNode);
@@ -281,7 +280,6 @@ function transformProfileData(profile) {
   return rootNode;
 }
 // Count nodes
-
 
 // function transformNode(node, allNodes) {
 //     // Create the transformed node with children first
@@ -307,44 +305,42 @@ function transformProfileData(profile) {
 //   return transformNode(profileData.profile.nodes[0],profileData.profile.nodes);
 // }
 
-
 const profileData = {
-  "profile": {
-    "nodes": [
+  profile: {
+    nodes: [
       {
-        "callFrame": { "functionName": "root" },
-        "hitcount": 100,
-        "children": [1, 2]
+        callFrame: { functionName: "root" },
+        hitcount: 100,
+        children: [1, 2],
       },
       {
-        "callFrame": { "functionName": "function1" },
-        "hitcount": 50,
-        "children": [3]
+        callFrame: { functionName: "function1" },
+        hitcount: 50,
+        children: [3],
       },
       {
-        "callFrame": { "functionName": "function2" },
-        "hitcount": 30,
-        "children": []
+        callFrame: { functionName: "function2" },
+        hitcount: 30,
+        children: [],
       },
       {
-        "callFrame": { "functionName": "function3" },
-        "hitcount": 20,
-        "children": [4, 5]
+        callFrame: { functionName: "function3" },
+        hitcount: 20,
+        children: [4, 5],
       },
       {
-        "callFrame": { "functionName": "function4" },
-        "hitcount": 10,
-        "children": []
+        callFrame: { functionName: "function4" },
+        hitcount: 10,
+        children: [],
       },
       {
-        "callFrame": { "functionName": "function5" },
-        "hitcount": 5,
-        "children": []
-      }
-    ]
-  }
-}
-
+        callFrame: { functionName: "function5" },
+        hitcount: 5,
+        children: [],
+      },
+    ],
+  },
+};
 
 function profileWithTabID() {
   sendToDevTools("Tab ID in DevTools panel!");
