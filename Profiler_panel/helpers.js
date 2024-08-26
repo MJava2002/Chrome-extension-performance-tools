@@ -122,13 +122,7 @@ export function countCoveredNumbers(ranges) {
 
   return totalCovered;
 }
-// module.exports = {
-//   proccessFiles,
-//   countCoveredNumbers,
-//   getLastSegmentFromUrl,
-//   checkValidUrl,
-//   calculateCoveragePercentage,
-// };
+
 
 // def count_covered_numbers(ranges):
 //     events = []

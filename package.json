@@ -1,12 +1,16 @@
 {
   "devDependencies": {
     "@types/progressbar.js": "^1.1.7",
+    "esm": "^3.2.25",
+    "mocha": "^10.7.3",
     "prettier": "3.3.3"
   },
   "dependencies": {
-    "progressbar.js": "^1.1.1"
+    "progressbar.js": "^1.1.1",
+    "require": "^2.4.20",
+    "requirejs": "^2.3.7"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha -r esm"
   }
 }

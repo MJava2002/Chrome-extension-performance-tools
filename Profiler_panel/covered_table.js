@@ -1,4 +1,4 @@
-import { Line } from "progressbar.js";
+var Line = require("progressbar.js")
 
 function createProgressBar(containerId, widthPercentage) {
   const widthPercent = `${widthPercentage}%`;

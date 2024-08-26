@@ -1,6 +1,6 @@
 // import { drawTable } from "./covered_table.js";
-import { checkValidUrl } from "./helpers.js";
-import { proccessFiles } from "./helpers.js";
+// import { checkValidUrl } from "./helpers.js";
+import { checkValidUrl, proccessFiles } from "./helpers.js";
 
 async function startProfilerForCoverage(tabId) {
   await chrome.debugger.sendCommand({ tabId }, "Profiler.enable");
