@@ -1,4 +1,4 @@
-import { drawTable } from "./covered_table.js";
+// import { drawTable } from "./covered_table.js";
 import { checkValidUrl } from "./helpers.js";
 import { proccessFiles } from "./helpers.js";
 
@@ -58,7 +58,7 @@ export async function runContentScriptCoverage(tabId, extensionId) {
       console.log(extensionId);
       // uniqueFiles = ['chrome-extension://bmpknceehpgjajlnajokmikpknfffgmj/low_coverage_script.js']
       const data = proccessFiles(uniqueFiles, coverageData);
-      drawTable(data);
+      // drawTable(data);
       // Example usage:
     });
   } catch (error) {
