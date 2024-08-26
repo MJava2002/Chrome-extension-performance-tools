@@ -126,8 +126,8 @@ module.exports = {
   proccessFiles,
   countCoveredNumbers,
   getLastSegmentFromUrl,
-  checkValidUrl
-}
+  checkValidUrl,
+};
 
 // def count_covered_numbers(ranges):
 //     events = []

@@ -1,7 +1,7 @@
-import { transformProfileData } from './profileUtils.js';
+import { transformProfileData } from "./profileUtils.js";
 export function extensionProfileForFlameGraph() {
-    const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
-    chrome.debugger.getTargets((result) => {
+  const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
+  chrome.debugger.getTargets((result) => {
     let target = result.find((t) => t.title.includes(extensionId));
     if (target) {
       const targetId = target.id;
@@ -40,11 +40,11 @@ export function extensionProfileForFlameGraph() {
           { targetId: targetId },
           "Profiler.stop",
           (result) => {
-            const profile = result.profile;;
+            const profile = result.profile;
             const transformedData = transformProfileData(profile);
-            const jsonData = JSON.stringify(transformedData, null, 2)
-            chrome.storage.local.set({ myJsonData: jsonData }, function() {
-              chrome.runtime.sendMessage({ action: 'dataSaved' });
+            const jsonData = JSON.stringify(transformedData, null, 2);
+            chrome.storage.local.set({ myJsonData: jsonData }, function () {
+              chrome.runtime.sendMessage({ action: "dataSaved" });
             });
           },
         );
@@ -54,4 +54,3 @@ export function extensionProfileForFlameGraph() {
     }
   });
 }
-
