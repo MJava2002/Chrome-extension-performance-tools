@@ -1,8 +1,11 @@
 var assert = require('assert');
-describe('Array', function () {
-  describe('#indexOf()', function () {
-    it('should return -1 when the value is not present', function () {
-      assert.equal([1, 2, 3].indexOf(4), -1);
+const { countCoveredNumbers } = require('../Profiler_panel/helpers');
+
+describe('Bytes', function () {
+  describe('covered bytes', function () {
+    it('intersecting ranges', function () {
+      // 6, 4, 3, 6
+      assert.equal(countCoveredNumbers([[10, 15], [5, 12], [18, 20], [25, 30]]), 19);
     });
   });
 });
