@@ -22,33 +22,39 @@ function initializeFlameGraph() {
       .label(function (d) {
         return d.name + " (" + d.value + ")";
       });
-      chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-        if (message.action === 'dataSaved') {
-            chrome.storage.local.get(['myJsonData'], function(result) {
-                if (result.myJsonData) {
-                    const retrievedData = JSON.parse(result.myJsonData);
-                    console.log('Retrieved JSON data:', retrievedData);
-                    const blob = new Blob([result.myJsonData], { type: 'application/json' });
-                    const dataUrl = URL.createObjectURL(blob);
-                    d3.json(dataUrl)
-                    .then((data) => {
-                      d3.select("#flameGraph").datum(data).call(chart);
-                    })
-                    .catch((error) => {
-                      console.warn("Error loading JSON:", error);
-                    });
-                } else {
-                    console.log('No data found.');
-                }
-            });
+    chrome.runtime.onMessage.addListener(
+      function (message, sender, sendResponse) {
+        if (message.action === "dataSaved") {
+          chrome.storage.local.get(["myJsonData"], function (result) {
+            if (result.myJsonData) {
+              const retrievedData = JSON.parse(result.myJsonData);
+              console.log("Retrieved JSON data:", retrievedData);
+              const blob = new Blob([result.myJsonData], {
+                type: "application/json",
+              });
+              const dataUrl = URL.createObjectURL(blob);
+              d3.json(dataUrl)
+                .then((data) => {
+                  d3.select("#flameGraph").datum(data).call(chart);
+                })
+                .catch((error) => {
+                  console.warn("Error loading JSON:", error);
+                });
+            } else {
+              console.log("No data found.");
+            }
+          });
         }
-    });
+      },
+    );
   } else {
     console.error("D3 not loaded");
   }
 }
 
-document.getElementById("flamegraphButton").addEventListener("click", initializeFlameGraph);
+document
+  .getElementById("flamegraphButton")
+  .addEventListener("click", initializeFlameGraph);
 
 document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
@@ -149,7 +155,6 @@ document.getElementById("stopButton").addEventListener("click", function () {
 document.getElementById("networkButton").addEventListener("click", function () {
   chrome.runtime.sendMessage({ action: "networkButtonClicked" });
 });
-
 
 document.getElementById("stopButton").addEventListener("click", function () {
   chrome.runtime.sendMessage({ action: "stopButtonClicked" });

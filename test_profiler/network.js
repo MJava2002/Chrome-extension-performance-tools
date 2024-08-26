@@ -38,12 +38,14 @@ chrome.action.onClicked.addListener(function (tab) {
               },
             );
 
-            chrome.debugger.onEvent.addListener(function(debuggeeId, message, params) {
+            chrome.debugger.onEvent.addListener(
+              function (debuggeeId, message, params) {
                 if (message === "Network.requestWillBeSent") {
-                console.log("Request intercepted: ", params.request);
-                console.log(params);
+                  console.log("Request intercepted: ", params.request);
+                  console.log(params);
                 }
-            });
+              },
+            );
           },
         );
       } else {
@@ -52,9 +54,8 @@ chrome.action.onClicked.addListener(function (tab) {
     });
   }
 });
-  
+
 // Handle debugger detachment
-chrome.debugger.onDetach.addListener(function(source, reason) {
-    console.log("Debugger detached: ", reason);
+chrome.debugger.onDetach.addListener(function (source, reason) {
+  console.log("Debugger detached: ", reason);
 });
-  

@@ -2,8 +2,8 @@ import { runContentScriptCoverage } from "./tab_coverage.js";
 import { checkValidUrl, proccessFiles } from "./helpers.js";
 import { proccessFiles } from "./helpers.js";
 import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
-import {extensionProfileForFlameGraph} from "./extensionprofiler";
-import {tabProfileForFlameGraph} from "./tabprofiler";
+import { extensionProfileForFlameGraph } from "./extensionprofiler";
+import { tabProfileForFlameGraph } from "./tabprofiler";
 
 console.log("Service worker loaded");
 const TAB = true;
@@ -155,7 +155,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
   if (request.action === "flamegraphClicked") {
     //tabProfileForFlameGraph()
-    extensionProfileForFlameGraph()
+    extensionProfileForFlameGraph();
   }
 });
 
@@ -203,17 +203,16 @@ function profileWithTabID() {
 }
 
 chrome.webRequest.onBeforeRequest.addListener(
-  function(details) {
+  function (details) {
     // console.log('Request captured:', details);
   },
-  { urls: ["<all_urls>"] }
+  { urls: ["<all_urls>"] },
 );
 
 // Handle debugger detachment
-chrome.debugger.onDetach.addListener(function(source, reason) {
+chrome.debugger.onDetach.addListener(function (source, reason) {
   console.log("Debugger detached: ", reason);
 });
-
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "networkButtonClicked") {
@@ -229,4 +228,3 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     stopNetwork();
   }
 });
-
