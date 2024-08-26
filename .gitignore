@@ -1,0 +1,2 @@
+# exclude everything
+node_modules/*
