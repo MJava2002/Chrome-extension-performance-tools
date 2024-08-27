@@ -1,5 +1,4 @@
-// import { drawTable } from "./covered_table.js";
-// import { checkValidUrl } from "./helpers.js";
+import { drawTable } from "./covered_table.js";
 import { checkValidUrl, proccessFiles } from "./helpers.js";
 
 async function startProfilerForCoverage(tabId) {
