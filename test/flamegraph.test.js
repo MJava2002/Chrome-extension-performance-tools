@@ -1,3 +1,5 @@
+require = require("esm")(module/*, options*/)
+
 var assert = require("assert");
 
 const { transformProfileData } = require("../Profiler_panel/profileutils.js");

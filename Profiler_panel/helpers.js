@@ -1,4 +1,4 @@
-function proccessFiles(uniqueFiles, coverageData) {
+export function proccessFiles(uniqueFiles, coverageData) {
   uniqueFiles = [...uniqueFiles];
   const percentPerFile = new Map();
   console.log(uniqueFiles);
@@ -40,7 +40,7 @@ function proccessFiles(uniqueFiles, coverageData) {
 }
 
 // i will use this in graphs
-function getLastSegmentFromUrl(url, extensionId) {
+export function getLastSegmentFromUrl(url, extensionId) {
   try {
     const urlObj = new URL(url);
 
@@ -55,7 +55,7 @@ function getLastSegmentFromUrl(url, extensionId) {
   }
 }
 
-function checkValidUrl(url, id) {
+export function checkValidUrl(url, id) {
   try {
     const containsId = url.includes(id);
 
@@ -70,7 +70,7 @@ function checkValidUrl(url, id) {
   }
 }
 
-async function calculateCoveragePercentage(
+export async function calculateCoveragePercentage(
   totalScriptSize,
   coverageData,
   scriptUrl,
@@ -98,7 +98,7 @@ async function calculateCoveragePercentage(
 }
 
 // ranges is a list of [start,end] numbers
-function countCoveredNumbers(ranges) {
+export function countCoveredNumbers(ranges) {
   let events = [];
 
   ranges.forEach(([start, end]) => {
@@ -122,13 +122,7 @@ function countCoveredNumbers(ranges) {
 
   return totalCovered;
 }
-module.exports = {
-  proccessFiles,
-  countCoveredNumbers,
-  getLastSegmentFromUrl,
-  checkValidUrl,
-  calculateCoveragePercentage,
-};
+
 
 // def count_covered_numbers(ranges):
 //     events = []

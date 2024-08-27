@@ -1,6 +1,5 @@
 import { drawTable } from "./covered_table.js";
-import { checkValidUrl } from "./helpers.js";
-import { proccessFiles } from "./helpers.js";
+import { checkValidUrl, proccessFiles } from "./helpers.js";
 
 async function startProfilerForCoverage(tabId) {
   await chrome.debugger.sendCommand({ tabId }, "Profiler.enable");
@@ -58,7 +57,7 @@ export async function runContentScriptCoverage(tabId, extensionId) {
       console.log(extensionId);
       // uniqueFiles = ['chrome-extension://bmpknceehpgjajlnajokmikpknfffgmj/low_coverage_script.js']
       const data = proccessFiles(uniqueFiles, coverageData);
-      drawTable(data);
+      // drawTable(data);
       // Example usage:
     });
   } catch (error) {

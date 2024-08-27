@@ -1,8 +1,6 @@
-import { Line } from "progressbar.js";
-
 function createProgressBar(containerId, widthPercentage) {
   const widthPercent = `${widthPercentage}%`;
-  var bar = new Line(containerId, {
+  var bar = new ProgressBar.Line(containerId, {
     strokeWidth: 4,
     easing: "easeInOut",
     duration: 1400,
@@ -34,7 +32,7 @@ function createProgressBar(containerId, widthPercentage) {
 }
 
 export function drawTable(data) {
-  data.array.forEach((fileName, percentage) => {
+  data.forEach((fileName, percentage) => {
     let container = document.createElement("div");
     container.id = `container${i}`;
     document.body.appendChild(container);

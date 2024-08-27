@@ -1,7 +1,11 @@
-import { transformProfileData } from "./profileUtils.js";
+import {transformProfileData} from "./profileutils.js";
+
+
 export function extensionProfileForFlameGraph() {
   const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
+  // sendToDevTools("Extension ID in DevTools panel!");
   chrome.debugger.getTargets((result) => {
+    // sendToDevTools(result);
     let target = result.find((t) => t.title.includes(extensionId));
     if (target) {
       const targetId = target.id;
@@ -10,7 +14,7 @@ export function extensionProfileForFlameGraph() {
           console.log("Error: " + chrome.runtime.lastError.message);
           return;
         }
-
+        console.log("Debugger attached");
         // Enable the debugger and profiler
         chrome.debugger.sendCommand(
           { targetId: targetId },
@@ -35,22 +39,34 @@ export function extensionProfileForFlameGraph() {
             console.log("Profiler started");
           },
         );
+
         await new Promise((r) => setTimeout(r, 5000));
+
         chrome.debugger.sendCommand(
           { targetId: targetId },
           "Profiler.stop",
           (result) => {
+            console.log("RESULT IS", result)
             const profile = result.profile;
+            console.log("PROFILERRR:", profile);
+            console.log(JSON.stringify(profile, null, 2));
             const transformedData = transformProfileData(profile);
-            const jsonData = JSON.stringify(transformedData, null, 2);
-            chrome.storage.local.set({ myJsonData: jsonData }, function () {
-              chrome.runtime.sendMessage({ action: "dataSaved" });
+            console.log("BEFORRRRRRRRRRRE", profile);
+
+            // Serialize JSON object to a string
+            const jsonData = JSON.stringify(transformedData, null, 2)
+            console.log(jsonData)
+            // Save the stringified JSON using chrome.storage.local
+            chrome.storage.local.set({ myJsonData: jsonData }, function() {
+              console.log('JSON data has been saved.');
+              chrome.runtime.sendMessage({ action: 'dataSaved' });
             });
           },
         );
       });
     } else {
-      console.log("Target not found.");
+      sendToDevTools("Target not found.");
     }
   });
 }
+
