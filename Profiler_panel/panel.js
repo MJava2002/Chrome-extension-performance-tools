@@ -58,15 +58,13 @@ function drawCoverageTable() {
   console.log('heree')
   chrome.runtime.onMessage.addListener(
     function (message, sender, sendResponse) {
-      if (message.action === "coverageDone") {
-        chrome.storage.local.get(["coverageData"], function (result) {
+      chrome.storage.local.get(['coverageData'], function(result) {
           if (result.coverageData) {
-            console.log("someeeethiiiing")
-          } else {
-            console.log("No data found.");
+              // Convert the array of key-value pairs back into a Map
+              const retrievedMap = new Map(result.coverageData);
+              console.log('Retrieved Map:', retrievedMap);
           }
-        });
-      }
+      });
     },
   );
 }

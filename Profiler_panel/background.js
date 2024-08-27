@@ -119,11 +119,11 @@ async function runCoverage(extensionId) {
       stringNumberMap.set('banana', 20);
       stringNumberMap.set('cherry', 30);
       stringNumberMap.set('date', 40);
-      const jsonData = JSON.stringify(stringNumberMap, null, 2)
-      console.log('abcd')
-      // Save the stringified JSON using chrome.storage.local
-      chrome.storage.local.set({ coverageData: jsonData }, function() {
-          console.log('JSON data has been saved.');
+      const mapArray = Array.from(stringNumberMap.entries());
+
+      // Save the array in chrome.storage.local
+      chrome.storage.local.set({ coverageData: mapArray }, function() {
+          console.log('Map data has been saved.');
           chrome.runtime.sendMessage({ action: "coverageDone" });
       });
     });
