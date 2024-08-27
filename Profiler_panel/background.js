@@ -2,6 +2,7 @@ import {runContentScriptCoverage} from "./tab_coverage.js";
 import {checkValidUrl, proccessFiles} from "./helpers.js";
 import {extensionProfileForFlameGraph} from "./extensionprofiler.js";
 import {tabProfileForFlameGraph} from "./tabprofiler.js";
+import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 
 console.log("Service worker loaded");
 const TAB = true;
@@ -201,3 +202,18 @@ function profileWithTabID() {
     });
   });
 }
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "networkButtonClicked") {
+    const extensionId = "cmnfljdhgcojlcpokmgoooppdcngamgj";
+    console.log("Network button clicked");
+    startNetworkWithTabID(extensionId);
+  }
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "stopButtonClicked") {
+    console.log("Stop button clicked");
+    stopNetwork();
+  }
+});
