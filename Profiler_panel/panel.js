@@ -9,6 +9,8 @@
  *   requred, but it's unclear whether this is still supported
  */
 
+import { drawTable } from "./covered_table.js";
+
 
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 function initializeFlameGraph() {
@@ -54,8 +56,18 @@ function initializeFlameGraph() {
   }
 }
 
+document
+  .getElementById("coverageButton")
+  .addEventListener("click", drawCoverageTable);
+
+document
+  .getElementById("coverageButton")
+  .addEventListener("click", function() {
+    chrome.runtime.sendMessage({ action: "buttonClicked" });
+  });
+
+
 function drawCoverageTable() {
-  console.log('heree')
   chrome.runtime.onMessage.addListener(
     function (message, sender, sendResponse) {
       chrome.storage.local.get(['coverageData'], function(result) {
@@ -63,12 +75,12 @@ function drawCoverageTable() {
               // Convert the array of key-value pairs back into a Map
               const retrievedMap = new Map(result.coverageData);
               console.log('Retrieved Map:', retrievedMap);
+              drawTable(retrievedMap)
           }
       });
     },
   );
 }
-
 
 
 document
@@ -79,12 +91,14 @@ document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
   this.classList.toggle("active");
 });
+
 document.addEventListener("click", function (event) {
   const dropdown = document.getElementById("dropdown-content");
   if (dropdown) {
     dropdown.classList.remove("active");
   }
 });
+
 document.getElementById("runExtension").addEventListener("click", function () {
   // Remove the active class to hide the dropdown
   const dropdown = document.getElementById("dropdown-content");
@@ -101,16 +115,6 @@ document.getElementById("runTab").addEventListener("click", function () {
   }
   chrome.runtime.sendMessage({ action: "runTabClicked" });
 });
-
-document
-  .getElementById("coverageButton")
-  .addEventListener("click", drawCoverageTable);
-
-document
-  .getElementById("coverageButton")
-  .addEventListener("click", function() {
-    chrome.runtime.sendMessage({ action: "buttonClicked" });
-  });
 
 document
   .getElementById("flamegraphButton")

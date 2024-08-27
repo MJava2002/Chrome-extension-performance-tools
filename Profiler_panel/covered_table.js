@@ -1,5 +1,6 @@
 function createProgressBar(containerId, widthPercentage) {
   const widthPercent = `${widthPercentage}%`;
+  console.log(widthPercent)
   var bar = new ProgressBar.Line(containerId, {
     strokeWidth: 4,
     easing: "easeInOut",
@@ -32,10 +33,13 @@ function createProgressBar(containerId, widthPercentage) {
 }
 
 export function drawTable(data) {
-  data.forEach((fileName, percentage) => {
-    const container = document.getElementById('#flameGraph');
+  let i = 1
+  data.forEach((percentage, fileName) => {
+    console.log('abcd')
+    const container = document.getElementById('flameGraph');
     let bar = document.createElement("div");
     bar.id = `container${i}`;
+    i += 1
     container.appendChild(bar);
     createProgressBar(`#${bar.id}`, percentage);
   });
