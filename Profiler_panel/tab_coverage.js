@@ -56,9 +56,7 @@ export async function runContentScriptCoverage(tabId, extensionId) {
       console.log(uniqueFiles);
       console.log(extensionId);
       // uniqueFiles = ['chrome-extension://bmpknceehpgjajlnajokmikpknfffgmj/low_coverage_script.js']
-      const data = proccessFiles(uniqueFiles, coverageData);
-      // drawTable(data);
-      // Example usage:
+      return proccessFiles(uniqueFiles, coverageData);
     });
   } catch (error) {
     console.error("Error during coverage analysis:", error);

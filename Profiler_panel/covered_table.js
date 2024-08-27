@@ -33,9 +33,10 @@ function createProgressBar(containerId, widthPercentage) {
 
 export function drawTable(data) {
   data.forEach((fileName, percentage) => {
-    let container = document.createElement("div");
-    container.id = `container${i}`;
-    document.body.appendChild(container);
-    createProgressBar(`#${container.id}`, percentage);
+    const container = document.getElementById('#flameGraph');
+    let bar = document.createElement("div");
+    bar.id = `container${i}`;
+    container.appendChild(bar);
+    createProgressBar(`#${bar.id}`, percentage);
   });
 }

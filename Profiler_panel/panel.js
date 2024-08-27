@@ -8,6 +8,8 @@
  *   Based on the docs, the silent-debugger-extension-api flag is
  *   requred, but it's unclear whether this is still supported
  */
+
+
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
@@ -52,6 +54,25 @@ function initializeFlameGraph() {
   }
 }
 
+function drawCoverageTable() {
+  console.log('heree')
+  chrome.runtime.onMessage.addListener(
+    function (message, sender, sendResponse) {
+      if (message.action === "coverageDone") {
+        chrome.storage.local.get(["coverageData"], function (result) {
+          if (result.coverageData) {
+            console.log("someeeethiiiing")
+          } else {
+            console.log("No data found.");
+          }
+        });
+      }
+    },
+  );
+}
+
+
+
 document
   .getElementById("flamegraphButton")
   .addEventListener("click", initializeFlameGraph);
@@ -85,7 +106,11 @@ document.getElementById("runTab").addEventListener("click", function () {
 
 document
   .getElementById("coverageButton")
-  .addEventListener("click", function () {
+  .addEventListener("click", drawCoverageTable);
+
+document
+  .getElementById("coverageButton")
+  .addEventListener("click", function() {
     chrome.runtime.sendMessage({ action: "buttonClicked" });
   });
 
