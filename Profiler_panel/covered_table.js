@@ -1,6 +1,40 @@
+const TEXT_COLOR = "#baaec4";
+const BORDER_COLOR = "#a79ab4";
+const PINK = "#d6587e";
+const YELLOW = "#eaa41e";
+const ORANGE = "#f48250";
+
+function interpolateColor(color1, color2, factor) {
+  var result = color1
+    .slice(1)
+    .match(/.{2}/g)
+    .map(function (value, index) {
+      return Math.round(
+        parseInt(value, 16) +
+          factor *
+            (parseInt(color2.slice(1).match(/.{2}/g)[index], 16) -
+              parseInt(value, 16)),
+      )
+        .toString(16)
+        .padStart(2, "0");
+    });
+
+  return "#" + result.join("");
+}
+
+function determineColors(num) {
+  if (num >= 75) {
+    return PINK;
+  }
+  if (num >= 50) {
+    return ORANGE;
+  }
+  return YELLOW;
+}
+
 function createProgressBar(containerId, widthPercentage) {
   const widthPercent = `${widthPercentage}%`;
-  console.log(widthPercent);
+  const finalColor = determineColors(widthPercentage);
   var bar = new ProgressBar.Line(containerId, {
     strokeWidth: 4,
     easing: "easeInOut",
@@ -11,7 +45,7 @@ function createProgressBar(containerId, widthPercentage) {
     svgStyle: { width: widthPercent, height: "12px" },
     text: {
       style: {
-        color: "#999",
+        color: TEXT_COLOR,
         position: "absolute",
         right: "0",
         top: "50%", // Adjusted to align with the bar
@@ -22,10 +56,23 @@ function createProgressBar(containerId, widthPercentage) {
       },
       autoStyleContainer: false,
     },
-    from: { color: "#ED6A5A" },
-    to: { color: "#AFE1AF" },
+    from: { color: YELLOW },
+    to: { color: finalColor },
     step: (state, bar) => {
-      bar.path.setAttribute("stroke", state.color);
+      // Determine the current percentage of animation
+      const progress = bar.value();
+
+      // Define the color at different points
+      let color = state.color;
+      if (progress < 0.5 && widthPercentage >= 50) {
+        // Interpolate between the initial color and the middle color
+        color = interpolateColor(YELLOW, ORANGE, progress * 2);
+      } else if (widthPercentage >= 50) {
+        // Interpolate between the middle color and the final color
+        color = interpolateColor(ORANGE, finalColor, (progress - 0.5) * 2);
+      }
+
+      bar.path.setAttribute("stroke", color);
       bar.setText(widthPercentage + " %");
     },
   });
@@ -48,7 +95,7 @@ export function drawTable(data) {
   docBody.innerHTML = "";
   const container = document.createElement("div");
   container.style.width = "100%";
-  container.style.border = "1px solid black";
+  container.style.border = "1px solid " + BORDER_COLOR;
 
   // Create header row
   const headerRow = createCoverageTableRow(
@@ -88,17 +135,19 @@ function createCoverageTableRow(
   const row = document.createElement("div");
   row.style.display = "flex";
   row.style.justifyContent = "space-between";
-  row.style.borderBottom = "1px solid #ddd";
+  row.style.borderBottom = "1px solid " + BORDER_COLOR;
   row.style.padding = "8px 0";
 
   const filenameCell = document.createElement("div");
   filenameCell.textContent = filename;
   filenameCell.style.flex = "2";
+  filenameCell.style.color = TEXT_COLOR;
 
   const bytesCoveredCell = document.createElement("div");
   bytesCoveredCell.textContent = bytesCovered;
   bytesCoveredCell.style.flex = "1";
   bytesCoveredCell.style.textAlign = "center";
+  bytesCoveredCell.style.color = TEXT_COLOR;
 
   const coverageCell = document.createElement("div");
   coverageCell.style.flex = "3";
@@ -106,6 +155,7 @@ function createCoverageTableRow(
 
   if (containerId === "header") {
     coverageCell.textContent = coverageLabel;
+    coverageCell.style.color = TEXT_COLOR;
     coverageCell.style.textAlign = "center"; // Center the text for the header
   } else {
     const progressBarContainer = document.createElement("div");

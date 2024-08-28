@@ -91,6 +91,11 @@ function drawCoverageTable() {
                 bytesCovered: 800,
                 percentageCovered: 100,
               },
+              {
+                filename: "file.js",
+                bytesCovered: 800,
+                percentageCovered: 20,
+              },
             ];
             drawTable(coverageData);
           }
