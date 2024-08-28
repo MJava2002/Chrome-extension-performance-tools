@@ -100,7 +100,7 @@ export function drawTable(data) {
   // Create header row
   const headerRow = createCoverageTableRow(
     "header",
-    "Filename",
+    "File Name",
     "Bytes Covered",
     "Coverage",
   );
@@ -112,7 +112,7 @@ export function drawTable(data) {
     const containerId = `container${index}`;
     const row = createCoverageTableRow(
       containerId,
-      item.filename,
+      item.fileName,
       item.bytesCovered,
       item.percentageCovered,
     );

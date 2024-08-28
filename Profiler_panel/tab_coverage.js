@@ -26,38 +26,61 @@ async function stopProfilerAndCollectCoverage(tabId) {
 
 export async function runContentScriptCoverage(tabId, extensionId) {
   try {
-    await chrome.debugger.attach({ tabId: tabId }, "1.3", async () => {
-      if (chrome.runtime.lastError) {
-        console.error(
-          "Failed to attach debugger:",
-          chrome.runtime.lastError.message,
-        );
-        return;
-      }
-
-      console.log("Debugger attached successfully.");
-
-      // Now that the debugger is attached, start profiling
-      await startProfilerForCoverage(tabId);
-      await new Promise((resolve) => setTimeout(resolve, 4000));
-      const coverageData = await stopProfilerAndCollectCoverage(tabId);
-      let uniqueFiles = new Set();
-      coverageData.result.forEach((script) => {
-        if (
-          script.url != "" &&
-          !uniqueFiles.has(script.url) &&
-          checkValidUrl(script.url, extensionId)
-        ) {
-          uniqueFiles.add(script.url);
+    // Attach the debugger to the tab
+    await new Promise((resolve, reject) => {
+      chrome.debugger.attach({ tabId }, "1.3", () => {
+        if (chrome.runtime.lastError) {
+          reject(new Error("Failed to attach debugger: " + chrome.runtime.lastError.message));
+        } else {
+          console.log("Debugger attached successfully.");
+          resolve();
         }
       });
-      console.log(coverageData);
-      console.log(uniqueFiles);
-      console.log(extensionId);
-      // uniqueFiles = ['chrome-extension://bmpknceehpgjajlnajokmikpknfffgmj/low_coverage_script.js']
-      return proccessFiles(uniqueFiles, coverageData);
     });
+
+    // Start profiling
+    await startProfilerForCoverage(tabId);
+
+    // Wait for a specified time to collect coverage data
+    await new Promise(resolve => setTimeout(resolve, 40000));
+
+    // Stop profiling and collect coverage data
+    const coverageData = await stopProfilerAndCollectCoverage(tabId);
+
+    // Process the coverage data
+    let uniqueFiles = new Set();
+    coverageData.result.forEach((script) => {
+      if (script.url && !uniqueFiles.has(script.url) && checkValidUrl(script.url, extensionId)) {
+        uniqueFiles.add(script.url);
+      }
+    });
+
+    console.log("Coverage Data:", coverageData);
+    console.log("Unique Files:", uniqueFiles);
+    console.log("Extension ID:", extensionId);
+
+    // Process the collected files
+    const mapData = await proccessFiles(uniqueFiles, coverageData, extensionId);
+    console.log('runContentScriptCoverage', mapData)
+    return mapData
+
   } catch (error) {
     console.error("Error during coverage analysis:", error);
+    return null; // Return null or appropriate value if there's an error
+  } finally {
+    // Detach the debugger in case of error or successful completion
+    try {
+      await new Promise((resolve, reject) => {
+        chrome.debugger.detach({ tabId }, () => {
+          if (chrome.runtime.lastError) {
+            reject(new Error("Failed to detach debugger: " + chrome.runtime.lastError.message));
+          } else {
+            resolve();
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Error detaching debugger:", error);
+    }
   }
 }

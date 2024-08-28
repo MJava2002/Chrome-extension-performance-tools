@@ -164,6 +164,17 @@ describe("Get file name", function () {
       );
     });
   });
+  describe("real example test", function () {
+    it("", function () {
+      assert.equal(
+        getLastSegmentFromUrl(
+          "chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/vendor/@eyeo/webext-ad-filtering-solution/content.js",
+          id,
+        ),
+        "content.js",
+      );
+    });
+  });
   describe("nested directories", function () {
     it("", function () {
       assert.equal(
@@ -324,11 +335,11 @@ describe("Get file name", function () {
   describe("basic test", function () {
     it("", async function () {
       assert.equal(
-        await calculateCoveragePercentage(
+        calculateCoveragePercentage(
           1000,
           mockCoverageData,
-          "chrome-extension://abcd1234/background.js",
-        ),
+          "chrome-extension://abcd1234/background.js"
+        ).coveragePercentage,
         20.3,
       );
     });
@@ -337,11 +348,11 @@ describe("Get file name", function () {
   describe("different file", function () {
     it("", async function () {
       assert.equal(
-        await calculateCoveragePercentage(
+        calculateCoveragePercentage(
           1000,
           mockCoverageData,
-          "chrome-extension://abcd1234/content.js",
-        ),
+          "chrome-extension://abcd1234/content.js"
+        ).coveragePercentage,
         12.1,
       );
     });
@@ -350,11 +361,11 @@ describe("Get file name", function () {
   describe("complex ranges", function () {
     it("", async function () {
       assert.equal(
-        await calculateCoveragePercentage(
+        calculateCoveragePercentage(
           10000,
           mockCoverageData,
-          "chrome-extension://abcd1234/script/background.js",
-        ),
+          "chrome-extension://abcd1234/script/background.js"
+        ).coveragePercentage,
         3.82,
       );
     });
