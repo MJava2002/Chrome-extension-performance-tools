@@ -24,7 +24,7 @@ body {
 .button {
   width: 140px;
   height: 40px;
-  color: #c8a2c8;
+  color: #baaec4;
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
@@ -53,7 +53,7 @@ body {
 .main-button {
   background-color: #21132c;
   border: 1px solid #b393b3;
-  color: #c8a2c8;
+  color: #baaec4;
   padding: 10px 20px;
   cursor: pointer;
   flex-grow: 1;
