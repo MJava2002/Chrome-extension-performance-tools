@@ -152,3 +152,49 @@ export function countCoveredNumbers(ranges) {
 //         count = point
 
 //     return total_covered
+
+export function setAttached(target) {
+  chrome.storage.local.set({ attachedTarget: target }, () => {
+    console.log("attachedTarget value set to ", target);
+  });
+}
+
+// Detach debugger using the stored target
+export async function detachDebugger() {
+  chrome.storage.local.get("attachedTarget", async (result) => {
+    const attachedTarget = result.attachedTarget;
+    console.log("entered detach, attachedTarget value ", attachedTarget);
+    if (attachedTarget) {
+      try {
+        await chrome.debugger.detach(attachedTarget);
+        console.log("detachDebugger success");
+        chrome.storage.local.remove("attachedTarget");
+      } catch (error) {
+        if (chrome.runtime.lastError) {
+          if (chrome.runtime.lastError.message.includes("not attached")) {
+            console.log("Debugger was not attached, ignoring the error.");
+          } else {
+            console.error(
+              "Failed to detach debugger:",
+              chrome.runtime.lastError.message,
+            );
+          }
+        }
+      }
+    }
+  });
+}
+
+export function waitForStopButtonClick() {
+  return new Promise((resolve) => {
+    chrome.runtime.onMessage.addListener(
+      function listener(request, sender, sendResponse) {
+        if (request.action === "stopButtonClicked") {
+          console.log("Received button click message in background script.");
+          chrome.runtime.onMessage.removeListener(listener); // Clean up the listener
+          resolve();
+        }
+      },
+    );
+  });
+}

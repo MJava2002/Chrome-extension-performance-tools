@@ -1,10 +1,19 @@
-import {runContentScriptCoverage} from "./tab_coverage.js";
-import {checkValidUrl, proccessFiles} from "./helpers.js";
-import {extensionProfileForFlameGraph} from "./extensionprofiler.js";
-import {tabProfileForFlameGraph} from "./tabprofiler.js";
+import { runContentScriptCoverage } from "./tab_coverage.js";
+import {
+  checkValidUrl,
+  detachDebugger,
+  proccessFiles,
+  setAttached,
+  waitForStopButtonClick,
+} from "./helpers.js";
+import { extensionProfileForFlameGraph } from "./extensionprofiler.js";
+import { tabProfileForFlameGraph } from "./tabprofiler.js";
+import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 
 console.log("Service worker loaded");
-const TAB = true;
+chrome.storage.local.remove("attachedTarget");
+
+const TAB = false;
 const ExtensionId = "bmpknceehpgjajlnajokmikpknfffgmj";
 var tabId;
 function isExtensionNode(node) {
@@ -46,6 +55,7 @@ async function startExtensionCoverage(extensionId) {
 
   console.log(backgroundPage.id);
   await chrome.debugger.attach({ targetId: backgroundPage.id }, "1.3");
+  setAttached({ targetId: backgroundPage.id });
 
   await chrome.debugger.sendCommand(
     { targetId: backgroundPage.id },
@@ -96,6 +106,7 @@ async function stopAndCollectExtensionCoverage(extensionId) {
 
   // Detach
   await chrome.debugger.detach({ targetId: backgroundPage.id });
+  // await detachDebugger();
 
   console.log(
     "Coverage data collected for the extension's background page:",
@@ -107,32 +118,35 @@ async function stopAndCollectExtensionCoverage(extensionId) {
 
 async function runCoverage(extensionId) {
   if (TAB) {
-    chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
-      let activeTab = tabs[0];
-      sendToDevTools("Active Tab ID: " + activeTab.id);
-      tabId = activeTab.id;
-      const covData = await runContentScriptCoverage(tabId, extensionId);
-      const mapArray = Array.from(covData.entries());
-      console.log("runCoverge", covData)
-       // Save the array in chrome.storage.local
-       await new Promise((resolve, reject) => {
-        chrome.storage.local.set({ coverageData: mapArray }, function() {
+    chrome.tabs.query(
+      { active: true, currentWindow: true },
+      async function (tabs) {
+        let activeTab = tabs[0];
+        sendToDevTools("Active Tab ID: " + activeTab.id);
+        tabId = activeTab.id;
+        const covData = await runContentScriptCoverage(tabId, extensionId);
+        const mapArray = Array.from(covData.entries());
+        console.log("runCoverge", covData);
+        // Save the array in chrome.storage.local
+        await new Promise((resolve, reject) => {
+          chrome.storage.local.set({ coverageData: mapArray }, function () {
             if (chrome.runtime.lastError) {
-                reject(new Error(chrome.runtime.lastError));
+              reject(new Error(chrome.runtime.lastError));
             } else {
-                console.log('Map data has been saved.', covData);
-                resolve();
+              console.log("Map data has been saved.", covData);
+              resolve();
             }
+          });
         });
-    });
 
-    // Send the coverageDone message
-    chrome.runtime.sendMessage({ action: "coverageDone" });
-    });
+        // Send the coverageDone message
+        chrome.runtime.sendMessage({ action: "coverageDone" });
+      },
+    );
   } else {
     await startExtensionCoverage(extensionId);
     let coverageData;
-    await new Promise((r) => setTimeout(r, 10000));
+    await waitForStopButtonClick();
     coverageData = await stopAndCollectExtensionCoverage(extensionId);
     let uniqueFiles = new Set();
     coverageData.result.forEach((script) => {
@@ -143,18 +157,19 @@ async function runCoverage(extensionId) {
         uniqueFiles.add(script.url);
       }
     });
-    const covData = await proccessFiles(uniqueFiles, coverageData);
-    console.log("runCoverge", covData)
-       // Save the array in chrome.storage.local
-       await new Promise((resolve, reject) => {
-        chrome.storage.local.set({ coverageData: mapArray }, function() {
-            if (chrome.runtime.lastError) {
-                reject(new Error(chrome.runtime.lastError));
-            } else {
-                console.log('Map data has been saved.', covData);
-                resolve();
-            }
-        });
+    const covData = await proccessFiles(uniqueFiles, coverageData, extensionId);
+    console.log("runCoverge", covData);
+    const mapArray = Array.from(covData.entries());
+    // Save the array in chrome.storage.local
+    await new Promise((resolve, reject) => {
+      chrome.storage.local.set({ coverageData: mapArray }, function () {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError));
+        } else {
+          console.log("Map data has been saved.", covData);
+          resolve();
+        }
+      });
     });
 
     // Send the coverageDone message
@@ -178,10 +193,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     profileWithTabID();
   }
   if (request.action === "flamegraphClicked") {
-    // tabProfileForFlameGraph()
-    extensionProfileForFlameGraph()
+    tabProfileForFlameGraph();
+    // extensionProfileForFlameGraph();
   }
-
 });
 
 function profileWithTabID() {
@@ -196,6 +210,7 @@ function profileWithTabID() {
         return;
       }
       console.log("Debugger attached");
+      setAttached({ tabId: tabId });
 
       chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.enable", () => {
         console.log("Profiler enabled");
@@ -205,7 +220,7 @@ function profileWithTabID() {
         console.log("Profiler started");
       });
 
-      await new Promise((r) => setTimeout(r, 3000));
+      await waitForStopButtonClick();
 
       chrome.debugger.sendCommand(
         { tabId: tabId },
@@ -225,3 +240,18 @@ function profileWithTabID() {
     });
   });
 }
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "networkButtonClicked") {
+    const extensionId = "cmnfljdhgcojlcpokmgoooppdcngamgj";
+    console.log("Network button clicked");
+    startNetworkWithTabID(extensionId);
+  }
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "stopButtonClicked") {
+    console.log("Stop button clicked");
+    stopNetwork();
+  }
+});

@@ -9,7 +9,11 @@
     />
     <link rel="stylesheet" type="text/css" href="styles/panel_styles.css" />
     <meta charset="utf8" />
-    <style></style>
+    <style>
+      .pressed {
+        background-color: #dcdcdc;
+      }
+    </style>
   </head>
   <body>
     <h1>Performance Panel</h1>
@@ -22,17 +26,14 @@
           <a href="#" id="runTab">Tab</a>
         </div>
       </div>
-      <button id="recordButton" class="button" style="margin-left: 10px">
-        Record
-      </button>
       <button id="networkButton" class="button" style="margin-left: 10px">
         Record Network
       </button>
-      <button id="stopButton" class="button" style="margin-left: 10px">
-        Stop
-      </button>
       <button id="flamegraphButton" class="button" style="margin-left: 10px">
         FlameGraph
+      </button>
+      <button id="stopButton" class="button" style="margin-left: 10px">
+        Stop
       </button>
       <span id="timeDisplay"></span>
     </div>
@@ -42,7 +43,7 @@
     <!-- Container for background messages -->
     <div
       id="flameGraph"
-      style="width: 960px; height: 500px; border: 1px solid black"
+      style="width: 960px; height: 500px"
     ></div>
     <script src="node_modules/d3/d3.v7.js"></script>
     <script src="node_modules/d3-flame-graph/dist/d3-flamegraph.min.js"></script>

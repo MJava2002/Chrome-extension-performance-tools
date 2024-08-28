@@ -1,4 +1,4 @@
-require = require("esm")(module/*, options*/)
+require = require("esm")(module /*, options*/);
 
 var assert = require("assert");
 const {
@@ -338,7 +338,7 @@ describe("Get file name", function () {
         calculateCoveragePercentage(
           1000,
           mockCoverageData,
-          "chrome-extension://abcd1234/background.js"
+          "chrome-extension://abcd1234/background.js",
         ).coveragePercentage,
         20.3,
       );
@@ -351,7 +351,7 @@ describe("Get file name", function () {
         calculateCoveragePercentage(
           1000,
           mockCoverageData,
-          "chrome-extension://abcd1234/content.js"
+          "chrome-extension://abcd1234/content.js",
         ).coveragePercentage,
         12.1,
       );
@@ -364,11 +364,10 @@ describe("Get file name", function () {
         calculateCoveragePercentage(
           10000,
           mockCoverageData,
-          "chrome-extension://abcd1234/script/background.js"
+          "chrome-extension://abcd1234/script/background.js",
         ).coveragePercentage,
         3.82,
       );
     });
   });
 });
-

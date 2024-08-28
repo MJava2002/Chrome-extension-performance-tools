@@ -1,3 +1,5 @@
+import { detachDebugger, setAttached } from "./helpers.js";
+
 let id;
 let debugee;
 
@@ -7,12 +9,11 @@ function startRequestMonitoring() {
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     const pattern = `chrome-extension://${id}`;
     if (message === "Network.requestWillBeSent") {
-      console.log("Request intercepted: ", params);
+      // console.log("Request intercepted: ", params);
       if (
         params.initiator.stack &&
         params.initiator.stack.callFrames[0].url.startsWith(pattern)
       ) {
-        console.log("Extension request: ", params.request);
         requestTimes[params.requestId] = {
           startTime: params.timestamp,
           url: params.request.url,
@@ -23,7 +24,7 @@ function startRequestMonitoring() {
 
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     if (message === "Network.responseReceived") {
-      console.log("Response received: ", params.response);
+      // console.log("Response received: ", params.response);
       if (requestTimes[params.requestId]) {
         // Retrieve the request start time and compute latency
         const startTime = requestTimes[params.requestId].startTime;
@@ -54,9 +55,7 @@ export function startNetwork(extensionId) {
           console.error(chrome.runtime.lastError.message);
           return;
         }
-        console.log("Debugger attached");
-
-        // Enable debugger
+        setAttached({ targetId: targetId });
         chrome.debugger.sendCommand(
           { targetId: targetId },
           "Debugger.enable",
@@ -92,6 +91,7 @@ export function startNetworkWithTabID(extensionId) {
         console.error(chrome.runtime.lastError.message);
         return;
       }
+      setAttached({ tabId: tabId });
       // Enable debugger
       chrome.debugger.sendCommand({ tabId: tabId }, "Debugger.enable", () => {
         console.log("Debugger enabled");
@@ -109,8 +109,10 @@ export function startNetworkWithTabID(extensionId) {
 export function stopNetwork() {
   if (debugee) {
     chrome.debugger.sendCommand(debugee, "Network.disable", () => {
+      // console.log(debugee);
       console.log("Network disabled");
-      chrome.debugger.detach(debugee);
+      // chrome.debugger.detach(debugee);
+      detachDebugger();
       console.log("Debugger detached");
       debugee = null;
     });

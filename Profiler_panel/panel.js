@@ -10,6 +10,7 @@
  */
 
 import { drawTable } from "./covered_table.js";
+import { detachDebugger } from "./helpers.js";
 
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 function initializeFlameGraph() {
@@ -63,12 +64,13 @@ document
   .getElementById("coverageButton")
   .addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "buttonClicked" });
+    handleButtonClick("coverageButton");
   });
 
 function drawCoverageTable() {
   chrome.runtime.onMessage.addListener(
     function (message, sender, sendResponse) {
-      if (message.action == "coverageDone") {
+      if (message.action === "coverageDone") {
         chrome.storage.local.get(["coverageData"], function (result) {
           if (result.coverageData) {
             // Convert the array of key-value pairs back into a Map
@@ -118,6 +120,7 @@ document.getElementById("runTab").addEventListener("click", function () {
 document
   .getElementById("flamegraphButton")
   .addEventListener("click", function () {
+    handleButtonClick("flamegraphButton");
     chrome.runtime.sendMessage({ action: "flamegraphClicked" });
   });
 
@@ -154,11 +157,10 @@ document.body.appendChild(messagesContainer);
 
 let startTime, endTime;
 
-document.getElementById("recordButton").addEventListener("click", function () {
-  startTime = new Date();
-  document.getElementById("timeDisplay").innerText = ""; // Clear previous time display
-  console.log("Recording started at", startTime);
-});
+// document.getElementById("recordButton").addEventListener("click", function () {
+//   handleButtonClick("recordButton");
+//   console.log("Recording started at", startTime);
+// });
 
 document.getElementById("stopButton").addEventListener("click", function () {
   if (startTime) {
@@ -173,15 +175,48 @@ document.getElementById("stopButton").addEventListener("click", function () {
       timeElapsed,
       "seconds",
     );
+    startTime = null;
+    if (activeButton) {
+      chrome.runtime.sendMessage({
+        action: `${activeButton.id}RecordingStopped`,
+        timeElapsed,
+      });
+      activeButton.classList.remove("pressed");
+      console.log(`${activeButton.id}RecordingStopped`);
+      activeButton = null;
+    }
   } else {
     console.log("Recording not started.");
   }
 });
 
 document.getElementById("networkButton").addEventListener("click", function () {
-  chrome.runtime.sendMessage({ action: "networkButtonClicked" });
+  handleButtonClick("networkButton");
 });
 
 document.getElementById("stopButton").addEventListener("click", function () {
   chrome.runtime.sendMessage({ action: "stopButtonClicked" });
 });
+
+let activeButton = null;
+
+function handleButtonClick(buttonId) {
+  console.log("handling click ", buttonId);
+  document.getElementById("timeDisplay").innerText = ""; // Clear previous time display
+  const button = document.getElementById(buttonId);
+
+  detachDebugger();
+  if (activeButton) {
+    // If there's an active button, remove its "pressed" state
+    activeButton.classList.remove("pressed");
+  }
+
+  // Set the new active button
+  activeButton = button;
+  activeButton.classList.add("pressed");
+
+  // Send message for the button clicked
+  chrome.runtime.sendMessage({ action: `${buttonId}Clicked` });
+
+  startTime = new Date();
+}
