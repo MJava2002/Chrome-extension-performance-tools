@@ -1,44 +1,53 @@
-export function proccessFiles(uniqueFiles, coverageData) {
+export async function proccessFiles(uniqueFiles, coverageData, extensionId) {
   uniqueFiles = [...uniqueFiles];
-  const percentPerFile = new Map();
+  const percentPerFile = [];
   console.log(uniqueFiles);
-  // Promise.all(fetch(url).then( r => r.text() ).then( t => content += t))
-  Promise.all(
-    uniqueFiles.map((url) =>
-      fetch(url)
-        .then(async (response) => {
-          if (!response.ok) {
-            throw new Error(
-              `Failed to fetch ${url}. Status: ${response.status}`,
-            );
-          }
-          const content = await response.text();
-          return { url, content };
-        })
-        .catch((error) => {
-          console.error(`Error fetching ${url}:`, error.message);
-          return { url, content: "" };
-        }),
-    ),
-  )
-    .then((data) => {
-      console.log(data);
-      data.forEach((fileData) => {
-        const { url, content } = fileData;
-        const covered = calculateCoveragePercentage(
-          content.length,
-          coverageData,
-          url,
-        );
-        percentPerFile.set(getLastSegmentFromUrl(url), covered);
-      });
-    })
-    .catch((e) => {
-      console.error("Error during Promise.all:", e);
-    });
-  return percentPerFile;
-}
 
+  try {
+    const data = await Promise.all(
+      uniqueFiles.map((url) =>
+        fetch(url)
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error(
+                `Failed to fetch ${url}. Status: ${response.status}`,
+              );
+            }
+            const content = await response.text();
+            return { url, content };
+          })
+          .catch((error) => {
+            console.error(`Error fetching ${url}:`, error.message);
+            return { url, content: "" };
+          }),
+      ),
+    );
+    console.log(data);
+    data.forEach((fileData) => {
+      const { url: url_1, content: content_1 } = fileData;
+      const covered = calculateCoveragePercentage(
+        content_1.length,
+        coverageData,
+        url_1,
+      );
+      console.log(
+        "in process file",
+        covered,
+        getLastSegmentFromUrl(url_1, extensionId),
+      );
+      percentPerFile.push({
+        fileName: getLastSegmentFromUrl(url_1, extensionId),
+        bytesCovered: covered.coveredBytes,
+        percentageCovered: covered.coveragePercentage,
+      });
+    });
+    console.log("processFile", percentPerFile);
+    return percentPerFile;
+  } catch (e) {
+    console.error("Error during Promise.all:", e);
+    return percentPerFile;
+  }
+}
 // i will use this in graphs
 export function getLastSegmentFromUrl(url, extensionId) {
   try {
@@ -70,7 +79,7 @@ export function checkValidUrl(url, id) {
   }
 }
 
-export async function calculateCoveragePercentage(
+export function calculateCoveragePercentage(
   totalScriptSize,
   coverageData,
   scriptUrl,
@@ -94,7 +103,7 @@ export async function calculateCoveragePercentage(
   console.log(`Covered Bytes: ${coveredBytes} bytes`);
   console.log(`Coverage Percentage: ${coveragePercentage.toFixed(2)}%`);
 
-  return coveragePercentage;
+  return { coveragePercentage, coveredBytes };
 }
 
 // ranges is a list of [start,end] numbers
@@ -122,7 +131,6 @@ export function countCoveredNumbers(ranges) {
 
   return totalCovered;
 }
-
 
 // def count_covered_numbers(ranges):
 //     events = []
