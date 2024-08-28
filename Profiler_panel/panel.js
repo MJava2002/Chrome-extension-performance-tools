@@ -8,6 +8,9 @@
  *   Based on the docs, the silent-debugger-extension-api flag is
  *   requred, but it's unclear whether this is still supported
  */
+
+import { drawTable } from "./covered_table.js";
+
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
@@ -53,6 +56,56 @@ function initializeFlameGraph() {
 }
 
 document
+  .getElementById("coverageButton")
+  .addEventListener("click", drawCoverageTable);
+
+document
+  .getElementById("coverageButton")
+  .addEventListener("click", function () {
+    chrome.runtime.sendMessage({ action: "buttonClicked" });
+  });
+
+function drawCoverageTable() {
+  chrome.runtime.onMessage.addListener(
+    function (message, sender, sendResponse) {
+      if (message.action == "coverageDone") {
+        chrome.storage.local.get(["coverageData"], function (result) {
+          if (result.coverageData) {
+            // Convert the array of key-value pairs back into a Map
+            const retrievedMap = new Map(result.coverageData);
+            console.log("Retrieved Map:", retrievedMap);
+            // Example usage
+            const coverageData = [
+              {
+                filename: "background.js",
+                bytesCovered: 1500,
+                percentageCovered: 75,
+              },
+              {
+                filename: "content.js",
+                bytesCovered: 800,
+                percentageCovered: 50,
+              },
+              {
+                filename: "script.js",
+                bytesCovered: 800,
+                percentageCovered: 100,
+              },
+              {
+                filename: "file.js",
+                bytesCovered: 800,
+                percentageCovered: 20,
+              },
+            ];
+            drawTable(coverageData);
+          }
+        });
+      }
+    },
+  );
+}
+
+document
   .getElementById("flamegraphButton")
   .addEventListener("click", initializeFlameGraph);
 
@@ -60,12 +113,14 @@ document.getElementById("dropdown").addEventListener("click", function (event) {
   event.stopPropagation(); // Prevent clicks from propagating to the document
   this.classList.toggle("active");
 });
+
 document.addEventListener("click", function (event) {
   const dropdown = document.getElementById("dropdown-content");
   if (dropdown) {
     dropdown.classList.remove("active");
   }
 });
+
 document.getElementById("runExtension").addEventListener("click", function () {
   // Remove the active class to hide the dropdown
   const dropdown = document.getElementById("dropdown-content");
@@ -82,12 +137,6 @@ document.getElementById("runTab").addEventListener("click", function () {
   }
   chrome.runtime.sendMessage({ action: "runTabClicked" });
 });
-
-document
-  .getElementById("coverageButton")
-  .addEventListener("click", function () {
-    chrome.runtime.sendMessage({ action: "buttonClicked" });
-  });
 
 document
   .getElementById("flamegraphButton")

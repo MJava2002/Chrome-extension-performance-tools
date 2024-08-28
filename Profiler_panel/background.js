@@ -107,11 +107,25 @@ async function stopAndCollectExtensionCoverage(extensionId) {
 
 async function runCoverage(extensionId) {
   if (TAB) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
       let activeTab = tabs[0];
       sendToDevTools("Active Tab ID: " + activeTab.id);
       tabId = activeTab.id;
-      runContentScriptCoverage(tabId, extensionId);
+      const covData = await runContentScriptCoverage(tabId, extensionId);
+      const stringNumberMap = new Map();
+
+      // Add string keys with numeric values
+      stringNumberMap.set('apple', 10);
+      stringNumberMap.set('banana', 20);
+      stringNumberMap.set('cherry', 30);
+      stringNumberMap.set('date', 40);
+      const mapArray = Array.from(stringNumberMap.entries());
+
+      // Save the array in chrome.storage.local
+      chrome.storage.local.set({ coverageData: mapArray }, function() {
+          console.log('Map data has been saved.');
+          chrome.runtime.sendMessage({ action: "coverageDone" });
+      });
     });
   } else {
     await startExtensionCoverage(extensionId);
