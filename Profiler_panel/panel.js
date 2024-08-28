@@ -70,7 +70,7 @@ document
 function drawCoverageTable() {
   chrome.runtime.onMessage.addListener(
     function (message, sender, sendResponse) {
-      if (message.action == "coverageDone") {
+      if (message.action === "coverageDone") {
         chrome.storage.local.get(["coverageData"], function (result) {
           if (result.coverageData) {
             // Convert the array of key-value pairs back into a Map
@@ -157,10 +157,10 @@ document.body.appendChild(messagesContainer);
 
 let startTime, endTime;
 
-document.getElementById("recordButton").addEventListener("click", function () {
-  handleButtonClick("recordButton");
-  console.log("Recording started at", startTime);
-});
+// document.getElementById("recordButton").addEventListener("click", function () {
+//   handleButtonClick("recordButton");
+//   console.log("Recording started at", startTime);
+// });
 
 document.getElementById("stopButton").addEventListener("click", function () {
   if (startTime) {
