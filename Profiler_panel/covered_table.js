@@ -3,6 +3,7 @@ const BORDER_COLOR = "#a79ab4";
 const PINK = "#d6587e";
 const YELLOW = "#eaa41e";
 const ORANGE = "#f48250";
+const IMAGE_PATH = "Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
 
 function interpolateColor(color1, color2, factor) {
   var result = color1
@@ -96,32 +97,53 @@ export function drawTable(data) {
   const container = document.createElement("div");
   container.style.width = "100%";
   container.style.border = "1px solid " + BORDER_COLOR;
+  if (data.size === 0) {
+    container.style.border = "none";  // Remove table border
+    // If there are no data entries, display an image
+    const emptyRow = document.createElement("div");
+    emptyRow.style.textAlign = "center"; // Center the image in the div
 
-  // Create header row
-  const headerRow = createCoverageTableRow(
-    "header",
-    "File Name",
-    "Bytes Covered",
-    "Coverage",
-  );
-  headerRow.style.fontWeight = "bold";
-  container.appendChild(headerRow);
+    const img = document.createElement("img");
+    img.src = IMAGE_PATH; // Replace with your image file name
+    img.alt = "Nothing to observe here";
+    img.style.width = "25%"; // Set the image width as needed
+    const text = document.createElement("div");
+    text.textContent = "Nothing to observe here";
+    text.style.fontFamily = "'MyCustomFont', sans-serif";
+    text.style.color = TEXT_COLOR  // Set the text color
+    text.style.marginTop = "10px";  // Add some space between the image and the text
+    text.style.fontSize = "24px";
 
-  // Add data rows
-  data.forEach((item, index) => {
-    const containerId = `container${index}`;
-    const row = createCoverageTableRow(
-      containerId,
-      item.fileName,
-      item.bytesCovered,
-      item.percentageCovered,
+    emptyRow.appendChild(img);
+    emptyRow.appendChild(text);
+
+    container.appendChild(emptyRow);
+  } else {
+    // Create header row
+    const headerRow = createCoverageTableRow(
+      "header",
+      "File Name",
+      "Bytes Covered",
+      "Coverage",
     );
-    container.appendChild(row);
+    headerRow.style.fontWeight = "bold";
+    container.appendChild(headerRow);
 
-    docBody.appendChild(container);
-    createProgressBar(`#${containerId}`, item.percentageCovered);
-  });
+    // Add data rows
+    data.forEach((item, index) => {
+      const containerId = `container${index}`;
+      const row = createCoverageTableRow(
+        containerId,
+        item.fileName,
+        item.bytesCovered,
+        item.percentageCovered,
+      );
+      container.appendChild(row);
 
+      docBody.appendChild(container);
+      createProgressBar(`#${containerId}`, item.percentageCovered);
+    });
+  }
   // Append the table to the body (or any other element you prefer)
   docBody.appendChild(container);
 }

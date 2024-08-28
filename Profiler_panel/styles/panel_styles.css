@@ -158,3 +158,18 @@ body {
   overflow-y: auto;
   padding: 10px;
 }
+
+@font-face {
+  font-family: 'MyCustomFont';
+  src: url('SpaceGrotesk-VariableFont_wght.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'MyCustomFont', sans-serif;
+}
+
+#flameGraph {
+  font-family: 'MyCustomFont', sans-serif; /* Apply the custom font */
+}
