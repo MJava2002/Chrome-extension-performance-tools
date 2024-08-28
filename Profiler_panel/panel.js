@@ -11,7 +11,6 @@
 
 import { drawTable } from "./covered_table.js";
 
-
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
@@ -62,34 +61,44 @@ document
 
 document
   .getElementById("coverageButton")
-  .addEventListener("click", function() {
+  .addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "buttonClicked" });
   });
-
 
 function drawCoverageTable() {
   chrome.runtime.onMessage.addListener(
     function (message, sender, sendResponse) {
-      if (message.action == "coverageDone"){
-      chrome.storage.local.get(['coverageData'], function(result) {
+      if (message.action == "coverageDone") {
+        chrome.storage.local.get(["coverageData"], function (result) {
           if (result.coverageData) {
-              // Convert the array of key-value pairs back into a Map
-              const retrievedMap = new Map(result.coverageData);
-              console.log('Retrieved Map:', retrievedMap);
-              // Example usage
-              const coverageData = [
-                { filename: 'background.js', bytesCovered: 1500, percentageCovered: 75 },
-                { filename: 'content.js', bytesCovered: 800, percentageCovered: 50 },
-                { filename: 'script.js', bytesCovered: 800, percentageCovered: 100 }
-              ]
-              drawTable(coverageData)
+            // Convert the array of key-value pairs back into a Map
+            const retrievedMap = new Map(result.coverageData);
+            console.log("Retrieved Map:", retrievedMap);
+            // Example usage
+            const coverageData = [
+              {
+                filename: "background.js",
+                bytesCovered: 1500,
+                percentageCovered: 75,
+              },
+              {
+                filename: "content.js",
+                bytesCovered: 800,
+                percentageCovered: 50,
+              },
+              {
+                filename: "script.js",
+                bytesCovered: 800,
+                percentageCovered: 100,
+              },
+            ];
+            drawTable(coverageData);
           }
-      });
-    }
+        });
+      }
     },
   );
 }
-
 
 document
   .getElementById("flamegraphButton")
