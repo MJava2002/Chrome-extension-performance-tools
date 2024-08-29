@@ -1,10 +1,11 @@
+import { waitForStopButtonClick, setAttached } from "./helpers.js";
 import { transformProfileData } from "./profileutils.js";
 
 export function tabProfileForFlameGraph() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let activeTab = tabs[0];
     console.log("Active Tab ID: " + activeTab.id);
-    tabId = activeTab.id;
+    const tabId = activeTab.id;
     chrome.debugger.attach({ tabId: tabId }, "1.3", async function () {
       if (chrome.runtime.lastError) {
         console.log("Error: " + chrome.runtime.lastError.message);
@@ -21,7 +22,7 @@ export function tabProfileForFlameGraph() {
         console.log("Profiler started");
       });
 
-      await new Promise((r) => setTimeout(r, 3000));
+      await waitForStopButtonClick();
 
       chrome.debugger.sendCommand(
         { tabId: tabId },

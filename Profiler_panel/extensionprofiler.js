@@ -1,4 +1,4 @@
-import { setAttached } from "./helpers.js";
+import { setAttached, waitForStopButtonClick } from "./helpers.js";
 import { transformProfileData } from "./profileutils.js";
 
 export function extensionProfileForFlameGraph() {
@@ -41,7 +41,7 @@ export function extensionProfileForFlameGraph() {
           },
         );
 
-        await new Promise((r) => setTimeout(r, 5000));
+        await waitForStopButtonClick();
 
         chrome.debugger.sendCommand(
           { targetId: targetId },
