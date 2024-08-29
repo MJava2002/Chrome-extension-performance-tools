@@ -188,7 +188,6 @@ document.getElementById("stopButton").addEventListener("click", function () {
 
 document.getElementById("networkButton").addEventListener("click", function () {
   handleButtonClick("networkButton");
-  chrome.runtime.sendMessage({ action: "networkButtonClicked" });
 });
 
 document.getElementById("stopButton").addEventListener("click", function () {
