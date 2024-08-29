@@ -9,15 +9,18 @@
     />
     <link rel="stylesheet" type="text/css" href="styles/panel_styles.css" />
     <meta charset="utf8" />
-    <style>
-      .pressed {
-        background-color: #dcdcdc;
-      }
-    </style>
   </head>
   <body>
     <h1>Performance Panel</h1>
     <div class="button-container">
+      <link rel="stylesheet" href="node_modules/slideon-main/slideon.css" />
+      <script src="node_modules/slideon-main/slideon.js"></script>
+      <label class="slideon slideon-danger slideon-xl slideon-p1 slideon-primary" >
+          <input type="checkbox" checked >
+          <span class="slideon-slider" >
+
+          </span>
+      </label>
       <button id="coverageButton" class="button">
         Run Coverage
       </button>
