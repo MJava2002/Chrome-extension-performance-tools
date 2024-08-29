@@ -1,4 +1,5 @@
 import { checkValidUrl, proccessFiles, setAttached } from "./helpers.js";
+import { waitForStopButtonClick } from "./helpers.js";
 
 async function startProfilerForCoverage(tabId) {
   await chrome.debugger.sendCommand({ tabId }, "Profiler.enable");
@@ -48,7 +49,7 @@ export async function runContentScriptCoverage(tabId, extensionId) {
     await startProfilerForCoverage(tabId);
 
     // Wait for a specified time to collect coverage data
-    await new Promise((resolve) => setTimeout(resolve, 4000));
+    await waitForStopButtonClick();
 
     // Stop profiling and collect coverage data
     const coverageData = await stopProfilerAndCollectCoverage(tabId);

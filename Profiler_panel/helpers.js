@@ -184,3 +184,17 @@ export async function detachDebugger() {
     }
   });
 }
+
+export function waitForStopButtonClick() {
+  return new Promise((resolve) => {
+    chrome.runtime.onMessage.addListener(
+      function listener(request, sender, sendResponse) {
+        if (request.action === "stopButtonClicked") {
+          console.log("Received button click message in background script.");
+          chrome.runtime.onMessage.removeListener(listener); // Clean up the listener
+          resolve();
+        }
+      },
+    );
+  });
+}
