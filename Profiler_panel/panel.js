@@ -278,18 +278,6 @@ document.getElementById("stopButton").addEventListener("click", function () {
 });
 
 document.getElementById("networkButton").addEventListener("click", function () {
-  handleButtonClick("networkButton");
-  chrome.runtime.onMessage.addListener(
-    function (message, sender, sendResponse) {
-      if (message.action === "networkDataSaved") {
-        chrome.storage.local.get(["networkData"], function (result) {
-          if (result.networkData) {
-            console.log("Retrieved network data:", result.networkData);
-          }
-        });
-      }
-    },
-  );
     disableButtons();
     const docBody = document.getElementById("flameGraph");
     docBody.innerHTML = "";
@@ -310,6 +298,22 @@ document.getElementById("networkButton").addEventListener("click", function () {
     // Append the loading image to the flameGraph container
     docBody.appendChild(loadingImage);
     handleButtonClick("networkButton");
+
+    chrome.runtime.onMessage.addListener(
+      function (message, sender, sendResponse) {
+        if (message.action === "networkDataSaved") {
+          chrome.storage.local.get(["networkData"], function (result) {
+            if (result.networkData) {
+              console.log("Retrieved network data:", result.networkData);
+              const loadingImage = document.getElementById("loadingImage");
+              if (loadingImage) {
+                loadingImage.style.display = "none";
+              }
+            }
+          });
+        }
+      },
+    );
 });
 
 document.getElementById("stopButton").addEventListener("click", function () {

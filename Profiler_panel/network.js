@@ -58,7 +58,6 @@ function saveRequestData(requestData) {
 
     chrome.storage.local.set({ networkData: networkData }, function () {
       console.log("Network request data saved:", requestData);
-      chrome.runtime.sendMessage({ action: "networkDataSaved" });
     });
   });
 }
@@ -135,6 +134,7 @@ export function stopNetwork() {
       // console.log(debugee);
       console.log("Network disabled");
       // chrome.debugger.detach(debugee);
+      chrome.runtime.sendMessage({ action: "networkDataSaved" });
       detachDebugger();
       console.log("Debugger detached");
       debugee = null;
