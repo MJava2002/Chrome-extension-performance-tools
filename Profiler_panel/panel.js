@@ -12,6 +12,34 @@
 import { drawTable } from "./covered_table.js";
 import { detachDebugger } from "./helpers.js";
 
+function disableButtons() {
+  const coverageButton = document.getElementById("coverageButton")
+  const networkButton = document.getElementById("networkButton")
+  const flamegraphButton = document.getElementById("flamegraphButton")
+
+  coverageButton.disabled = true;
+  networkButton.disabled = true;
+  flamegraphButton.disabled = true;
+
+  coverageButton.style.cursor = 'not-allowed';
+  networkButton.style.cursor = 'not-allowed';
+  flamegraphButton.style.cursor = 'not-allowed';
+}
+
+function enableButtons() {
+  const coverageButton = document.getElementById("coverageButton")
+  const networkButton = document.getElementById("networkButton")
+  const flamegraphButton = document.getElementById("flamegraphButton")
+
+  coverageButton.disabled = false;
+  networkButton.disabled = false;
+  flamegraphButton.disabled = false;
+
+  coverageButton.style.cursor = '';
+  networkButton.style.cursor = '';
+  flamegraphButton.style.cursor = '';
+}
+
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
@@ -63,6 +91,7 @@ document
 document
   .getElementById("coverageButton")
   .addEventListener("click", function () {
+    disableButtons();
     chrome.runtime.sendMessage({ action: "buttonClicked" });
     handleButtonClick("coverageButton");
   });
@@ -120,6 +149,7 @@ document.getElementById("runTab").addEventListener("click", function () {
 document
   .getElementById("flamegraphButton")
   .addEventListener("click", function () {
+    disableButtons();
     handleButtonClick("flamegraphButton");
     chrome.runtime.sendMessage({ action: "flamegraphClicked" });
   });
@@ -191,10 +221,12 @@ document.getElementById("stopButton").addEventListener("click", function () {
 });
 
 document.getElementById("networkButton").addEventListener("click", function () {
+  disableButtons();
   handleButtonClick("networkButton");
 });
 
 document.getElementById("stopButton").addEventListener("click", function () {
+  enableButtons();
   chrome.runtime.sendMessage({ action: "stopButtonClicked" });
 });
 
