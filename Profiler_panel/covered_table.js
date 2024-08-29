@@ -3,7 +3,7 @@ const BORDER_COLOR = "#a79ab4";
 const PINK = "#d6587e";
 const YELLOW = "#eaa41e";
 const ORANGE = "#f48250";
-const IMAGE_PATH = "Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
+const IMAGE_PATH = "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
 
 function interpolateColor(color1, color2, factor) {
   var result = color1
@@ -53,7 +53,6 @@ function createProgressBar(containerId, widthPercentage) {
         transform: "translateY(-50%)", // Center vertically with the bar
         padding: 0,
         margin: 0,
-        transform: null,
       },
       autoStyleContainer: false,
     },
