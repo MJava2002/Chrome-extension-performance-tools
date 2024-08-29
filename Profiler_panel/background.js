@@ -243,9 +243,9 @@ function profileWithTabID() {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "networkButtonClicked") {
-    const extensionId = "cmnfljdhgcojlcpokmgoooppdcngamgj";
+    const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
     console.log("Network button clicked");
-    startNetworkWithTabID(extensionId);
+    startNetwork(extensionId);
   }
 });
 

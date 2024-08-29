@@ -9,7 +9,7 @@ function startRequestMonitoring() {
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     const pattern = `chrome-extension://${id}`;
     if (message === "Network.requestWillBeSent") {
-      // console.log("Request intercepted: ", params);
+      console.log("Request intercepted: ", params);
       if (
         params.initiator.stack &&
         params.initiator.stack.callFrames[0].url.startsWith(pattern)
@@ -17,6 +17,7 @@ function startRequestMonitoring() {
         requestTimes[params.requestId] = {
           startTime: params.timestamp,
           url: params.request.url,
+          method: params.request.method,
         };
       }
     }
@@ -24,19 +25,40 @@ function startRequestMonitoring() {
 
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     if (message === "Network.responseReceived") {
-      // console.log("Response received: ", params.response);
+      console.log("Response received: ", params.response);
       if (requestTimes[params.requestId]) {
         // Retrieve the request start time and compute latency
         const startTime = requestTimes[params.requestId].startTime;
         const endTime = params.timestamp;
         const latency = endTime - startTime;
 
-        // Log latency
-        console.log(
-          `Latency of request to ${requestTimes[params.requestId].url}: ${latency.toFixed(4)} seconds`,
-        );
+        // Add additional details to the request data
+        const requestData = {
+          url: requestTimes[params.requestId].url,
+          method: requestTimes[params.requestId].method,
+          latency: latency.toFixed(4) * 1000, // convert to ms
+          status: params.response.status,
+          type: params.type,
+          size: params.response.encodedDataLength,
+        };
+
+        // Save the data in chrome storage
+        saveRequestData(requestData);
+
+        delete requestTimes[params.requestId];
       }
     }
+  });
+}
+
+function saveRequestData(requestData) {
+  chrome.storage.local.get({ networkData: [] }, function (result) {
+    const networkData = result.networkData;
+    networkData.push(requestData);
+
+    chrome.storage.local.set({ networkData: networkData }, function () {
+      console.log("Network request data saved:", requestData);
+    });
   });
 }
 
