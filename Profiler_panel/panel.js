@@ -50,7 +50,6 @@ function initializeFlameGraph() {
       .cellHeight(18)
       .transitionDuration(750)
       .minFrameSize(5)
-      .title("HERE LIES MY HOPES AND DREAMS")
       .label(function (d) {
         return d.name + " (" + d.value + ")";
       });
@@ -67,16 +66,28 @@ function initializeFlameGraph() {
               const dataUrl = URL.createObjectURL(blob);
               d3.json(dataUrl)
                 .then((data) => {
-                  document.getElementById("loadingImage").style.display = "none";
+                  const loadingImage = document.getElementById("loadingImage");
+                  if (loadingImage) {
+                      loadingImage.style.display = "none";
+                  }
+
                   d3.select("#flameGraph").datum(data).call(chart);
                 })
                 .catch((error) => {
                   console.warn("Error loading JSON:", error);
-                  document.getElementById("loadingImage").style.display = "none";
+                  const loadingImage = document.getElementById("loadingImage");
+                  if (loadingImage) {
+                      loadingImage.style.display = "none";
+                  }
+
                 });
             } else {
               console.log("No data found.");
-              document.getElementById("loadingImage").style.display = "none";
+              const loadingImage = document.getElementById("loadingImage");
+              if (loadingImage) {
+                  loadingImage.style.display = "none";
+              }
+
             }
           });
         }
@@ -155,7 +166,10 @@ document
   .addEventListener("click", function () {
     disableButtons();
     handleButtonClick("flamegraphButton");
-    document.getElementById("loadingImage").style.display = "block";
+    const loadingImage = document.getElementById("loadingImage");
+    if (loadingImage) {
+        loadingImage.style.display = "block";
+    }
     chrome.runtime.sendMessage({ action: "flamegraphClicked" });
   });
 
