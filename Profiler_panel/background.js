@@ -108,24 +108,33 @@ async function stopAndCollectExtensionCoverage(extensionId) {
 
 async function runCoverage(extensionId) {
   if (TAB) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
       let activeTab = tabs[0];
       sendToDevTools("Active Tab ID: " + activeTab.id);
       tabId = activeTab.id;
-      runContentScriptCoverage(tabId, extensionId);
+      const covData = await runContentScriptCoverage(tabId, extensionId);
+      const mapArray = Array.from(covData.entries());
+      console.log("runCoverge", covData)
+       // Save the array in chrome.storage.local
+       await new Promise((resolve, reject) => {
+        chrome.storage.local.set({ coverageData: mapArray }, function() {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError));
+            } else {
+                console.log('Map data has been saved.', covData);
+                resolve();
+            }
+        });
+    });
+
+    // Send the coverageDone message
+    chrome.runtime.sendMessage({ action: "coverageDone" });
     });
   } else {
     await startExtensionCoverage(extensionId);
     let coverageData;
     await new Promise((r) => setTimeout(r, 10000));
     coverageData = await stopAndCollectExtensionCoverage(extensionId);
-    // setTimeout(() => {
-    //     stopAndCollectExtensionCoverage().then(coverage => {
-    //         console.log("Final Coverage Data:", coverage);
-    //         console.log(coverage)
-    //         coverageData = coverage;
-    //     });
-    // }, 5000);  // Adjust delay as needed
     let uniqueFiles = new Set();
     coverageData.result.forEach((script) => {
       if (
@@ -135,7 +144,22 @@ async function runCoverage(extensionId) {
         uniqueFiles.add(script.url);
       }
     });
-    proccessFiles(uniqueFiles, coverageData);
+    const covData = await proccessFiles(uniqueFiles, coverageData);
+    console.log("runCoverge", covData)
+       // Save the array in chrome.storage.local
+       await new Promise((resolve, reject) => {
+        chrome.storage.local.set({ coverageData: mapArray }, function() {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError));
+            } else {
+                console.log('Map data has been saved.', covData);
+                resolve();
+            }
+        });
+    });
+
+    // Send the coverageDone message
+    chrome.runtime.sendMessage({ action: "coverageDone" });
   }
 }
 
