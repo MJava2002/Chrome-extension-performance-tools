@@ -67,13 +67,16 @@ function initializeFlameGraph() {
               const dataUrl = URL.createObjectURL(blob);
               d3.json(dataUrl)
                 .then((data) => {
+                  document.getElementById("loadingImage").style.display = "none";
                   d3.select("#flameGraph").datum(data).call(chart);
                 })
                 .catch((error) => {
                   console.warn("Error loading JSON:", error);
+                  document.getElementById("loadingImage").style.display = "none";
                 });
             } else {
               console.log("No data found.");
+              document.getElementById("loadingImage").style.display = "none";
             }
           });
         }
@@ -81,6 +84,7 @@ function initializeFlameGraph() {
     );
   } else {
     console.error("D3 not loaded");
+    document.getElementById("loadingImage").style.display = "none";
   }
 }
 
@@ -151,6 +155,7 @@ document
   .addEventListener("click", function () {
     disableButtons();
     handleButtonClick("flamegraphButton");
+    document.getElementById("loadingImage").style.display = "block";
     chrome.runtime.sendMessage({ action: "flamegraphClicked" });
   });
 
