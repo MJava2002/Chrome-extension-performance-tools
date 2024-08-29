@@ -155,29 +155,32 @@ export function countCoveredNumbers(ranges) {
 
 export function setAttached(target) {
   chrome.storage.local.set({ attachedTarget: target }, () => {
-      console.log("attachedTarget value set to ", target);
+    console.log("attachedTarget value set to ", target);
   });
 }
 
 // Detach debugger using the stored target
 export async function detachDebugger() {
-  chrome.storage.local.get('attachedTarget', async (result) => {
-      const attachedTarget = result.attachedTarget;
-      console.log("entered detach, attachedTarget value ", attachedTarget);
-      if (attachedTarget) {
-        try {
-            await chrome.debugger.detach(attachedTarget);
-            console.log("detachDebugger success");
-            chrome.storage.local.remove('attachedTarget');
-        } catch (error) {
-            if (chrome.runtime.lastError) {
-              if (chrome.runtime.lastError.message.includes("not attached")) {
-                  console.log("Debugger was not attached, ignoring the error.");
-              } else {
-                  console.error("Failed to detach debugger:", chrome.runtime.lastError.message);
-              }
-            }
+  chrome.storage.local.get("attachedTarget", async (result) => {
+    const attachedTarget = result.attachedTarget;
+    console.log("entered detach, attachedTarget value ", attachedTarget);
+    if (attachedTarget) {
+      try {
+        await chrome.debugger.detach(attachedTarget);
+        console.log("detachDebugger success");
+        chrome.storage.local.remove("attachedTarget");
+      } catch (error) {
+        if (chrome.runtime.lastError) {
+          if (chrome.runtime.lastError.message.includes("not attached")) {
+            console.log("Debugger was not attached, ignoring the error.");
+          } else {
+            console.error(
+              "Failed to detach debugger:",
+              chrome.runtime.lastError.message,
+            );
+          }
         }
       }
+    }
   });
 }

@@ -1,6 +1,5 @@
 import { setAttached } from "./helpers.js";
-import {transformProfileData} from "./profileutils.js";
-
+import { transformProfileData } from "./profileutils.js";
 
 export function extensionProfileForFlameGraph() {
   const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
@@ -48,7 +47,7 @@ export function extensionProfileForFlameGraph() {
           { targetId: targetId },
           "Profiler.stop",
           (result) => {
-            console.log("RESULT IS", result)
+            console.log("RESULT IS", result);
             const profile = result.profile;
             console.log("PROFILERRR:", profile);
             console.log(JSON.stringify(profile, null, 2));
@@ -56,12 +55,12 @@ export function extensionProfileForFlameGraph() {
             console.log("BEFORRRRRRRRRRRE", profile);
 
             // Serialize JSON object to a string
-            const jsonData = JSON.stringify(transformedData, null, 2)
-            console.log(jsonData)
+            const jsonData = JSON.stringify(transformedData, null, 2);
+            console.log(jsonData);
             // Save the stringified JSON using chrome.storage.local
-            chrome.storage.local.set({ myJsonData: jsonData }, function() {
-              console.log('JSON data has been saved.');
-              chrome.runtime.sendMessage({ action: 'dataSaved' });
+            chrome.storage.local.set({ myJsonData: jsonData }, function () {
+              console.log("JSON data has been saved.");
+              chrome.runtime.sendMessage({ action: "dataSaved" });
             });
           },
         );
@@ -71,4 +70,3 @@ export function extensionProfileForFlameGraph() {
     }
   });
 }
-

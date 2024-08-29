@@ -30,10 +30,14 @@ export async function runContentScriptCoverage(tabId, extensionId) {
     await new Promise((resolve, reject) => {
       chrome.debugger.attach({ tabId }, "1.3", () => {
         if (chrome.runtime.lastError) {
-          reject(new Error("Failed to attach debugger: " + chrome.runtime.lastError.message));
+          reject(
+            new Error(
+              "Failed to attach debugger: " + chrome.runtime.lastError.message,
+            ),
+          );
         } else {
           console.log("Debugger attached successfully.");
-          setAttached({tabId});
+          setAttached({ tabId });
           console.log("should have set ", tabId);
           resolve();
         }
@@ -44,7 +48,7 @@ export async function runContentScriptCoverage(tabId, extensionId) {
     await startProfilerForCoverage(tabId);
 
     // Wait for a specified time to collect coverage data
-    await new Promise(resolve => setTimeout(resolve, 4000));
+    await new Promise((resolve) => setTimeout(resolve, 4000));
 
     // Stop profiling and collect coverage data
     const coverageData = await stopProfilerAndCollectCoverage(tabId);
@@ -52,7 +56,11 @@ export async function runContentScriptCoverage(tabId, extensionId) {
     // Process the coverage data
     let uniqueFiles = new Set();
     coverageData.result.forEach((script) => {
-      if (script.url && !uniqueFiles.has(script.url) && checkValidUrl(script.url, extensionId)) {
+      if (
+        script.url &&
+        !uniqueFiles.has(script.url) &&
+        checkValidUrl(script.url, extensionId)
+      ) {
         uniqueFiles.add(script.url);
       }
     });
@@ -63,9 +71,8 @@ export async function runContentScriptCoverage(tabId, extensionId) {
 
     // Process the collected files
     const mapData = await proccessFiles(uniqueFiles, coverageData, extensionId);
-    console.log('runContentScriptCoverage', mapData)
-    return mapData
-
+    console.log("runContentScriptCoverage", mapData);
+    return mapData;
   } catch (error) {
     console.error("Error during coverage analysis:", error);
     return null; // Return null or appropriate value if there's an error
@@ -75,7 +82,12 @@ export async function runContentScriptCoverage(tabId, extensionId) {
       await new Promise((resolve, reject) => {
         chrome.debugger.detach({ tabId }, () => {
           if (chrome.runtime.lastError) {
-            reject(new Error("Failed to detach debugger: " + chrome.runtime.lastError.message));
+            reject(
+              new Error(
+                "Failed to detach debugger: " +
+                  chrome.runtime.lastError.message,
+              ),
+            );
           } else {
             resolve();
           }

@@ -177,15 +177,17 @@ document.getElementById("stopButton").addEventListener("click", function () {
     );
     startTime = null;
     if (activeButton) {
-      chrome.runtime.sendMessage({ action: `${activeButton.id}RecordingStopped`, timeElapsed });
-      activeButton.classList.remove('pressed');
+      chrome.runtime.sendMessage({
+        action: `${activeButton.id}RecordingStopped`,
+        timeElapsed,
+      });
+      activeButton.classList.remove("pressed");
       console.log(`${activeButton.id}RecordingStopped`);
       activeButton = null;
     }
   } else {
     console.log("Recording not started.");
   }
-  
 });
 
 document.getElementById("networkButton").addEventListener("click", function () {
@@ -196,23 +198,22 @@ document.getElementById("stopButton").addEventListener("click", function () {
   chrome.runtime.sendMessage({ action: "stopButtonClicked" });
 });
 
-
 let activeButton = null;
 
 function handleButtonClick(buttonId) {
   console.log("handling click ", buttonId);
   document.getElementById("timeDisplay").innerText = ""; // Clear previous time display
   const button = document.getElementById(buttonId);
-  
+
   detachDebugger();
   if (activeButton) {
     // If there's an active button, remove its "pressed" state
-    activeButton.classList.remove('pressed');
+    activeButton.classList.remove("pressed");
   }
-  
+
   // Set the new active button
   activeButton = button;
-  activeButton.classList.add('pressed');
+  activeButton.classList.add("pressed");
 
   // Send message for the button clicked
   chrome.runtime.sendMessage({ action: `${buttonId}Clicked` });

@@ -1,11 +1,11 @@
-import {runContentScriptCoverage} from "./tab_coverage.js";
-import {checkValidUrl, proccessFiles, setAttached} from "./helpers.js";
-import {extensionProfileForFlameGraph} from "./extensionprofiler.js";
-import {tabProfileForFlameGraph} from "./tabprofiler.js";
+import { runContentScriptCoverage } from "./tab_coverage.js";
+import { checkValidUrl, proccessFiles, setAttached } from "./helpers.js";
+import { extensionProfileForFlameGraph } from "./extensionprofiler.js";
+import { tabProfileForFlameGraph } from "./tabprofiler.js";
 import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 
 console.log("Service worker loaded");
-chrome.storage.local.remove('attachedTarget');
+chrome.storage.local.remove("attachedTarget");
 
 const TAB = true;
 const ExtensionId = "bmpknceehpgjajlnajokmikpknfffgmj";
@@ -111,28 +111,31 @@ async function stopAndCollectExtensionCoverage(extensionId) {
 
 async function runCoverage(extensionId) {
   if (TAB) {
-    chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
-      let activeTab = tabs[0];
-      sendToDevTools("Active Tab ID: " + activeTab.id);
-      tabId = activeTab.id;
-      const covData = await runContentScriptCoverage(tabId, extensionId);
-      const mapArray = Array.from(covData.entries());
-      console.log("runCoverge", covData)
-       // Save the array in chrome.storage.local
-       await new Promise((resolve, reject) => {
-        chrome.storage.local.set({ coverageData: mapArray }, function() {
+    chrome.tabs.query(
+      { active: true, currentWindow: true },
+      async function (tabs) {
+        let activeTab = tabs[0];
+        sendToDevTools("Active Tab ID: " + activeTab.id);
+        tabId = activeTab.id;
+        const covData = await runContentScriptCoverage(tabId, extensionId);
+        const mapArray = Array.from(covData.entries());
+        console.log("runCoverge", covData);
+        // Save the array in chrome.storage.local
+        await new Promise((resolve, reject) => {
+          chrome.storage.local.set({ coverageData: mapArray }, function () {
             if (chrome.runtime.lastError) {
-                reject(new Error(chrome.runtime.lastError));
+              reject(new Error(chrome.runtime.lastError));
             } else {
-                console.log('Map data has been saved.', covData);
-                resolve();
+              console.log("Map data has been saved.", covData);
+              resolve();
             }
+          });
         });
-    });
 
-    // Send the coverageDone message
-    chrome.runtime.sendMessage({ action: "coverageDone" });
-    });
+        // Send the coverageDone message
+        chrome.runtime.sendMessage({ action: "coverageDone" });
+      },
+    );
   } else {
     await startExtensionCoverage(extensionId);
     let coverageData;
@@ -148,17 +151,17 @@ async function runCoverage(extensionId) {
       }
     });
     const covData = await proccessFiles(uniqueFiles, coverageData);
-    console.log("runCoverge", covData)
-       // Save the array in chrome.storage.local
-       await new Promise((resolve, reject) => {
-        chrome.storage.local.set({ coverageData: mapArray }, function() {
-            if (chrome.runtime.lastError) {
-                reject(new Error(chrome.runtime.lastError));
-            } else {
-                console.log('Map data has been saved.', covData);
-                resolve();
-            }
-        });
+    console.log("runCoverge", covData);
+    // Save the array in chrome.storage.local
+    await new Promise((resolve, reject) => {
+      chrome.storage.local.set({ coverageData: mapArray }, function () {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError));
+        } else {
+          console.log("Map data has been saved.", covData);
+          resolve();
+        }
+      });
     });
 
     // Send the coverageDone message
@@ -183,9 +186,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
   if (request.action === "flamegraphClicked") {
     // tabProfileForFlameGraph()
-    extensionProfileForFlameGraph()
+    extensionProfileForFlameGraph();
   }
-
 });
 
 function profileWithTabID() {

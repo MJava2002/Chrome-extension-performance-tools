@@ -1,4 +1,4 @@
-import {transformProfileData} from "./profileutils.js";
+import { transformProfileData } from "./profileutils.js";
 
 export function tabProfileForFlameGraph() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -33,14 +33,14 @@ export function tabProfileForFlameGraph() {
           console.log(JSON.stringify(profile, null, 2));
           const transformedData = transformProfileData(profile);
           console.log("Before saving", profile);
-          const jsonData = JSON.stringify(transformedData, null, 2)
+          const jsonData = JSON.stringify(transformedData, null, 2);
 
           // Save the stringified JSON using chrome.storage.local
-          chrome.storage.local.set({ myJsonData: jsonData }, function() {
-              console.log('JSON data has been saved.');
-              chrome.runtime.sendMessage({ action: 'dataSaved' });
+          chrome.storage.local.set({ myJsonData: jsonData }, function () {
+            console.log("JSON data has been saved.");
+            chrome.runtime.sendMessage({ action: "dataSaved" });
           });
-        }
+        },
       );
     });
   });

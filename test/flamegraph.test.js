@@ -1,4 +1,4 @@
-require = require("esm")(module/*, options*/)
+require = require("esm")(module /*, options*/);
 
 var assert = require("assert");
 
