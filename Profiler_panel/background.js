@@ -1,6 +1,7 @@
 import { runContentScriptCoverage } from "./tab_coverage.js";
 import {
   checkValidUrl,
+  detachDebugger,
   proccessFiles,
   setAttached,
   waitForStopButtonClick,
@@ -105,6 +106,7 @@ async function stopAndCollectExtensionCoverage(extensionId) {
 
   // Detach
   await chrome.debugger.detach({ targetId: backgroundPage.id });
+  // await detachDebugger();
 
   console.log(
     "Coverage data collected for the extension's background page:",

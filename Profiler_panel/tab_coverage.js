@@ -97,5 +97,6 @@ export async function runContentScriptCoverage(tabId, extensionId) {
     } catch (error) {
       console.error("Error detaching debugger:", error);
     }
+    // await detachDebugger();
   }
 }
