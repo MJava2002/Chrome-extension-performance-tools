@@ -10,6 +10,7 @@
  */
 
 import { drawTable } from "./covered_table.js";
+import { detachDebugger } from "./helpers.js";
 
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
 function initializeFlameGraph() {
@@ -63,6 +64,7 @@ document
   .getElementById("coverageButton")
   .addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "buttonClicked" });
+    handleButtonClick("coverageButton");
   });
 
 function drawCoverageTable() {
@@ -198,9 +200,11 @@ document.getElementById("stopButton").addEventListener("click", function () {
 let activeButton = null;
 
 function handleButtonClick(buttonId) {
+  console.log("handling click ", buttonId);
   document.getElementById("timeDisplay").innerText = ""; // Clear previous time display
   const button = document.getElementById(buttonId);
-
+  
+  detachDebugger();
   if (activeButton) {
     // If there's an active button, remove its "pressed" state
     activeButton.classList.remove('pressed');

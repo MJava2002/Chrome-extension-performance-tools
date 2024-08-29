@@ -11,6 +11,7 @@ export function tabProfileForFlameGraph() {
         return;
       }
       console.log("Debugger attached");
+      setAttached({ tabId: tabId });
 
       chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.enable", () => {
         console.log("Profiler enabled");

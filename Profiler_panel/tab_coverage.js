@@ -1,4 +1,4 @@
-import { checkValidUrl, proccessFiles } from "./helpers.js";
+import { checkValidUrl, proccessFiles, setAttached } from "./helpers.js";
 
 async function startProfilerForCoverage(tabId) {
   await chrome.debugger.sendCommand({ tabId }, "Profiler.enable");
@@ -33,6 +33,8 @@ export async function runContentScriptCoverage(tabId, extensionId) {
           reject(new Error("Failed to attach debugger: " + chrome.runtime.lastError.message));
         } else {
           console.log("Debugger attached successfully.");
+          setAttached({tabId});
+          console.log("should have set ", tabId);
           resolve();
         }
       });
@@ -42,7 +44,7 @@ export async function runContentScriptCoverage(tabId, extensionId) {
     await startProfilerForCoverage(tabId);
 
     // Wait for a specified time to collect coverage data
-    await new Promise(resolve => setTimeout(resolve, 40000));
+    await new Promise(resolve => setTimeout(resolve, 4000));
 
     // Stop profiling and collect coverage data
     const coverageData = await stopProfilerAndCollectCoverage(tabId);

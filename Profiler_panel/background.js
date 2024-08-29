@@ -1,10 +1,12 @@
 import {runContentScriptCoverage} from "./tab_coverage.js";
-import {checkValidUrl, proccessFiles} from "./helpers.js";
+import {checkValidUrl, proccessFiles, setAttached} from "./helpers.js";
 import {extensionProfileForFlameGraph} from "./extensionprofiler.js";
 import {tabProfileForFlameGraph} from "./tabprofiler.js";
 import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 
 console.log("Service worker loaded");
+chrome.storage.local.remove('attachedTarget');
+
 const TAB = true;
 const ExtensionId = "bmpknceehpgjajlnajokmikpknfffgmj";
 var tabId;
@@ -47,6 +49,7 @@ async function startExtensionCoverage(extensionId) {
 
   console.log(backgroundPage.id);
   await chrome.debugger.attach({ targetId: backgroundPage.id }, "1.3");
+  setAttached({ targetId: backgroundPage.id });
 
   await chrome.debugger.sendCommand(
     { targetId: backgroundPage.id },
@@ -197,6 +200,7 @@ function profileWithTabID() {
         return;
       }
       console.log("Debugger attached");
+      setAttached({ tabId: tabId });
 
       chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.enable", () => {
         console.log("Profiler enabled");

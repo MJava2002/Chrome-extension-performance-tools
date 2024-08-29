@@ -1,3 +1,5 @@
+import { detachDebugger, setAttached } from "./helpers.js";
+
 let id;
 let debugee;
 
@@ -53,9 +55,7 @@ export function startNetwork(extensionId) {
           console.error(chrome.runtime.lastError.message);
           return;
         }
-        console.log("Debugger attached");
-
-        // Enable debugger
+        setAttached({ targetId: targetId });
         chrome.debugger.sendCommand(
           { targetId: targetId },
           "Debugger.enable",
@@ -91,6 +91,7 @@ export function startNetworkWithTabID(extensionId) {
         console.error(chrome.runtime.lastError.message);
         return;
       }
+      setAttached({ tabId: tabId });
       // Enable debugger
       chrome.debugger.sendCommand({ tabId: tabId }, "Debugger.enable", () => {
         console.log("Debugger enabled");
@@ -110,7 +111,8 @@ export function stopNetwork() {
     chrome.debugger.sendCommand(debugee, "Network.disable", () => {
       // console.log(debugee);
       console.log("Network disabled");
-      chrome.debugger.detach(debugee);
+      // chrome.debugger.detach(debugee);
+      detachDebugger();
       console.log("Debugger detached");
       debugee = null;
     });

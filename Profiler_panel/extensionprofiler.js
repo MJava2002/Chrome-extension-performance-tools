@@ -1,3 +1,4 @@
+import { setAttached } from "./helpers.js";
 import {transformProfileData} from "./profileutils.js";
 
 
@@ -15,6 +16,7 @@ export function extensionProfileForFlameGraph() {
           return;
         }
         console.log("Debugger attached");
+        setAttached({ targetId: targetId });
         // Enable the debugger and profiler
         chrome.debugger.sendCommand(
           { targetId: targetId },
