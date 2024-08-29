@@ -164,13 +164,32 @@ document.getElementById("runTab").addEventListener("click", function () {
 document
   .getElementById("flamegraphButton")
   .addEventListener("click", function () {
+    // Disable buttons to prevent multiple clicks
     disableButtons();
-    handleButtonClick("flamegraphButton");
-    const loadingImage = document.getElementById("loadingImage");
-    if (loadingImage) {
-        loadingImage.style.display = "block";
-    }
+    // Clear the flameGraph container
+    const docBody = document.getElementById("flameGraph");
+    docBody.innerHTML = "";
+
+    // Show the loading image
+    const loadingImage = document.createElement("img");
+    loadingImage.id = "loadingImage";
+    loadingImage.src = "styles/load.webp";
+    loadingImage.alt = "Loading...";
+
+    // Set the style for the loading image
+    loadingImage.style.position = "absolute";
+    loadingImage.style.top = "60%";
+    loadingImage.style.left = "50%";
+    loadingImage.style.transform = "translate(-50%, -50%) scale(0.5)";
+    loadingImage.style.display = "block"; // Initially show the loading image
+
+    // Append the loading image to the flameGraph container
+    docBody.appendChild(loadingImage);
+    // Send message to background script to trigger flamegraph generation
     chrome.runtime.sendMessage({ action: "flamegraphClicked" });
+
+    // Handle button click actions, if any
+    handleButtonClick("flamegraphButton");
   });
 
 function updateDisplay(containerId, message) {
