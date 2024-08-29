@@ -1,5 +1,10 @@
 import { runContentScriptCoverage } from "./tab_coverage.js";
-import { checkValidUrl, proccessFiles, setAttached } from "./helpers.js";
+import {
+  checkValidUrl,
+  proccessFiles,
+  setAttached,
+  waitForStopButtonClick,
+} from "./helpers.js";
 import { extensionProfileForFlameGraph } from "./extensionprofiler.js";
 import { tabProfileForFlameGraph } from "./tabprofiler.js";
 import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
@@ -7,7 +12,7 @@ import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 console.log("Service worker loaded");
 chrome.storage.local.remove("attachedTarget");
 
-const TAB = true;
+const TAB = false;
 const ExtensionId = "bmpknceehpgjajlnajokmikpknfffgmj";
 var tabId;
 function isExtensionNode(node) {
@@ -139,7 +144,7 @@ async function runCoverage(extensionId) {
   } else {
     await startExtensionCoverage(extensionId);
     let coverageData;
-    await new Promise((r) => setTimeout(r, 10000));
+    await waitForStopButtonClick();
     coverageData = await stopAndCollectExtensionCoverage(extensionId);
     let uniqueFiles = new Set();
     coverageData.result.forEach((script) => {
@@ -152,6 +157,7 @@ async function runCoverage(extensionId) {
     });
     const covData = await proccessFiles(uniqueFiles, coverageData);
     console.log("runCoverge", covData);
+    const mapArray = Array.from(covData.entries());
     // Save the array in chrome.storage.local
     await new Promise((resolve, reject) => {
       chrome.storage.local.set({ coverageData: mapArray }, function () {
@@ -185,8 +191,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     profileWithTabID();
   }
   if (request.action === "flamegraphClicked") {
-    // tabProfileForFlameGraph()
-    extensionProfileForFlameGraph();
+    tabProfileForFlameGraph();
+    // extensionProfileForFlameGraph();
   }
 });
 
@@ -212,7 +218,7 @@ function profileWithTabID() {
         console.log("Profiler started");
       });
 
-      await new Promise((r) => setTimeout(r, 3000));
+      await waitForStopButtonClick();
 
       chrome.debugger.sendCommand(
         { tabId: tabId },
