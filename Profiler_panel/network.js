@@ -58,6 +58,7 @@ function saveRequestData(requestData) {
 
     chrome.storage.local.set({ networkData: networkData }, function () {
       console.log("Network request data saved:", requestData);
+      chrome.runtime.sendMessage({ action: "networkDataSaved" });
     });
   });
 }

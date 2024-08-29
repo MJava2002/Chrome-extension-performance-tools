@@ -192,6 +192,17 @@ document.getElementById("stopButton").addEventListener("click", function () {
 
 document.getElementById("networkButton").addEventListener("click", function () {
   handleButtonClick("networkButton");
+  chrome.runtime.onMessage.addListener(
+    function (message, sender, sendResponse) {
+      if (message.action === "networkDataSaved") {
+        chrome.storage.local.get(["networkData"], function (result) {
+          if (result.networkData) {
+            console.log("Retrieved network data:", result.networkData);
+          }
+        });
+      }
+    },
+  );
 });
 
 document.getElementById("stopButton").addEventListener("click", function () {
