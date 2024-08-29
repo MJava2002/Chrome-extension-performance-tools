@@ -93,6 +93,7 @@ export function drawTable(data) {
   // });
   const docBody = document.getElementById("flameGraph");
   docBody.innerHTML = "";
+
   const container = document.createElement("div");
   container.style.width = "100%";
   container.style.border = "1px solid " + BORDER_COLOR;
