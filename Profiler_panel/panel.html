@@ -9,30 +9,28 @@
     />
     <link rel="stylesheet" type="text/css" href="styles/panel_styles.css" />
     <meta charset="utf8" />
-    <style>
-      .pressed {
-        background-color: #dcdcdc;
-      }
-    </style>
   </head>
   <body>
     <h1>Performance Panel</h1>
     <div class="button-container">
-      <button id="coverageButton" class="main-button">Run Coverage</button>
-      <div class="dropdown" id="dropdown">
-        <button class="dropdown-button"></button>
-        <div class="dropdown-content">
-          <a href="#" id="runExtension">Extension</a>
-          <a href="#" id="runTab">Tab</a>
-        </div>
-      </div>
-      <button id="networkButton" class="button" style="margin-left: 10px">
+      <link rel="stylesheet" href="node_modules/slideon-main/slideon.css" />
+      <script src="node_modules/slideon-main/slideon.js"></script>
+      <label class="slideon slideon-danger slideon-xl slideon-p1 slideon-primary" >
+          <input type="checkbox" checked >
+          <span class="slideon-slider" >
+
+          </span>
+      </label>
+      <button id="coverageButton" class="button">
+        Run Coverage
+      </button>
+      <button id="networkButton" class="button">
         Record Network
       </button>
-      <button id="flamegraphButton" class="button" style="margin-left: 10px">
+      <button id="flamegraphButton" class="button">
         FlameGraph
       </button>
-      <button id="stopButton" class="button" style="margin-left: 10px">
+      <button id="stopButton" class="button">
         Stop
       </button>
       <span id="timeDisplay"></span>

@@ -6,6 +6,19 @@ body {
   color: #b393b3;
 }
 
+.header-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.header-title {
+  font-size: 20vw; /* Increase the font size as needed */
+  font-style: italic; /* Make the font italic */
+  margin: 0; /* Remove default margins */
+}
+
 .popup-container {
   width: 400px;
   height: 500px;

@@ -40,8 +40,12 @@ body {
 }
 .button-container {
   display: flex;
-  align-items: center;
-  margin-top: 10px;
+  flex-wrap: wrap; /* Allows buttons to wrap if needed */
+  gap: 20px; /* Adjust the gap between buttons as needed */
+  justify-content: center; /* Center items horizontally in the container */
+  align-items: center; /* Center items vertically in the container */
+  width: 100%; /* Full width of the parent container */
+  padding: 10px;
 }
 
 #coverageButton {
@@ -50,12 +54,16 @@ body {
   position: relative;
 }
 
-.main-button {
+.main-button .button {
   background-color: #21132c;
   border: 1px solid #b393b3;
   color: #baaec4;
-  padding: 10px 20px;
+  font-size: 16px;
   cursor: pointer;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-grow: 1;
   position: relative;
   border-radius: 5px 0 0 5px;
