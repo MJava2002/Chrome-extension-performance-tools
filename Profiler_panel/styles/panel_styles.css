@@ -22,7 +22,9 @@ body {
   margin-bottom: 20px;
 }
 .button {
-  width: 140px;
+  min-width: 140px;
+  width: auto;
+  white-space: nowrap;
   height: 40px;
   color: #baaec4;
   font-size: 16px;
@@ -42,7 +44,7 @@ body {
   display: flex;
   flex-wrap: wrap; /* Allows buttons to wrap if needed */
   gap: 20px; /* Adjust the gap between buttons as needed */
-  justify-content: center; /* Center items horizontally in the container */
+  justify-content: flex-start; /* Center items horizontally in the container */
   align-items: center; /* Center items vertically in the container */
   width: 100%; /* Full width of the parent container */
   padding: 10px;

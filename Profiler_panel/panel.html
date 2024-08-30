@@ -8,19 +8,18 @@
       href="node_modules/d3-flame-graph/dist/d3-flamegraph.css"
     />
     <link rel="stylesheet" type="text/css" href="styles/panel_styles.css" />
+    <link rel="stylesheet" type="text/css" href="styles/toggle.css" />
     <meta charset="utf8" />
   </head>
   <body>
     <h1>Performance Panel</h1>
     <div class="button-container">
-      <link rel="stylesheet" href="node_modules/slideon-main/slideon.css" />
-      <script src="node_modules/slideon-main/slideon.js"></script>
-      <label class="slideon slideon-danger slideon-xl slideon-p1 slideon-primary" >
-          <input type="checkbox" checked >
-          <span class="slideon-slider" >
-
-          </span>
-      </label>
+      <div class="can-toggle demo-rebrand-1">
+          <input id="d" type="checkbox">
+          <label for="d">
+            <div class="can-toggle__switch" data-checked="Tab" data-unchecked="Extension"></div>
+          </label>
+      </div>
       <button id="coverageButton" class="button">
         Run Coverage
       </button>
@@ -35,6 +34,7 @@
       </button>
       <span id="timeDisplay"></span>
     </div>
+
     <div id="output"></div>
 
     <div id="backgroundMessages"></div>
