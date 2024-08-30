@@ -8,12 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const detailsLink = document.getElementById("detailsLink");
 
   const RESTRICTED = "gpojcgmbiiohoppjcpeeceocaocnnjff";
+  const RESTRICTED_NAME = "Turbo"
   const extensionsDropdown = document.getElementById("extensionsDropdown");
   const extensionIdDisplay = document.getElementById("extensionIdDisplay");
 
   chrome.management.getAll(function (extensions) {
     extensions.forEach((extension) => {
-      if (extension.type === "extension" && extension.id != RESTRICTED) {
+      if (extension.type === "extension" && extension.id != RESTRICTED && extension.name != RESTRICTED_NAME) {
         let button = document.createElement("button");
         let option = document.createElement("option");
         option.value = extension.id;
