@@ -1,8 +1,8 @@
-import { setAttached, waitForStopButtonClick } from "./helpers.js";
+import { getId, setAttached, waitForStopButtonClick } from "./helpers.js";
 import { transformProfileData } from "./profileutils.js";
 
 export function extensionProfileForFlameGraph() {
-  const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
+  const extensionId = getId();
   // sendToDevTools("Extension ID in DevTools panel!");
   chrome.debugger.getTargets((result) => {
     // sendToDevTools(result);

@@ -4,39 +4,31 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   color: #b393b3;
+  border-radius: 15px; /* Adjust the radius to your preference */
 }
 
 .header-info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  text-align: center; /* Center the header text */
+  padding: 20px; /* Reduce padding */
 }
 
 .header-title {
-  font-size: 20vw; /* Increase the font size as needed */
-  font-style: italic; /* Make the font italic */
+  font-size: 5vw; /* Decrease the font size */
+  font-style: italic; /* Keep the font italic */
   margin: 0; /* Remove default margins */
 }
 
 .popup-container {
-  width: 400px;
-  height: 500px;
+  width: 300px;
   background-color: #2c1e38;
-  border: 1px solid #ddd;
   box-shadow: 0 0 10px #21132c;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-}
-
-.header-wrapper {
-  height: 10%;
-  display: flex;
   align-items: center;
-  padding: 10px;
-  background-color: #21132c;
-  box-sizing: border-box;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden; /* Clip content that exceeds the rounded corners */
 }
 
 .header-logo {
@@ -69,6 +61,29 @@ body {
   padding: 10px;
   box-sizing: border-box;
   overflow-y: auto;
+  border-radius: 15px; /* Adjust the radius to your preference */
+}
+
+.link-container {
+  margin-bottom: 20px; /* Add margin after the link */
+}
+
+.link-container a {
+  color: #b3a7bd; /* Normal link color */
+  text-decoration: none; /* Remove underline */
+}
+
+.link-container a:hover {
+  color: #d6587e; /* Color when hovering over the link */
+  text-decoration: underline; /* Add underline on hover */
+}
+
+.link-container a:visited {
+  color: #d1c4e9; /* Color after the link has been visited */
+}
+
+.link-container a:active {
+  color: #f48250; /* Color when the link is clicked */
 }
 
 .input-group {
@@ -95,6 +110,13 @@ input[type="text"] {
   box-sizing: border-box; /* Include padding in width */
 }
 
+/* Style the image */
+.dropdown-image {
+  width: 150px; /* Adjust the width as needed */
+  height: auto;
+  margin-bottom: 20px; /* Space between the image and the dropdown */
+}
+
 button {
   padding: 5px 10px;
   cursor: pointer;
@@ -109,7 +131,48 @@ button:hover {
 }
 
 select {
-  width: 100%; /* Full width for the select element */
-  padding: 5px;
-  box-sizing: border-box;
+  width: 90%;
+  padding: 10px;
+  border-radius: 16px;
+  border: 2px solid #a79ab4;
+  background-color: #ded8e3;
+  font-size: 16px;
+  color: #1f1527;
+  outline: none;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+select:focus {
+  border-color: #a79ab4;
+  box-shadow: 0 0 5px rgba(106, 103, 206, 0.5);
+}
+
+#extensionIdDisplay {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #a79ab4;
+}
+#extensionsDropdown {
+  width: 90%; /* Adjust width to your preference */
+  padding: 8px 16px; /* Control padding, adjust second value to move arrow */
+  font-size: 16px;
+  appearance: none; /* Removes default arrow in some browsers */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("https://static.thenounproject.com/png/551749-200.png");
+  background-size: 8px 6px; /* Adjusts arrow size */
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* Adjust arrow position */
+}
+
+/* Optional: Control the dropdown arrow in Firefox */
+#extensionsDropdown::-ms-expand {
+  display: none;
+}
+
+/* Control the arrow position more precisely */
+#extensionsDropdown {
+  background-position: calc(100% - 16px) center; /* Adjust 16px to your preference */
 }
