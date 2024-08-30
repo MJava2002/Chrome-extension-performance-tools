@@ -2,6 +2,7 @@ body {
 	 padding: 30px;
 }
  .can-toggle {
+	 margin-right: 188px;
 	 position: relative;
 }
  .can-toggle *, .can-toggle *:before, .can-toggle *:after {
