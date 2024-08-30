@@ -13,7 +13,8 @@
     "scripting",
     "webNavigation",
     "webRequest",
-    "downloads"
+    "downloads",
+    "management"
   ],
   "host_permissions": ["<all_urls>"],
 
