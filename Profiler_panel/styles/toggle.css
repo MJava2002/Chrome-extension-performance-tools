@@ -53,7 +53,7 @@ body {
 	 z-index: 5;
 	 text-transform: uppercase;
 	 text-align: center;
-	 background: #21132c;
+	 background: white;
 	 transform: translate3d(0, 0, 0);
 }
  .can-toggle input[type="checkbox"][disabled] ~ label {

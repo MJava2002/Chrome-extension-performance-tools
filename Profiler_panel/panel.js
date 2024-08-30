@@ -146,39 +146,41 @@ function drawCoverageTable() {
     },
   );
 }
+function updateToggleState(isChecked) {
+    if (isChecked) {
+        console.log("Toggle switched to: Tab");
+        // alert("Toggle switched to: Tab");
+    } else {
+        const extensionId = "your-extension-id-here"; // Replace with actual ID or method to get it
+        console.log("Toggle switched to: Extension", extensionId);
+        // alert(`Toggle switched to: Extension (ID: ${extensionId})`);
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleSwitch = document.querySelector('.can-toggle input[type="checkbox"]');
+
+
+    // Set initial state
+    updateToggleState(toggleSwitch.checked);
+
+    // Add event listener for change
+    toggleSwitch.addEventListener('change', function() {
+        // Determine which option is currently checked
+        const currentState = this.checked ? 'Tab' : 'Extension';
+
+        // Send message to background with the current state
+        chrome.runtime.sendMessage({
+            action: "toggleClicked",
+            state: currentState
+        });
+
+        updateToggleState(this.checked);
+    });
+});
 
 document
   .getElementById("flamegraphButton")
   .addEventListener("click", initializeFlameGraph);
-
-// document.getElementById("dropdown").addEventListener("click", function (event) {
-//   event.stopPropagation(); // Prevent clicks from propagating to the document
-//   this.classList.toggle("active");
-// });
-
-// document.addEventListener("click", function (event) {
-//   const dropdown = document.getElementById("dropdown-content");
-//   if (dropdown) {
-//     dropdown.classList.remove("active");
-//   }
-// });
-
-// document.getElementById("runExtension").addEventListener("click", function () {
-//   // Remove the active class to hide the dropdown
-//   const dropdown = document.getElementById("dropdown-content");
-//   if (dropdown) {
-//     dropdown.classList.remove("active");
-//   }
-//   chrome.runtime.sendMessage({ action: "runExtensionClicked" });
-// });
-
-// document.getElementById("runTab").addEventListener("click", function () {
-//   const dropdown = document.getElementById("dropdown-content");
-//   if (dropdown) {
-//     dropdown.classList.remove("active");
-//   }
-//   chrome.runtime.sendMessage({ action: "runTabClicked" });
-// });
 
 document
   .getElementById("flamegraphButton")

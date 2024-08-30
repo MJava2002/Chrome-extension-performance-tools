@@ -11,14 +11,13 @@ import { extensionProfileForFlameGraph } from "./extensionprofiler.js";
 import { tabProfileForFlameGraph } from "./tabprofiler.js";
 import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 
+let tabIsChecked = true;
 console.log("Service worker loaded");
 chrome.storage.local.remove("attachedTarget");
 
 const TAB = false;
 var tabId;
-function isExtensionNode(node) {
-  return node.callFrame.url.includes(extensionId);
-}
+
 function sendToDevTools(message) {
   chrome.runtime.sendMessage({
     target: "devtools",
@@ -187,62 +186,26 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
 });
 
 chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
-  if (request.action === "runExtensionClicked") {
-    const extensionId = await getId();
-    extensionProfileForFlameGraph(extensionId);
-  }
-  if (request.action === "runTabClicked") {
-    profileWithTabID();
-  }
-  if (request.action === "flamegraphClicked") {
-    const extensionId = await getId();
-    extensionProfileForFlameGraph(extensionId);
-    // extensionProfileForFlameGraph();
-  }
+    if (request.action === "flamegraphClicked") {
+        if (!tabIsChecked) {
+            const extensionId = await getId();
+            if (extensionId) {
+                console.log("EXTEBSUIB UD", extensionId)
+                extensionProfileForFlameGraph(extensionId);
+            } else {
+                console.log("Enot checked", extensionId)
+                alert("Extension ID is empty!\nPlease Select From Extension Pop up");
+            }
+        } else if (tabIsChecked) {
+            tabProfileForFlameGraph();
+        }
+    }
+
+    if (request.action === "toggleClicked") {
+        tabIsChecked = request.state === 'Tab'
+    }
 });
 
-function profileWithTabID() {
-  console.log("Tab ID in DevTools panel!");
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    let activeTab = tabs[0];
-    console.log("Active Tab ID: " + activeTab.id);
-    tabId = activeTab.id;
-    chrome.debugger.attach({ tabId: tabId }, "1.3", async function () {
-      if (chrome.runtime.lastError) {
-        console.log("Error: " + chrome.runtime.lastError.message);
-        return;
-      }
-      console.log("Debugger attached");
-      setAttached({ tabId: tabId });
-
-      chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.enable", () => {
-        console.log("Profiler enabled");
-      });
-
-      chrome.debugger.sendCommand({ tabId: tabId }, "Profiler.start", () => {
-        console.log("Profiler started");
-      });
-
-      await waitForStopButtonClick();
-
-      chrome.debugger.sendCommand(
-        { tabId: tabId },
-        "Profiler.stop",
-        (result) => {
-          console.log("Profiler stopped");
-          const profile = result.profile;
-          console.log("PROOOOOOFILE", profile);
-
-          chrome.runtime.sendMessage({
-            target: "panel.js",
-            type: "flameGraphData",
-            data: profile,
-          });
-        },
-      );
-    });
-  });
-}
 
 chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
   if (request.action === "networkButtonClicked") {
