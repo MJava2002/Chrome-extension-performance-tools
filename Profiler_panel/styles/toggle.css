@@ -53,7 +53,7 @@ body {
 	 z-index: 5;
 	 text-transform: uppercase;
 	 text-align: center;
-	 background: white;
+	 background: #21132c;
 	 transform: translate3d(0, 0, 0);
 }
  .can-toggle input[type="checkbox"][disabled] ~ label {
@@ -123,7 +123,7 @@ body {
 	 padding: 0 12px;
 }
  .can-toggle label .can-toggle__switch:after {
-	 top: 2px;
+	 top: 1px;
 	 left: 2px;
 	 border-radius: 2px;
 	 width: 65px;
@@ -172,7 +172,7 @@ body {
 	 background: linear-gradient(135deg, #db7045, #764676);
 }
  .can-toggle.demo-rebrand-1 label .can-toggle__switch:before {
-	 right:2px;
+	 right:1px;
 	 left: 90px; /* Centered the text within the new width */
 	 font-size: 12px; /* Increased font size */
 	 line-height: 40px; /* Centered text vertically */
@@ -181,7 +181,7 @@ body {
 	 color: rgba(255, 255, 255, 0.6);
 }
  .can-toggle.demo-rebrand-1 label .can-toggle__switch:after {
-	 top: 2px;
+	 top: 1px;
      left: 2px;
      border-radius: 5px;
      width: 80px;
