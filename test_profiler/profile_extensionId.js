@@ -13,10 +13,10 @@ import { getId } from "../Profiler_panel/helpers";
 
 let extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
 
-chrome.action.onClicked.addListener(function (tab) {
+chrome.action.onClicked.addListener(async function (tab) {
   if (tab.url.startsWith("http")) {
     let target;
-    extensionId = getId();
+    extensionId = await getId();
     chrome.debugger.getTargets((result) => {
       console.log(result);
       target = result.find((t) => t.title.includes(extensionId));

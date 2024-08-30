@@ -7,10 +7,10 @@ import { getId } from "../Profiler_panel/helpers";
 var tabId;
 let extensionId = "mmgodofmgemfldcejapbjjcbphiajiaj";
 
-chrome.action.onClicked.addListener(function (tab) {
+chrome.action.onClicked.addListener(async function (tab) {
   console.log("CLICKED");
   console.log(tab.url);
-  extensionId = getId();
+  extensionId = await getId();
   if (tab.url.startsWith("http")) {
     tabId = tab.id;
     chrome.debugger.attach({ tabId: tabId }, "1.3", async function () {

@@ -177,24 +177,26 @@ async function runCoverage(extensionId) {
   }
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
   if (request.action === "buttonClicked") {
     console.log("Run coverage button clicked");
-    const extensionId = getId()
+    const extensionId = await getId()
     console.log(extensionId)
     runCoverage(extensionId);
   }
 });
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
   if (request.action === "runExtensionClicked") {
-    extensionProfileForFlameGraph();
+    const extensionId = await getId();
+    extensionProfileForFlameGraph(extensionId);
   }
   if (request.action === "runTabClicked") {
     profileWithTabID();
   }
   if (request.action === "flamegraphClicked") {
-    tabProfileForFlameGraph();
+    const extensionId = await getId();
+    extensionProfileForFlameGraph(extensionId);
     // extensionProfileForFlameGraph();
   }
 });
@@ -242,9 +244,9 @@ function profileWithTabID() {
   });
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
   if (request.action === "networkButtonClicked") {
-    const extensionId = getId();
+    const extensionId = await getId();
     console.log("Network button clicked");
     startNetworkWithTabID(extensionId);
   }

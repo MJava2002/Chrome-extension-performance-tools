@@ -199,11 +199,15 @@ export function waitForStopButtonClick() {
   });
 }
 
-export function getId() {
-  let activeId = ''
-  chrome.storage.local.get(['activeId'], function (result) {
-    console.log('Active ID retrieved:', result.activeId);
-    activeId = result.activeId
+export async function getId() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(['activeId'], function (result) {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError));
+      } else {
+        console.log('Active ID retrieved:', result.activeId);
+        resolve(result.activeId || ''); // Resolve with the retrieved ID or an empty string if not found
+      }
+    });
   });
-  return activeId;
 }
