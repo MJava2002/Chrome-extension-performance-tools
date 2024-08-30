@@ -1,9 +1,11 @@
-const extensionId = "eillpajpafkjenplkofjfimdipclffpk";
+import { getId } from "../Profiler_panel/helpers";
+
+let extensionId = "eillpajpafkjenplkofjfimdipclffpk";
 
 chrome.action.onClicked.addListener(function (tab) {
   if (tab.url.startsWith("http")) {
     let target;
-
+    extensionId = getId();
     chrome.debugger.getTargets((result) => {
       console.log(result);
       target = result.find((t) => t.title.includes(extensionId));

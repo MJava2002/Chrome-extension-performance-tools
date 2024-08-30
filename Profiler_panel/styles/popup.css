@@ -73,7 +73,6 @@ body {
   text-decoration: none; /* Remove underline */
 }
 
-
 .link-container a:hover {
   color: #d6587e; /* Color when hovering over the link */
   text-decoration: underline; /* Add underline on hover */
@@ -111,12 +110,12 @@ input[type="text"] {
   box-sizing: border-box; /* Include padding in width */
 }
 
-    /* Style the image */
-    .dropdown-image {
-      width: 150px; /* Adjust the width as needed */
-      height: auto;
-      margin-bottom: 20px; /* Space between the image and the dropdown */
-    }
+/* Style the image */
+.dropdown-image {
+  width: 150px; /* Adjust the width as needed */
+  height: auto;
+  margin-bottom: 20px; /* Space between the image and the dropdown */
+}
 
 button {
   padding: 5px 10px;
@@ -131,7 +130,6 @@ button:hover {
   background-color: #2b1a38;
 }
 
-
 select {
   width: 90%;
   padding: 10px;
@@ -141,7 +139,9 @@ select {
   font-size: 16px;
   color: #1f1527;
   outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
 }
 
 select:focus {

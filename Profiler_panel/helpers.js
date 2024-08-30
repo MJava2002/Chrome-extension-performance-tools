@@ -198,3 +198,12 @@ export function waitForStopButtonClick() {
     );
   });
 }
+
+export function getId() {
+  let activeId = ''
+  chrome.storage.local.get(['activeId'], function (result) {
+    console.log('Active ID retrieved:', result.activeId);
+    activeId = result.activeId
+  });
+  return activeId;
+}
