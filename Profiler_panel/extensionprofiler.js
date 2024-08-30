@@ -66,7 +66,8 @@ export function extensionProfileForFlameGraph(extensionId) {
         );
       });
     } else {
-      sendToDevTools("Target not found.");
+      chrome.runtime.sendMessage({ action: "targetNotFound" });
+      // chrome.runtime.sendMessage({ action: "changeTargetBool" });
     }
   });
 }

@@ -12,10 +12,13 @@ import { tabProfileForFlameGraph } from "./tabprofiler.js";
 import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 
 let tabIsChecked = true;
+
+let targetNotFound = false;
 console.log("Service worker loaded");
 chrome.storage.local.remove("attachedTarget");
 
 const TAB = false;
+
 var tabId;
 
 function sendToDevTools(message) {
@@ -116,12 +119,12 @@ async function stopAndCollectExtensionCoverage(extensionId) {
 }
 
 async function runCoverage(extensionId) {
-  if (TAB) {
+  if (tabIsChecked) {
     chrome.tabs.query(
       { active: true, currentWindow: true },
       async function (tabs) {
         let activeTab = tabs[0];
-        sendToDevTools("Active Tab ID: " + activeTab.id);
+
         tabId = activeTab.id;
         const covData = await runContentScriptCoverage(tabId, extensionId);
         const mapArray = Array.from(covData.entries());
@@ -184,8 +187,15 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
     runCoverage(extensionId);
   }
 });
-
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.action === "changeTargetBool") {
+        targetNotFound = true;
+        console.log("GOT THIS FARRRRRRRRR")
+    }
+    // Handle other actions...
+});
 chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
+
     if (request.action === "flamegraphClicked") {
         if (!tabIsChecked) {
             const extensionId = await getId();
@@ -194,12 +204,13 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
                 extensionProfileForFlameGraph(extensionId);
             } else {
                 console.log("Enot checked", extensionId)
-                alert("Extension ID is empty!\nPlease Select From Extension Pop up");
+
             }
         } else if (tabIsChecked) {
             tabProfileForFlameGraph();
         }
     }
+    // }
 
     if (request.action === "toggleClicked") {
         tabIsChecked = request.state === 'Tab'

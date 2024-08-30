@@ -219,7 +219,12 @@ function updateDisplay(containerId, message) {
     container.innerText = message;
   }
 }
-
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.action === "targetNotFound") {
+        alert("The target for the specified extension ID could not be found.");
+    }
+    // Handle other actions...
+});
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.target === "devtools") {
     updateDisplay(
@@ -229,6 +234,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         "\n",
     );
   }
+
 });
 
 const messagesContainer = document.createElement("div");
