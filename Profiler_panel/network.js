@@ -19,15 +19,28 @@ function startRequestMonitoring() {
           startTime: params.timestamp,
           url: params.request.url,
           method: params.request.method,
+          size: 0,
         };
       }
     }
   });
 
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
-    if (message === "Network.responseReceived") {
-      console.log("Response received: ", params.response);
+    if (message === "Network.dataReceived") {
+      console.log("Data received IGUESS: ", params.data);
       if (requestTimes[params.requestId]) {
+        console.log("Data received: ", params.data);
+        // Retrieve the request start time and compute latency
+        requestTimes.size += params.dataLength;
+      }
+    }
+  });
+
+  chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
+    if (message === "Network.responseReceived") {
+      if (requestTimes[params.requestId]) {
+        console.log("Response received: ", params.response);
+        console.log("Data size:", requestTimes[params.requestId].size);
         // Retrieve the request start time and compute latency
         const startTime = requestTimes[params.requestId].startTime;
         const endTime = params.timestamp;
