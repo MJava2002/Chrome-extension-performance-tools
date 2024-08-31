@@ -205,9 +205,13 @@ function drawRows(tbody, networkData) {
     timeCell.textContent = `${requestData.latency} ms`;
 
     // Create the waterfall bar
+    const maxWidth = 200;  // Set a maximum width for the bars
+    const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
+
+    // Create the waterfall bar
     const waterfallBar = document.createElement('div');
     waterfallBar.className = 'bar';
-    waterfallBar.style.width = `${requestData.latency}px`; // Scale this as needed
+    waterfallBar.style.width = `${requestData.latency * scaleFactor}px`;
     waterfallBar.style.height = '20px';
     waterfallBar.style.backgroundColor = '#76c7c0'; // Adjust color as needed
     waterfallCell.appendChild(waterfallBar);
