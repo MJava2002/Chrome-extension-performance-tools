@@ -112,7 +112,7 @@ export function countCoveredNumbers(ranges) {
 
   ranges.forEach(([start, end]) => {
     events.push([start, 1]);
-    events.push([end + 1, -1]);
+    events.push([end, -1]);
   });
 
   events.sort((a, b) => a[0] - b[0]);
