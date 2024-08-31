@@ -27,21 +27,21 @@ export function tabProfileForFlameGraph(extensionId) {
       chrome.debugger.sendCommand(
         { tabId: tabId },
         "Profiler.stop",
-        (result) => {
-          console.log("Profiler stopped");
-          const profile = result.profile;
-          console.log(JSON.stringify(profile, null, 2));
-          extensionId = getId();
-          console.log("extensionID", extensionId)
-          const transformedData = transformProfileData(profile, extensionId);
-          console.log("Before saving", transformedData);
-          const jsonData = JSON.stringify(transformedData, null, 2);
+        async (result) => {
+            console.log("Profiler stopped");
+            const profile = result.profile;
+            console.log(JSON.stringify(profile, null, 2));
+            extensionId = await getId();
+            console.log("extensionID", extensionId)
+            const transformedData = transformProfileData(profile, extensionId);
+            console.log("Before saving", transformedData);
+            const jsonData = JSON.stringify(transformedData, null, 2);
 
-          // Save the stringified JSON using chrome.storage.local
-          chrome.storage.local.set({ myJsonData: jsonData }, function () {
-            console.log("JSON data has been saved.");
-            chrome.runtime.sendMessage({ action: "dataSaved" });
-          });
+            // Save the stringified JSON using chrome.storage.local
+            chrome.storage.local.set({myJsonData: jsonData}, function () {
+                console.log("JSON data has been saved.");
+                chrome.runtime.sendMessage({action: "dataSaved"});
+            });
         },
       );
     });
