@@ -40,6 +40,7 @@ function startRequestMonitoring() {
           status: params.response.status,
           type: params.type,
           size: params.response.encodedDataLength,
+          timing: params.response.timing
         };
 
         // Save the data in chrome storage
