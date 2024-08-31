@@ -9,34 +9,23 @@
   </head>
   <body>
     <div class="popup-container">
-      <header class="header-wrapper">
-        <button class="header-button" aria-label="logo">
-          <img
-            class="header-logo"
-            src="icons/default_theme/logo.png"
-            alt="Logo"
-          />
-        </button>
         <div class="header-info">
-          <h1 class="header-title">Popup Header</h1>
+          <h1 class="header-title">TURBO</h1>
         </div>
       </header>
       <main class="popup-main">
-        <div class="input-group">
-          <label for="extensionIdInput">Add or Select Extension ID:</label>
-          <div class="input-button-container">
-            <input
-              type="text"
-              id="extensionIdInput"
-              placeholder="Enter new ID"
-            />
-            <button id="addIdButton">Add ID</button>
-          </div>
-        </div>
-
         <div>
-          <label for="extensionDropdown">Extension IDs:</label>
-          <select id="extensionDropdown"></select>
+          <img
+            class="dropdown-image"
+            src="icons/default_theme/Snail-Streamline-Cyber.svg"
+            alt="Logo"
+          />
+        <div>
+          <h3>Select an extension to get its ID:</h3>
+          <select id="extensionsDropdown">
+            <option value="">Select an extension</option>
+          </select>
+          <p id="extensionIdDisplay"></p>
         </div>
         <div class="link-container">
           <a href="#" id="detailsLink">Click for details</a>

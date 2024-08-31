@@ -2,12 +2,15 @@
  * filter extension related events from the result
  */
 
-var tabId;
-const extensionId = "mmgodofmgemfldcejapbjjcbphiajiaj";
+import { getId } from "../Profiler_panel/helpers";
 
-chrome.action.onClicked.addListener(function (tab) {
+var tabId;
+let extensionId = "mmgodofmgemfldcejapbjjcbphiajiaj";
+
+chrome.action.onClicked.addListener(async function (tab) {
   console.log("CLICKED");
   console.log(tab.url);
+  extensionId = await getId();
   if (tab.url.startsWith("http")) {
     tabId = tab.id;
     chrome.debugger.attach({ tabId: tabId }, "1.3", async function () {

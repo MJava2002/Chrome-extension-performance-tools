@@ -9,12 +9,14 @@
  *   requred, but it's unclear whether this is still supported
  */
 
-const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
+import { getId } from "../Profiler_panel/helpers";
 
-chrome.action.onClicked.addListener(function (tab) {
+let extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
+
+chrome.action.onClicked.addListener(async function (tab) {
   if (tab.url.startsWith("http")) {
     let target;
-
+    extensionId = await getId();
     chrome.debugger.getTargets((result) => {
       console.log(result);
       target = result.find((t) => t.title.includes(extensionId));

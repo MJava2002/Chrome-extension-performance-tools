@@ -8,35 +8,33 @@
       href="node_modules/d3-flame-graph/dist/d3-flamegraph.css"
     />
     <link rel="stylesheet" type="text/css" href="styles/panel_styles.css" />
+    <link rel="stylesheet" type="text/css" href="styles/toggle.css" />
     <meta charset="utf8" />
-    <style>
-      .pressed {
-        background-color: #dcdcdc;
-      }
-    </style>
   </head>
   <body>
     <h1>Performance Panel</h1>
     <div class="button-container">
-      <button id="coverageButton" class="main-button">Run Coverage</button>
-      <div class="dropdown" id="dropdown">
-        <button class="dropdown-button"></button>
-        <div class="dropdown-content">
-          <a href="#" id="runExtension">Extension</a>
-          <a href="#" id="runTab">Tab</a>
-        </div>
+      <div class="can-toggle demo-rebrand-1">
+          <input id="d" type="checkbox">
+          <label for="d">
+            <div class="can-toggle__switch" data-checked="Tab" data-unchecked="Extension"></div>
+          </label>
       </div>
-      <button id="networkButton" class="button" style="margin-left: 10px">
+      <button id="coverageButton" class="button">
+        Run Coverage
+      </button>
+      <button id="networkButton" class="button">
         Record Network
       </button>
-      <button id="flamegraphButton" class="button" style="margin-left: 10px">
+      <button id="flamegraphButton" class="button">
         FlameGraph
       </button>
-      <button id="stopButton" class="button" style="margin-left: 10px">
+      <button id="stopButton" class="button">
         Stop
       </button>
       <span id="timeDisplay"></span>
     </div>
+
     <div id="output"></div>
 
     <div id="backgroundMessages"></div>

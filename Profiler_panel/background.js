@@ -2,6 +2,7 @@ import { runContentScriptCoverage } from "./tab_coverage.js";
 import {
   checkValidUrl,
   detachDebugger,
+  getId,
   proccessFiles,
   setAttached,
   waitForStopButtonClick,
@@ -14,7 +15,6 @@ console.log("Service worker loaded");
 chrome.storage.local.remove("attachedTarget");
 
 const TAB = false;
-const ExtensionId = "bmpknceehpgjajlnajokmikpknfffgmj";
 var tabId;
 function isExtensionNode(node) {
   return node.callFrame.url.includes(extensionId);
@@ -177,23 +177,26 @@ async function runCoverage(extensionId) {
   }
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
   if (request.action === "buttonClicked") {
     console.log("Run coverage button clicked");
-    const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
+    const extensionId = await getId()
+    console.log(extensionId)
     runCoverage(extensionId);
   }
 });
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
   if (request.action === "runExtensionClicked") {
-    extensionProfileForFlameGraph();
+    const extensionId = await getId();
+    extensionProfileForFlameGraph(extensionId);
   }
   if (request.action === "runTabClicked") {
     profileWithTabID();
   }
   if (request.action === "flamegraphClicked") {
-    tabProfileForFlameGraph();
+    const extensionId = await getId();
+    extensionProfileForFlameGraph(extensionId);
     // extensionProfileForFlameGraph();
   }
 });
@@ -241,9 +244,9 @@ function profileWithTabID() {
   });
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
   if (request.action === "networkButtonClicked") {
-    const extensionId = "gighmmpiobklfepjocnamgkkbiglidom";
+    const extensionId = await getId();
     console.log("Network button clicked");
     startNetwork(extensionId);
   }

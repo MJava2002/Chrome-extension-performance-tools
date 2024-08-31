@@ -151,34 +151,34 @@ document
   .getElementById("flamegraphButton")
   .addEventListener("click", initializeFlameGraph);
 
-document.getElementById("dropdown").addEventListener("click", function (event) {
-  event.stopPropagation(); // Prevent clicks from propagating to the document
-  this.classList.toggle("active");
-});
+// document.getElementById("dropdown").addEventListener("click", function (event) {
+//   event.stopPropagation(); // Prevent clicks from propagating to the document
+//   this.classList.toggle("active");
+// });
 
-document.addEventListener("click", function (event) {
-  const dropdown = document.getElementById("dropdown-content");
-  if (dropdown) {
-    dropdown.classList.remove("active");
-  }
-});
+// document.addEventListener("click", function (event) {
+//   const dropdown = document.getElementById("dropdown-content");
+//   if (dropdown) {
+//     dropdown.classList.remove("active");
+//   }
+// });
 
-document.getElementById("runExtension").addEventListener("click", function () {
-  // Remove the active class to hide the dropdown
-  const dropdown = document.getElementById("dropdown-content");
-  if (dropdown) {
-    dropdown.classList.remove("active");
-  }
-  chrome.runtime.sendMessage({ action: "runExtensionClicked" });
-});
+// document.getElementById("runExtension").addEventListener("click", function () {
+//   // Remove the active class to hide the dropdown
+//   const dropdown = document.getElementById("dropdown-content");
+//   if (dropdown) {
+//     dropdown.classList.remove("active");
+//   }
+//   chrome.runtime.sendMessage({ action: "runExtensionClicked" });
+// });
 
-document.getElementById("runTab").addEventListener("click", function () {
-  const dropdown = document.getElementById("dropdown-content");
-  if (dropdown) {
-    dropdown.classList.remove("active");
-  }
-  chrome.runtime.sendMessage({ action: "runTabClicked" });
-});
+// document.getElementById("runTab").addEventListener("click", function () {
+//   const dropdown = document.getElementById("dropdown-content");
+//   if (dropdown) {
+//     dropdown.classList.remove("active");
+//   }
+//   chrome.runtime.sendMessage({ action: "runTabClicked" });
+// });
 
 document
   .getElementById("flamegraphButton")
