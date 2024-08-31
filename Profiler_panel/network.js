@@ -12,7 +12,8 @@ function startRequestMonitoring() {
       console.log("Request intercepted: ", params);
       if (
         params.initiator.stack &&
-        params.initiator.stack.callFrames[0].url.startsWith(pattern)
+        params.initiator.stack.callFrames[0].url.startsWith(pattern) ||
+        params.documentURL.startsWith(pattern)
       ) {
         requestTimes[params.requestId] = {
           startTime: params.timestamp,
@@ -198,7 +199,7 @@ function drawRows(tbody, networkData) {
     const timeCell = row.insertCell(5);
     const waterfallCell = row.insertCell(6);
 
-    nameCell.textContent = requestData.url.split('/').pop();  // Just the file name
+    nameCell.textContent = requestData.url;  // Just the file name
     methodCell.textContent = requestData.method;
     statusCell.textContent = requestData.status;
     typeCell.textContent = requestData.type;
@@ -206,38 +207,41 @@ function drawRows(tbody, networkData) {
     timeCell.textContent = `${requestData.latency} ms`;
 
     const timing = requestData.timing;
-    const phases = [
-      { start: timing.proxyStart, end: timing.proxyEnd, color: '#FF5733' }, // Proxy
-      { start: timing.dnsStart, end: timing.dnsEnd, color: '#33FF57' },     // DNS
-      { start: timing.connectStart, end: timing.connectEnd, color: '#3357FF' }, // Connect
-      { start: timing.sslStart, end: timing.sslEnd, color: '#FF33FF' }       // SSL
-    ];
-    console.log(phases);
+    if (timing) {
+      const phases = [
+        { start: timing.proxyStart, end: timing.proxyEnd, color: '#FF5733' }, // Proxy
+        { start: timing.dnsStart, end: timing.dnsEnd, color: '#33FF57' },     // DNS
+        { start: timing.connectStart, end: timing.connectEnd, color: '#3357FF' }, // Connect
+        { start: timing.sslStart, end: timing.sslEnd, color: '#FF33FF' }       // SSL
+      ];
+      console.log(phases);
+  
+      // Create the waterfall bar
+      const maxWidth = 150;  // Set a maximum width for the bars
+      const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
+  
+      // const validPhases = phases.filter(phase => phase.start >= 0 && phase.end >= 0 && phase.end > phase.start);
+      const validPhases = phases;
+      const totalDuration = validPhases.reduce((acc, phase) => acc + (phase.end - phase.start), 0);
+  
+      const barContainer = document.createElement("div");
+      barContainer.style.display = "flex";
+      barContainer.style.height = "100%";
+      barContainer.style.alignItems = "center";
+  
+      validPhases.forEach(phase => {
+          const phaseDuration = phase.end - phase.start;
+          const bar = document.createElement("div");
+          bar.style.width = `${(phaseDuration / totalDuration) * 100}%`;
+          bar.style.height = "10px";
+          bar.style.backgroundColor = phase.color;
+          bar.style.marginRight = "2px";
+          barContainer.appendChild(bar);
+      });
 
-    // Create the waterfall bar
-    const maxWidth = 200;  // Set a maximum width for the bars
-    const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
-
-    // const validPhases = phases.filter(phase => phase.start >= 0 && phase.end >= 0 && phase.end > phase.start);
-    const validPhases = phases;
-    const totalDuration = validPhases.reduce((acc, phase) => acc + (phase.end - phase.start), 0);
-
-    const barContainer = document.createElement("div");
-    barContainer.style.display = "flex";
-    barContainer.style.height = "100%";
-    barContainer.style.alignItems = "center";
-
-    validPhases.forEach(phase => {
-        const phaseDuration = phase.end - phase.start;
-        const bar = document.createElement("div");
-        bar.style.width = `${(phaseDuration / totalDuration) * 100}%`;
-        bar.style.height = "10px";
-        bar.style.backgroundColor = phase.color;
-        bar.style.marginRight = "2px";
-        barContainer.appendChild(bar);
-    });
-
-    waterfallCell.appendChild(barContainer);
+      barContainer.style.width = `${requestData.latency * scaleFactor}px`;
+      waterfallCell.appendChild(barContainer);
+    }
 
     // Create the waterfall bar
     // const waterfallBar = document.createElement('div');
@@ -245,7 +249,7 @@ function drawRows(tbody, networkData) {
     // waterfallBar.style.width = `${requestData.latency * scaleFactor}px`;
     // waterfallBar.style.height = '20px';
     // waterfallBar.style.backgroundColor = '#76c7c0'; // Adjust color as needed
-    waterfallCell.appendChild(waterfallBar);
+    // waterfallCell.appendChild(waterfallBar);
 
     // Style the row
     [nameCell, methodCell, statusCell, typeCell, sizeCell, timeCell, waterfallCell].forEach(cell => {
