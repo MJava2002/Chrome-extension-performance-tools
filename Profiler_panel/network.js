@@ -205,6 +205,15 @@ function drawRows(tbody, networkData) {
     sizeCell.textContent = `${(requestData.size / 1024).toFixed(2)} KB`; // Convert size to KB
     timeCell.textContent = `${requestData.latency} ms`;
 
+    const timing = requestData.timing;
+    const phases = [
+      { start: timing.proxyStart, end: timing.proxyEnd, color: '#FF5733' }, // Proxy
+      { start: timing.dnsStart, end: timing.dnsEnd, color: '#33FF57' },     // DNS
+      { start: timing.connectStart, end: timing.connectEnd, color: '#3357FF' }, // Connect
+      { start: timing.sslStart, end: timing.sslEnd, color: '#FF33FF' }       // SSL
+    ];
+    console.log(phases);
+
     // Create the waterfall bar
     const maxWidth = 200;  // Set a maximum width for the bars
     const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
