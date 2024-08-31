@@ -12,17 +12,17 @@ const {
 describe("CoveredBytes", function () {
   describe("one byte", function () {
     it("", function () {
-      assert.equal(countCoveredNumbers([[10, 10]]), 1);
+      assert.equal(countCoveredNumbers([[10, 11]]), 1);
     });
   });
   describe("two bytes", function () {
     it("", function () {
-      assert.equal(countCoveredNumbers([[10, 11]]), 2);
+      assert.equal(countCoveredNumbers([[10, 10]]), 0);
     });
   });
   describe("basic test", function () {
     it("", function () {
-      assert.equal(countCoveredNumbers([[10, 15]]), 6);
+      assert.equal(countCoveredNumbers([[0, 5]]), 5);
     });
   });
   describe("basic intersect test", function () {
@@ -30,7 +30,7 @@ describe("CoveredBytes", function () {
       assert.equal(
         countCoveredNumbers([
           [10, 15],
-          [15, 16],
+          [15, 17],
         ]),
         7,
       );
@@ -46,7 +46,7 @@ describe("CoveredBytes", function () {
           [18, 20],
           [25, 30],
         ]),
-        20,
+        17,
       );
     });
   });
@@ -58,7 +58,7 @@ describe("CoveredBytes", function () {
           [16, 20],
           [24, 30],
         ]),
-        18,
+        15,
       );
     });
   });
@@ -340,7 +340,7 @@ describe("Get file name", function () {
           mockCoverageData,
           "chrome-extension://abcd1234/background.js",
         ).coveragePercentage,
-        20.3,
+        20,
       );
     });
   });
@@ -353,7 +353,7 @@ describe("Get file name", function () {
           mockCoverageData,
           "chrome-extension://abcd1234/content.js",
         ).coveragePercentage,
-        12.1,
+        12,
       );
     });
   });
@@ -366,7 +366,7 @@ describe("Get file name", function () {
           mockCoverageData,
           "chrome-extension://abcd1234/script/background.js",
         ).coveragePercentage,
-        3.82,
+        3.8,
       );
     });
   });
