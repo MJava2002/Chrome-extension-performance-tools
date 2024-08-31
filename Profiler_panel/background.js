@@ -246,8 +246,7 @@ function profileWithTabID() {
 
 chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
   if (request.action === "networkButtonClicked") {
-    // const extensionId = await getId();
-    const extensionId = "mdnleldcmiljblolnjhpnblkcekpdkpa";
+    const extensionId = await getId();
     console.log("Network button clicked");
     startNetwork(extensionId);
   }

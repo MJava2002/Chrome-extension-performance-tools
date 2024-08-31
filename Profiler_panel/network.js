@@ -30,11 +30,11 @@ function startRequestMonitoring() {
       console.log("Data received IGUESS: ", params.data);
       if (requestTimes[params.requestId]) {
         console.log("Data received: ", params.data);
-        // Retrieve the request start time and compute latency
         requestTimes.size += params.dataLength;
       }
     }
   });
+
 
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     if (message === "Network.responseReceived") {
@@ -45,6 +45,14 @@ function startRequestMonitoring() {
         const startTime = requestTimes[params.requestId].startTime;
         const endTime = params.timestamp;
         const latency = endTime - startTime;
+        let size = requestTimes[params.requestId].size;
+        if (size == 0) {
+          size = params.response.encodedDataLength;
+        }
+        const local_protocols = ['file', 'chrome-extension'];
+        if (size === 0 && local_protocols.includes(params.response.protocol)) {
+          size = '(Local resource)';
+        }
 
         // Add additional details to the request data
         const requestData = {
@@ -53,7 +61,7 @@ function startRequestMonitoring() {
           latency: latency.toFixed(4) * 1000, // convert to ms
           status: params.response.status,
           type: params.type,
-          size: params.response.encodedDataLength,
+          size: size,
           timing: params.response.timing
         };
 
