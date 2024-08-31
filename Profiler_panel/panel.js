@@ -11,6 +11,7 @@
 
 import { drawTable } from "./covered_table.js";
 import { detachDebugger } from "./helpers.js";
+import { drawNetworkTable } from "./network.js";
 
 function disableButtons() {
   const coverageButton = document.getElementById("coverageButton")
@@ -309,6 +310,7 @@ document.getElementById("networkButton").addEventListener("click", function () {
               if (loadingImage) {
                 loadingImage.style.display = "none";
               }
+              drawNetworkTable(result.networkData);
             }
           });
         }

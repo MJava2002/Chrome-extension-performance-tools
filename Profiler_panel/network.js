@@ -141,3 +141,76 @@ export function stopNetwork() {
     });
   }
 }
+
+export function drawNetworkTable(networkData) {
+  const BORDER_COLOR = "#a79ab4";
+  const docBody = document.getElementById("flameGraph");
+  docBody.innerHTML = "";
+
+  const container = document.createElement("div");
+  container.style.width = "100%";
+  container.style.border = "1px solid " + BORDER_COLOR;
+
+  // Create the table element
+  const table = document.createElement("table");
+  table.style.width = "100%";
+  table.style.borderCollapse = "collapse";
+
+  // Create the table headers
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  const headers = ["Name", "Method", "Status", "Type", "Size", "Time", "Waterfall"];
+  
+  headers.forEach(headerText => {
+    const th = document.createElement("th");
+    th.textContent = headerText;
+    th.style.border = "1px solid " + BORDER_COLOR;
+    th.style.padding = "8px";
+    th.style.textAlign = "left";
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Create the table body
+  const tbody = document.createElement("tbody");
+  table.appendChild(tbody);
+
+  // Append the table to the container
+  container.appendChild(table);
+  docBody.appendChild(container);
+
+    networkData.forEach(requestData => {
+      const row = tbody.insertRow();
+
+      const nameCell = row.insertCell(0);
+      const methodCell = row.insertCell(1);
+      const statusCell = row.insertCell(2);
+      const typeCell = row.insertCell(3);
+      const sizeCell = row.insertCell(4);
+      const timeCell = row.insertCell(5);
+      const waterfallCell = row.insertCell(6);
+
+      nameCell.textContent = requestData.url.split('/').pop();  // Just the file name
+      methodCell.textContent = requestData.method;
+      statusCell.textContent = requestData.status;
+      typeCell.textContent = requestData.type;
+      sizeCell.textContent = `${(requestData.size / 1024).toFixed(2)} KB`; // Convert size to KB
+      timeCell.textContent = `${requestData.latency} ms`;
+
+      // Create the waterfall bar
+      const waterfallBar = document.createElement('div');
+      waterfallBar.className = 'bar';
+      waterfallBar.style.width = `${requestData.latency}px`; // Scale this as needed
+      waterfallBar.style.height = '20px';
+      waterfallBar.style.backgroundColor = '#76c7c0'; // Adjust color as needed
+      waterfallCell.appendChild(waterfallBar);
+
+      // Style the row
+      [nameCell, methodCell, statusCell, typeCell, sizeCell, timeCell, waterfallCell].forEach(cell => {
+        cell.style.border = "1px solid " + BORDER_COLOR;
+        cell.style.padding = "8px";
+      });
+    });
+}
