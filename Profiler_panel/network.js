@@ -218,12 +218,33 @@ function drawRows(tbody, networkData) {
     const maxWidth = 200;  // Set a maximum width for the bars
     const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
 
+    // const validPhases = phases.filter(phase => phase.start >= 0 && phase.end >= 0 && phase.end > phase.start);
+    const validPhases = phases;
+    const totalDuration = validPhases.reduce((acc, phase) => acc + (phase.end - phase.start), 0);
+
+    const barContainer = document.createElement("div");
+    barContainer.style.display = "flex";
+    barContainer.style.height = "100%";
+    barContainer.style.alignItems = "center";
+
+    validPhases.forEach(phase => {
+        const phaseDuration = phase.end - phase.start;
+        const bar = document.createElement("div");
+        bar.style.width = `${(phaseDuration / totalDuration) * 100}%`;
+        bar.style.height = "10px";
+        bar.style.backgroundColor = phase.color;
+        bar.style.marginRight = "2px";
+        barContainer.appendChild(bar);
+    });
+
+    waterfallCell.appendChild(barContainer);
+
     // Create the waterfall bar
-    const waterfallBar = document.createElement('div');
-    waterfallBar.className = 'bar';
-    waterfallBar.style.width = `${requestData.latency * scaleFactor}px`;
-    waterfallBar.style.height = '20px';
-    waterfallBar.style.backgroundColor = '#76c7c0'; // Adjust color as needed
+    // const waterfallBar = document.createElement('div');
+    // waterfallBar.className = 'bar';
+    // waterfallBar.style.width = `${requestData.latency * scaleFactor}px`;
+    // waterfallBar.style.height = '20px';
+    // waterfallBar.style.backgroundColor = '#76c7c0'; // Adjust color as needed
     waterfallCell.appendChild(waterfallBar);
 
     // Style the row
