@@ -30,10 +30,10 @@ export function transformProfileData(profile, extensionId) {
     if (!node) return null;
     let label = '';
     if (checkValidUrl(`(${node.callFrame.url})`, extensionId)) {
-      label = "Run by extension: "
+      label = "Run by extension: " + node.callFrame.functionName 
     }
     const result = {
-      name: label + node.callFrame.functionName,
+      name: label || `(${node.callFrame.url}`,
       value: node.selfTime || 1,
       children: [],
     };
