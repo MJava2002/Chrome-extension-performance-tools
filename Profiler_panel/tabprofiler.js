@@ -1,7 +1,8 @@
-import { waitForStopButtonClick, setAttached } from "./helpers.js";
+import {waitForStopButtonClick, setAttached, checkValidUrl} from "./helpers.js";
 import { transformProfileData } from "./profileutils.js";
 
-export function tabProfileForFlameGraph() {
+export function tabProfileForFlameGraph(extensionId) {
+  console.log("extensionID", extensionId)
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let activeTab = tabs[0];
     console.log("Active Tab ID: " + activeTab.id);
@@ -30,7 +31,17 @@ export function tabProfileForFlameGraph() {
         (result) => {
           console.log("Profiler stopped");
           const profile = result.profile;
-          console.log("Profiler result:", profile);
+          // console.log("Profiler result:", profile);
+          // let uniqueFiles = new Set();
+          // profile.nodes.forEach((script) => {
+          //     if (
+          //       script.callFrame.url &&
+          //       !uniqueFiles.has(script.callFrame.url) &&
+          //       checkValidUrl(script.callFrame.url, extensionId)
+          //     ) {
+          //       uniqueFiles.add(script.callFrame.url);
+          //     }
+          // });
           console.log(JSON.stringify(profile, null, 2));
           const transformedData = transformProfileData(profile);
           console.log("Before saving", profile);
