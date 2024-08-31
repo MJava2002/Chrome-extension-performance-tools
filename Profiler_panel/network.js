@@ -230,10 +230,15 @@ function drawRows(tbody, networkData) {
     const timing = requestData.timing;
     if (timing) {
       const phases = [
-        { start: timing.proxyStart, end: timing.proxyEnd, color: '#FF5733' }, // Proxy
-        { start: timing.dnsStart, end: timing.dnsEnd, color: '#33FF57' },     // DNS
-        { start: timing.connectStart, end: timing.connectEnd, color: '#3357FF' }, // Connect
-        { start: timing.sslStart, end: timing.sslEnd, color: '#FF33FF' }       // SSL
+        { start: timing.proxyStart, end: timing.proxyEnd, color: '#FF5733', label: 'Proxy' }, // Proxy
+        { start: timing.dnsStart, end: timing.dnsEnd, color: '#33FF57', label: 'DNS' },       // DNS
+        { start: timing.connectStart, end: timing.connectEnd, color: '#3357FF', label: 'Connect' }, // Connect
+        { start: timing.sslStart, end: timing.sslEnd, color: '#FF33FF', label: 'SSL' },       // SSL
+        { start: timing.workerStart, end: timing.workerReady, color: '#FF9933', label: 'Worker Start/Ready' }, // Worker Start/Ready
+        { start: timing.workerFetchStart, end: timing.workerRespondWithSettled, color: '#9933FF', label: 'Worker Fetch/Respond' }, // Worker Fetch/Respond
+        { start: timing.sendStart, end: timing.sendEnd, color: '#FF3399', label: 'Send Request' }, // Send Request
+        { start: timing.pushStart, end: timing.pushEnd, color: '#3399FF', label: 'Push Request' }, // Push Request
+        { start: timing.receiveHeadersStart, end: timing.receiveHeadersEnd, color: '#FF9966', label: 'Receive Headers' }  // Receive Headers
       ];
       console.log(phases);
   
@@ -257,6 +262,7 @@ function drawRows(tbody, networkData) {
           bar.style.height = "10px";
           bar.style.backgroundColor = phase.color;
           bar.style.marginRight = "2px";
+          // bar.addEventListener('mouseover', (event) => console.log('hovered!'));
           barContainer.appendChild(bar);
       });
 
