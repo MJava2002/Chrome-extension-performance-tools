@@ -65,6 +65,7 @@ export function getLastSegmentFromUrl(url, extensionId) {
 }
 
 export function checkValidUrl(url, id) {
+  try {
     const containsId = url.includes(id);
 
     const urlObj = new URL(url);
@@ -72,6 +73,10 @@ export function checkValidUrl(url, id) {
     const isValidProtocol = urlObj.protocol === "chrome-extension:";
     // Return true if both conditions are met
     return isValidProtocol && containsId;
+  } catch (error) {
+    //console.error("Invalid URL:", error);
+    return false;
+  }
 }
 
 export function calculateCoveragePercentage(
