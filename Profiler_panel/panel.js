@@ -280,6 +280,9 @@ document.getElementById("stopButton").addEventListener("click", function () {
 
 document.getElementById("networkButton").addEventListener("click", function () {
     disableButtons();
+    chrome.storage.local.set({ networkData: [] }, function () {
+      console.log("Network data cleared");
+    });
     const docBody = document.getElementById("flameGraph");
     docBody.innerHTML = "";
 
