@@ -234,7 +234,7 @@ function drawRows(tbody, networkData) {
     statusCell.textContent = requestData.status;
     typeCell.textContent = requestData.type;
     sizeCell.textContent = `${(requestData.size / 1024).toFixed(2)} KB`; // Convert size to KB
-    timeCell.textContent = `${requestData.latency} ms`;
+    timeCell.textContent = `${requestData.latency.toFixed(2)} ms`;
     const timing = requestData.timing;
     if (timing) {
       const phases = [
@@ -297,7 +297,8 @@ function drawRows(tbody, networkData) {
 
       // Create the waterfall bar
       const maxWidth = 150; // Set a maximum width for the bars
-      const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
+      // const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
+      const scaleFactor = 1;
 
       // const validPhases = phases.filter(phase => phase.start >= 0 && phase.end >= 0 && phase.end > phase.start);
       const validPhases = phases;
@@ -314,14 +315,21 @@ function drawRows(tbody, networkData) {
       validPhases.forEach((phase) => {
         const phaseDuration = phase.end - phase.start;
         const bar = document.createElement("div");
+        bar.className = "bar";
         bar.style.width = `${(phaseDuration / totalDuration) * 100}%`;
         bar.style.height = "10px";
         bar.style.backgroundColor = phase.color;
         bar.style.marginRight = "2px";
+        bar.title = `${phase.label}: ${phase.start}, ${phase.end}`;
+
+        // const tooltip = document.createElement("div");
+        // tooltip.className = 'tooltip';
+        // tooltip.textContent = 'pls';
+        // bar.appendChild(tooltip);
         barContainer.appendChild(bar);
       });
 
-      barContainer.style.width = `${requestData.latency * scaleFactor}px`;
+      barContainer.style.width = `300px`;
       waterfallCell.appendChild(barContainer);
     }
 
