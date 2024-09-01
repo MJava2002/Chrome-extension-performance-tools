@@ -45,7 +45,7 @@ function startRequestMonitoring() {
         const endTime = params.timestamp;
         const latency = endTime - startTime;
         let size = requestTimes[params.requestId].size;
-        if (size == 0) {
+        if (size == 0 && params.response.encodedDataLength > 0) {
           size = params.response.encodedDataLength;
         }
         const local_protocols = ["file", "chrome-extension"];
@@ -317,7 +317,6 @@ function drawRows(tbody, networkData) {
         bar.style.height = "10px";
         bar.style.backgroundColor = phase.color;
         bar.style.marginRight = "2px";
-        // bar.addEventListener('mouseover', (event) => console.log('hovered!'));
         barContainer.appendChild(bar);
       });
 
