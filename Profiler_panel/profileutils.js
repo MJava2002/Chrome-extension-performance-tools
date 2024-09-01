@@ -1,4 +1,6 @@
-export function transformProfileData(profile) {
+import { checkValidUrl } from "./helpers.js";
+
+export function transformProfileData(profile, extensionId) {
   if (!profile || !profile.nodes || !profile.nodes.length) {
     console.error("Invalid profile data");
     return null;
@@ -26,9 +28,12 @@ export function transformProfileData(profile) {
     const node = nodes[idx];
 
     if (!node) return null;
-
+    let label = node.callFrame.functionName;
+    if (checkValidUrl(`(${node.callFrame.url})`, extensionId)) {
+      label = "Run by extension: " + node.callFrame.functionName 
+    }
     const result = {
-      name: node.callFrame.functionName || `(${node.callFrame.url})`,
+      name: label || `(${node.callFrame.url}`,
       value: node.selfTime || 1,
       children: [],
     };
