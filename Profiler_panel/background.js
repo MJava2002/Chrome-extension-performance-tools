@@ -11,7 +11,7 @@ import { extensionProfileForFlameGraph } from "./extensionprofiler.js";
 import { tabProfileForFlameGraph } from "./tabprofiler.js";
 import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 
-let tabIsChecked = true;
+let tabIsChecked = false;
 
 let targetNotFound = false;
 console.log("Service worker loaded");
