@@ -11,8 +11,8 @@ function startRequestMonitoring() {
     if (message === "Network.requestWillBeSent") {
       console.log("Request intercepted: ", params);
       if (
-        params.initiator.stack &&
-        params.initiator.stack.callFrames[0].url.startsWith(pattern) ||
+        (params.initiator.stack &&
+          params.initiator.stack.callFrames[0].url.startsWith(pattern)) ||
         params.documentURL.startsWith(pattern)
       ) {
         requestTimes[params.requestId] = {
@@ -35,7 +35,6 @@ function startRequestMonitoring() {
     }
   });
 
-
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     if (message === "Network.responseReceived") {
       if (requestTimes[params.requestId]) {
@@ -49,9 +48,9 @@ function startRequestMonitoring() {
         if (size == 0) {
           size = params.response.encodedDataLength;
         }
-        const local_protocols = ['file', 'chrome-extension'];
+        const local_protocols = ["file", "chrome-extension"];
         if (size === 0 && local_protocols.includes(params.response.protocol)) {
-          size = '(Local resource)';
+          size = "(Local resource)";
         }
 
         // Add additional details to the request data
@@ -62,7 +61,7 @@ function startRequestMonitoring() {
           status: params.response.status,
           type: params.type,
           size: size,
-          timing: params.response.timing
+          timing: params.response.timing,
         };
 
         // Save the data in chrome storage
@@ -183,9 +182,17 @@ export function drawNetworkTable(networkData) {
   // Create the table headers
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
-  const headers = ["URL", "Method", "Status", "Type", "Size", "Latency", "Waterfall"];
-  
-  headers.forEach(headerText => {
+  const headers = [
+    "URL",
+    "Method",
+    "Status",
+    "Type",
+    "Size",
+    "Latency",
+    "Waterfall",
+  ];
+
+  headers.forEach((headerText) => {
     const th = document.createElement("th");
     th.textContent = headerText;
     th.style.border = "1px solid " + BORDER_COLOR;
@@ -209,7 +216,7 @@ export function drawNetworkTable(networkData) {
 }
 
 function drawRows(tbody, networkData) {
-  networkData.forEach(requestData => {
+  networkData.forEach((requestData) => {
     const row = tbody.insertRow();
 
     const nameCell = row.insertCell(0);
@@ -220,7 +227,7 @@ function drawRows(tbody, networkData) {
     const timeCell = row.insertCell(5);
     const waterfallCell = row.insertCell(6);
 
-    nameCell.textContent = requestData.url;  // Just the file name
+    nameCell.textContent = requestData.url; // Just the file name
     methodCell.textContent = requestData.method;
     statusCell.textContent = requestData.status;
     typeCell.textContent = requestData.type;
@@ -230,59 +237,106 @@ function drawRows(tbody, networkData) {
     const timing = requestData.timing;
     if (timing) {
       const phases = [
-        { start: timing.proxyStart, end: timing.proxyEnd, color: '#FF5733', label: 'Proxy' }, // Proxy
-        { start: timing.dnsStart, end: timing.dnsEnd, color: '#33FF57', label: 'DNS' },       // DNS
-        { start: timing.connectStart, end: timing.connectEnd, color: '#3357FF', label: 'Connect' }, // Connect
-        { start: timing.sslStart, end: timing.sslEnd, color: '#FF33FF', label: 'SSL' },       // SSL
-        { start: timing.workerStart, end: timing.workerReady, color: '#FF9933', label: 'Worker Start/Ready' }, // Worker Start/Ready
-        { start: timing.workerFetchStart, end: timing.workerRespondWithSettled, color: '#9933FF', label: 'Worker Fetch/Respond' }, // Worker Fetch/Respond
-        { start: timing.sendStart, end: timing.sendEnd, color: '#FF3399', label: 'Send Request' }, // Send Request
-        { start: timing.pushStart, end: timing.pushEnd, color: '#3399FF', label: 'Push Request' }, // Push Request
-        { start: timing.receiveHeadersStart, end: timing.receiveHeadersEnd, color: '#FF9966', label: 'Receive Headers' }  // Receive Headers
+        {
+          start: timing.proxyStart,
+          end: timing.proxyEnd,
+          color: "#FF5733",
+          label: "Proxy",
+        }, // Proxy
+        {
+          start: timing.dnsStart,
+          end: timing.dnsEnd,
+          color: "#33FF57",
+          label: "DNS",
+        }, // DNS
+        {
+          start: timing.connectStart,
+          end: timing.connectEnd,
+          color: "#3357FF",
+          label: "Connect",
+        }, // Connect
+        {
+          start: timing.sslStart,
+          end: timing.sslEnd,
+          color: "#FF33FF",
+          label: "SSL",
+        }, // SSL
+        {
+          start: timing.workerStart,
+          end: timing.workerReady,
+          color: "#FF9933",
+          label: "Worker Start/Ready",
+        }, // Worker Start/Ready
+        {
+          start: timing.workerFetchStart,
+          end: timing.workerRespondWithSettled,
+          color: "#9933FF",
+          label: "Worker Fetch/Respond",
+        }, // Worker Fetch/Respond
+        {
+          start: timing.sendStart,
+          end: timing.sendEnd,
+          color: "#FF3399",
+          label: "Send Request",
+        }, // Send Request
+        {
+          start: timing.pushStart,
+          end: timing.pushEnd,
+          color: "#3399FF",
+          label: "Push Request",
+        }, // Push Request
+        {
+          start: timing.receiveHeadersStart,
+          end: timing.receiveHeadersEnd,
+          color: "#FF9966",
+          label: "Receive Headers",
+        }, // Receive Headers
       ];
       console.log(phases);
-  
+
       // Create the waterfall bar
-      const maxWidth = 150;  // Set a maximum width for the bars
+      const maxWidth = 150; // Set a maximum width for the bars
       const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
-  
+
       // const validPhases = phases.filter(phase => phase.start >= 0 && phase.end >= 0 && phase.end > phase.start);
       const validPhases = phases;
-      const totalDuration = validPhases.reduce((acc, phase) => acc + (phase.end - phase.start), 0);
-  
+      const totalDuration = validPhases.reduce(
+        (acc, phase) => acc + (phase.end - phase.start),
+        0,
+      );
+
       const barContainer = document.createElement("div");
       barContainer.style.display = "flex";
       barContainer.style.height = "100%";
       barContainer.style.alignItems = "center";
-  
-      validPhases.forEach(phase => {
-          const phaseDuration = phase.end - phase.start;
-          const bar = document.createElement("div");
-          bar.style.width = `${(phaseDuration / totalDuration) * 100}%`;
-          bar.style.height = "10px";
-          bar.style.backgroundColor = phase.color;
-          bar.style.marginRight = "2px";
-          // bar.addEventListener('mouseover', (event) => console.log('hovered!'));
-          barContainer.appendChild(bar);
+
+      validPhases.forEach((phase) => {
+        const phaseDuration = phase.end - phase.start;
+        const bar = document.createElement("div");
+        bar.style.width = `${(phaseDuration / totalDuration) * 100}%`;
+        bar.style.height = "10px";
+        bar.style.backgroundColor = phase.color;
+        bar.style.marginRight = "2px";
+        // bar.addEventListener('mouseover', (event) => console.log('hovered!'));
+        barContainer.appendChild(bar);
       });
 
       barContainer.style.width = `${requestData.latency * scaleFactor}px`;
       waterfallCell.appendChild(barContainer);
     }
 
-    // Create the waterfall bar
-    // const waterfallBar = document.createElement('div');
-    // waterfallBar.className = 'bar';
-    // waterfallBar.style.width = `${requestData.latency * scaleFactor}px`;
-    // waterfallBar.style.height = '20px';
-    // waterfallBar.style.backgroundColor = '#76c7c0'; // Adjust color as needed
-    // waterfallCell.appendChild(waterfallBar);
-
     // Style the row
-    [nameCell, methodCell, statusCell, typeCell, sizeCell, timeCell, waterfallCell].forEach(cell => {
+    [
+      nameCell,
+      methodCell,
+      statusCell,
+      typeCell,
+      sizeCell,
+      timeCell,
+      waterfallCell,
+    ].forEach((cell) => {
       cell.style.border = "1px solid " + BORDER_COLOR;
       cell.style.padding = "8px";
     });
   });
 }
-

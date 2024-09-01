@@ -170,16 +170,16 @@ body {
 }
 
 @font-face {
-  font-family: 'MyCustomFont';
-  src: url('fonts/SpaceGrotesk-VariableFont_wght.ttf') format('truetype');
+  font-family: "MyCustomFont";
+  src: url("fonts/SpaceGrotesk-VariableFont_wght.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  font-family: 'MyCustomFont', sans-serif;
+  font-family: "MyCustomFont", sans-serif;
 }
 
 #flameGraph {
-  font-family: 'MyCustomFont', sans-serif; /* Apply the custom font */
+  font-family: "MyCustomFont", sans-serif; /* Apply the custom font */
 }

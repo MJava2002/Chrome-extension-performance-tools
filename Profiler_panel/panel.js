@@ -14,31 +14,31 @@ import { detachDebugger } from "./helpers.js";
 import { drawNetworkTable } from "./network.js";
 
 function disableButtons() {
-  const coverageButton = document.getElementById("coverageButton")
-  const networkButton = document.getElementById("networkButton")
-  const flamegraphButton = document.getElementById("flamegraphButton")
+  const coverageButton = document.getElementById("coverageButton");
+  const networkButton = document.getElementById("networkButton");
+  const flamegraphButton = document.getElementById("flamegraphButton");
 
   coverageButton.disabled = true;
   networkButton.disabled = true;
   flamegraphButton.disabled = true;
 
-  coverageButton.style.cursor = 'not-allowed';
-  networkButton.style.cursor = 'not-allowed';
-  flamegraphButton.style.cursor = 'not-allowed';
+  coverageButton.style.cursor = "not-allowed";
+  networkButton.style.cursor = "not-allowed";
+  flamegraphButton.style.cursor = "not-allowed";
 }
 
 function enableButtons() {
-  const coverageButton = document.getElementById("coverageButton")
-  const networkButton = document.getElementById("networkButton")
-  const flamegraphButton = document.getElementById("flamegraphButton")
+  const coverageButton = document.getElementById("coverageButton");
+  const networkButton = document.getElementById("networkButton");
+  const flamegraphButton = document.getElementById("flamegraphButton");
 
   coverageButton.disabled = false;
   networkButton.disabled = false;
   flamegraphButton.disabled = false;
 
-  coverageButton.style.cursor = '';
-  networkButton.style.cursor = '';
-  flamegraphButton.style.cursor = '';
+  coverageButton.style.cursor = "";
+  networkButton.style.cursor = "";
+  flamegraphButton.style.cursor = "";
 }
 
 // const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
@@ -69,7 +69,7 @@ function initializeFlameGraph() {
                 .then((data) => {
                   const loadingImage = document.getElementById("loadingImage");
                   if (loadingImage) {
-                      loadingImage.style.display = "none";
+                    loadingImage.style.display = "none";
                   }
 
                   d3.select("#flameGraph").datum(data).call(chart);
@@ -78,17 +78,15 @@ function initializeFlameGraph() {
                   console.warn("Error loading JSON:", error);
                   const loadingImage = document.getElementById("loadingImage");
                   if (loadingImage) {
-                      loadingImage.style.display = "none";
+                    loadingImage.style.display = "none";
                   }
-
                 });
             } else {
               console.log("No data found.");
               const loadingImage = document.getElementById("loadingImage");
               if (loadingImage) {
-                  loadingImage.style.display = "none";
+                loadingImage.style.display = "none";
               }
-
             }
           });
         }
@@ -279,46 +277,46 @@ document.getElementById("stopButton").addEventListener("click", function () {
 });
 
 document.getElementById("networkButton").addEventListener("click", function () {
-    disableButtons();
-    chrome.storage.local.set({ networkData: [] }, function () {
-      console.log("Network data cleared");
-    });
-    const docBody = document.getElementById("flameGraph");
-    docBody.innerHTML = "";
+  disableButtons();
+  chrome.storage.local.set({ networkData: [] }, function () {
+    console.log("Network data cleared");
+  });
+  const docBody = document.getElementById("flameGraph");
+  docBody.innerHTML = "";
 
-    // Show the loading image
-    const loadingImage = document.createElement("img");
-    loadingImage.id = "loadingImage";
-    loadingImage.src = "styles/load.webp";
-    loadingImage.alt = "Loading...";
+  // Show the loading image
+  const loadingImage = document.createElement("img");
+  loadingImage.id = "loadingImage";
+  loadingImage.src = "styles/load.webp";
+  loadingImage.alt = "Loading...";
 
-    // Set the style for the loading image
-    loadingImage.style.position = "absolute";
-    loadingImage.style.top = "60%";
-    loadingImage.style.left = "50%";
-    loadingImage.style.transform = "translate(-50%, -50%) scale(0.5)";
-    loadingImage.style.display = "block"; // Initially show the loading image
+  // Set the style for the loading image
+  loadingImage.style.position = "absolute";
+  loadingImage.style.top = "60%";
+  loadingImage.style.left = "50%";
+  loadingImage.style.transform = "translate(-50%, -50%) scale(0.5)";
+  loadingImage.style.display = "block"; // Initially show the loading image
 
-    // Append the loading image to the flameGraph container
-    docBody.appendChild(loadingImage);
-    handleButtonClick("networkButton");
+  // Append the loading image to the flameGraph container
+  docBody.appendChild(loadingImage);
+  handleButtonClick("networkButton");
 
-    chrome.runtime.onMessage.addListener(
-      function (message, sender, sendResponse) {
-        if (message.action === "networkDataSaved") {
-          chrome.storage.local.get(["networkData"], function (result) {
-            if (result.networkData) {
-              console.log("Retrieved network data:", result.networkData);
-              const loadingImage = document.getElementById("loadingImage");
-              if (loadingImage) {
-                loadingImage.style.display = "none";
-              }
-              drawNetworkTable(result.networkData);
+  chrome.runtime.onMessage.addListener(
+    function (message, sender, sendResponse) {
+      if (message.action === "networkDataSaved") {
+        chrome.storage.local.get(["networkData"], function (result) {
+          if (result.networkData) {
+            console.log("Retrieved network data:", result.networkData);
+            const loadingImage = document.getElementById("loadingImage");
+            if (loadingImage) {
+              loadingImage.style.display = "none";
             }
-          });
-        }
-      },
-    );
+            drawNetworkTable(result.networkData);
+          }
+        });
+      }
+    },
+  );
 });
 
 document.getElementById("stopButton").addEventListener("click", function () {

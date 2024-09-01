@@ -201,12 +201,12 @@ export function waitForStopButtonClick() {
 
 export async function getId() {
   return new Promise((resolve, reject) => {
-    chrome.storage.local.get(['activeId'], function (result) {
+    chrome.storage.local.get(["activeId"], function (result) {
       if (chrome.runtime.lastError) {
         reject(new Error(chrome.runtime.lastError));
       } else {
-        console.log('Active ID retrieved:', result.activeId);
-        resolve(result.activeId || ''); // Resolve with the retrieved ID or an empty string if not found
+        console.log("Active ID retrieved:", result.activeId);
+        resolve(result.activeId || ""); // Resolve with the retrieved ID or an empty string if not found
       }
     });
   });

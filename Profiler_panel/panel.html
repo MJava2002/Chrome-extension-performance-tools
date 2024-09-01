@@ -15,23 +15,19 @@
     <h1>Performance Panel</h1>
     <div class="button-container">
       <div class="can-toggle demo-rebrand-1">
-          <input id="d" type="checkbox">
-          <label for="d">
-            <div class="can-toggle__switch" data-checked="Tab" data-unchecked="Extension"></div>
-          </label>
+        <input id="d" type="checkbox" />
+        <label for="d">
+          <div
+            class="can-toggle__switch"
+            data-checked="Tab"
+            data-unchecked="Extension"
+          ></div>
+        </label>
       </div>
-      <button id="coverageButton" class="button">
-        Run Coverage
-      </button>
-      <button id="networkButton" class="button">
-        Record Network
-      </button>
-      <button id="flamegraphButton" class="button">
-        FlameGraph
-      </button>
-      <button id="stopButton" class="button">
-        Stop
-      </button>
+      <button id="coverageButton" class="button">Run Coverage</button>
+      <button id="networkButton" class="button">Record Network</button>
+      <button id="flamegraphButton" class="button">FlameGraph</button>
+      <button id="stopButton" class="button">Stop</button>
       <span id="timeDisplay"></span>
     </div>
 
@@ -39,11 +35,7 @@
 
     <div id="backgroundMessages"></div>
     <!-- Container for background messages -->
-    <div
-      id="flameGraph"
-      style="width: 960px; height: 500px"
-    >
-    </div>
+    <div id="flameGraph" style="width: 960px; height: 500px"></div>
     <script src="node_modules/d3/d3.v7.js"></script>
     <script src="node_modules/d3-flame-graph/dist/d3-flamegraph.min.js"></script>
     <script type="module" src="panel.js"></script>
