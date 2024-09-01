@@ -215,6 +215,8 @@ export function drawNetworkTable(networkData) {
   drawRows(tbody, networkData);
 }
 
+const colors = ['#faf2a1', '#10a4ae', '#082c96', '#61b3d6', '#e1775d', '#d35ca3', '#f1b0e8', '#d5f5b0', '#5f932c']
+
 function drawRows(tbody, networkData) {
   networkData.forEach((requestData) => {
     const row = tbody.insertRow();
@@ -233,62 +235,61 @@ function drawRows(tbody, networkData) {
     typeCell.textContent = requestData.type;
     sizeCell.textContent = `${(requestData.size / 1024).toFixed(2)} KB`; // Convert size to KB
     timeCell.textContent = `${requestData.latency} ms`;
-
     const timing = requestData.timing;
     if (timing) {
       const phases = [
         {
           start: timing.proxyStart,
           end: timing.proxyEnd,
-          color: "#FF5733",
+          color: colors[0],
           label: "Proxy",
         }, // Proxy
         {
           start: timing.dnsStart,
           end: timing.dnsEnd,
-          color: "#33FF57",
+          color: colors[1],
           label: "DNS",
         }, // DNS
         {
           start: timing.connectStart,
           end: timing.connectEnd,
-          color: "#3357FF",
+          color: colors[2],
           label: "Connect",
         }, // Connect
         {
           start: timing.sslStart,
           end: timing.sslEnd,
-          color: "#FF33FF",
+          color: colors[3],
           label: "SSL",
         }, // SSL
         {
           start: timing.workerStart,
           end: timing.workerReady,
-          color: "#FF9933",
+          color: colors[4],
           label: "Worker Start/Ready",
         }, // Worker Start/Ready
         {
           start: timing.workerFetchStart,
           end: timing.workerRespondWithSettled,
-          color: "#9933FF",
+          color: colors[5],
           label: "Worker Fetch/Respond",
         }, // Worker Fetch/Respond
         {
           start: timing.sendStart,
           end: timing.sendEnd,
-          color: "#FF3399",
+          color: colors[6],
           label: "Send Request",
         }, // Send Request
         {
           start: timing.pushStart,
           end: timing.pushEnd,
-          color: "#3399FF",
+          color: colors[7],
           label: "Push Request",
         }, // Push Request
         {
           start: timing.receiveHeadersStart,
           end: timing.receiveHeadersEnd,
-          color: "#FF9966",
+          color: colors[8],
           label: "Receive Headers",
         }, // Receive Headers
       ];
