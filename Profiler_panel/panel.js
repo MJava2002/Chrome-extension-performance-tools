@@ -146,35 +146,36 @@ function drawCoverageTable() {
   );
 }
 function updateToggleState(isChecked) {
-    if (isChecked) {
-        console.log("Toggle switched to: Tab");
-        // alert("Toggle switched to: Tab");
-    } else {
-        const extensionId = "your-extension-id-here"; // Replace with actual ID or method to get it
-        console.log("Toggle switched to: Extension", extensionId);
-        // alert(`Toggle switched to: Extension (ID: ${extensionId})`);
-    }
+  if (isChecked) {
+    console.log("Toggle switched to: Tab");
+    // alert("Toggle switched to: Tab");
+  } else {
+    const extensionId = "your-extension-id-here"; // Replace with actual ID or method to get it
+    console.log("Toggle switched to: Extension", extensionId);
+    // alert(`Toggle switched to: Extension (ID: ${extensionId})`);
+  }
 }
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleSwitch = document.querySelector('.can-toggle input[type="checkbox"]');
+document.addEventListener("DOMContentLoaded", function () {
+  const toggleSwitch = document.querySelector(
+    '.can-toggle input[type="checkbox"]',
+  );
 
+  // Set initial state
+  updateToggleState(toggleSwitch.checked);
 
-    // Set initial state
-    updateToggleState(toggleSwitch.checked);
+  // Add event listener for change
+  toggleSwitch.addEventListener("change", function () {
+    // Determine which option is currently checked
+    const currentState = this.checked ? "Tab" : "Extension";
 
-    // Add event listener for change
-    toggleSwitch.addEventListener('change', function() {
-        // Determine which option is currently checked
-        const currentState = this.checked ? 'Tab' : 'Extension';
-
-        // Send message to background with the current state
-        chrome.runtime.sendMessage({
-            action: "toggleClicked",
-            state: currentState
-        });
-
-        updateToggleState(this.checked);
+    // Send message to background with the current state
+    chrome.runtime.sendMessage({
+      action: "toggleClicked",
+      state: currentState,
     });
+
+    updateToggleState(this.checked);
+  });
 });
 
 document
@@ -219,10 +220,10 @@ function updateDisplay(containerId, message) {
   }
 }
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.action === "targetNotFound") {
-        alert("The target for the specified extension ID could not be found.");
-    }
-    // Handle other actions...
+  if (request.action === "targetNotFound") {
+    alert("The target for the specified extension ID could not be found.");
+  }
+  // Handle other actions...
 });
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.target === "devtools") {
@@ -233,7 +234,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         "\n",
     );
   }
-
 });
 
 const messagesContainer = document.createElement("div");

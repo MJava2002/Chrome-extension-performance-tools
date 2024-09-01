@@ -15,6 +15,7 @@ feature/api testing phase:
 - FlameGraph
 
 ## TODO
+
 - disable other buttons when one is clicked (there are errors when you click multiple buttons quickly)
 - maybe display a text like 'recording coverage...' or change button text to 'recording...'
 - coverage table draws over flamegraph. flamegraph doesnt show up if you do coverage first

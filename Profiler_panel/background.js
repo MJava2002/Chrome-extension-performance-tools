@@ -179,44 +179,45 @@ async function runCoverage(extensionId) {
   }
 }
 
-chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
-  if (request.action === "buttonClicked") {
-    console.log("Run coverage button clicked");
-    const extensionId = await getId()
-    console.log(extensionId)
-    runCoverage(extensionId);
-  }
-});
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.action === "changeTargetBool") {
-        targetNotFound = true;
-        console.log("GOT THIS FARRRRRRRRR")
+chrome.runtime.onMessage.addListener(
+  async function (request, sender, sendResponse) {
+    if (request.action === "buttonClicked") {
+      console.log("Run coverage button clicked");
+      const extensionId = await getId();
+      console.log(extensionId);
+      runCoverage(extensionId);
     }
-    // Handle other actions...
+  },
+);
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "changeTargetBool") {
+    targetNotFound = true;
+    console.log("GOT THIS FARRRRRRRRR");
+  }
+  // Handle other actions...
 });
-chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
-
+chrome.runtime.onMessage.addListener(
+  async function (request, sender, sendResponse) {
     if (request.action === "flamegraphClicked") {
-        if (!tabIsChecked) {
-            const extensionId = await getId();
-            if (extensionId) {
-                console.log("EXTEBSUIB UD", extensionId)
-                extensionProfileForFlameGraph(extensionId);
-            } else {
-                console.log("Enot checked", extensionId)
-
-            }
-        } else if (tabIsChecked) {
-            tabProfileForFlameGraph();
+      if (!tabIsChecked) {
+        const extensionId = await getId();
+        if (extensionId) {
+          console.log("EXTEBSUIB UD", extensionId);
+          extensionProfileForFlameGraph(extensionId);
+        } else {
+          console.log("Enot checked", extensionId);
         }
+      } else if (tabIsChecked) {
+        tabProfileForFlameGraph();
+      }
     }
     // }
 
     if (request.action === "toggleClicked") {
-        tabIsChecked = request.state === 'Tab'
+      tabIsChecked = request.state === "Tab";
     }
-});
-
+  },
+);
 
 chrome.runtime.onMessage.addListener(
   async function (request, sender, sendResponse) {

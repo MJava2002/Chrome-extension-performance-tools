@@ -215,7 +215,17 @@ export function drawNetworkTable(networkData) {
   drawRows(tbody, networkData);
 }
 
-const colors = ['#faf2a1', '#10a4ae', '#082c96', '#61b3d6', '#e1775d', '#d35ca3', '#f1b0e8', '#d5f5b0', '#5f932c']
+const colors = [
+  "#faf2a1",
+  "#10a4ae",
+  "#082c96",
+  "#61b3d6",
+  "#e1775d",
+  "#d35ca3",
+  "#f1b0e8",
+  "#d5f5b0",
+  "#5f932c",
+];
 
 function drawRows(tbody, networkData) {
   networkData.forEach((requestData) => {
