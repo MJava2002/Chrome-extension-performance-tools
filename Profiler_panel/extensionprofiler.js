@@ -2,8 +2,7 @@ import { getId, setAttached, waitForStopButtonClick } from "./helpers.js";
 import { transformProfileData } from "./profileutils.js";
 
 export function extensionProfileForFlameGraph(extensionId) {
-  // sendToDevTools("Extension ID in DevTools panel!");
-  console.log("extensionID", extensionId);
+  console.log("extensionID", extensionId)
   chrome.debugger.getTargets((result) => {
     // sendToDevTools(result);
     let target = result.find((t) => t.title.includes(extensionId));
@@ -52,21 +51,21 @@ export function extensionProfileForFlameGraph(extensionId) {
             console.log("PROFILERRR:", profile);
             console.log(JSON.stringify(profile, null, 2));
             const transformedData = transformProfileData(profile);
-            console.log("BEFORRRRRRRRRRRE", profile);
 
             // Serialize JSON object to a string
             const jsonData = JSON.stringify(transformedData, null, 2);
-            console.log(jsonData);
+            console.log("JSON DATA ISSSSSSSSSSSS", jsonData);
             // Save the stringified JSON using chrome.storage.local
             chrome.storage.local.set({ myJsonData: jsonData }, function () {
-              console.log("JSON data has been saved.");
+              console.log("JSON data has been saved.", jsonData);
               chrome.runtime.sendMessage({ action: "dataSaved" });
             });
           },
         );
       });
     } else {
-      sendToDevTools("Target not found.");
+      chrome.runtime.sendMessage({ action: "targetNotFound" });
+      // chrome.runtime.sendMessage({ action: "changeTargetBool" });
     }
   });
 }

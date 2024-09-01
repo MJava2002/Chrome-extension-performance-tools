@@ -74,7 +74,7 @@ export function checkValidUrl(url, id) {
     // Return true if both conditions are met
     return isValidProtocol && containsId;
   } catch (error) {
-    console.error("Invalid URL:", error);
+    //console.error("Invalid URL:", error);
     return false;
   }
 }
