@@ -1,4 +1,9 @@
-import {waitForStopButtonClick, setAttached, checkValidUrl, getId} from "./helpers.js";
+import {
+  waitForStopButtonClick,
+  setAttached,
+  checkValidUrl,
+  getId,
+} from "./helpers.js";
 import { transformProfileData } from "./profileutils.js";
 
 export function tabProfileForFlameGraph(extensionId) {
@@ -32,7 +37,7 @@ export function tabProfileForFlameGraph(extensionId) {
           const profile = result.profile;
           console.log(JSON.stringify(profile, null, 2));
           extensionId = getId();
-          console.log("extensionID", extensionId)
+          console.log("extensionID", extensionId);
           const transformedData = transformProfileData(profile, extensionId);
           console.log("Before saving", transformedData);
           const jsonData = JSON.stringify(transformedData, null, 2);

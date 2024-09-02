@@ -3,7 +3,8 @@ const BORDER_COLOR = "#a79ab4";
 const PINK = "#d6587e";
 const YELLOW = "#eaa41e";
 const ORANGE = "#f48250";
-const IMAGE_PATH = "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
+const IMAGE_PATH =
+  "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
 
 function interpolateColor(color1, color2, factor) {
   var result = color1
@@ -98,7 +99,7 @@ export function drawTable(data) {
   container.style.width = "100%";
   container.style.border = "1px solid " + BORDER_COLOR;
   if (data.size === 0) {
-    container.style.border = "none";  // Remove table border
+    container.style.border = "none"; // Remove table border
     // If there are no data entries, display an image
     const emptyRow = document.createElement("div");
     emptyRow.style.textAlign = "center"; // Center the image in the div
@@ -110,8 +111,8 @@ export function drawTable(data) {
     const text = document.createElement("div");
     text.textContent = "Nothing to observe here";
     text.style.fontFamily = "'MyCustomFont', sans-serif";
-    text.style.color = TEXT_COLOR  // Set the text color
-    text.style.marginTop = "10px";  // Add some space between the image and the text
+    text.style.color = TEXT_COLOR; // Set the text color
+    text.style.marginTop = "10px"; // Add some space between the image and the text
     text.style.fontSize = "24px";
 
     emptyRow.appendChild(img);

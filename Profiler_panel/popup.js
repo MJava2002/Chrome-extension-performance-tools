@@ -1,4 +1,4 @@
-let activeId = '';
+let activeId = "";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!chrome || !chrome.storage) {
@@ -8,13 +8,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const detailsLink = document.getElementById("detailsLink");
 
   const RESTRICTED = "gpojcgmbiiohoppjcpeeceocaocnnjff";
-  const RESTRICTED_NAME = "Turbo"
+  const RESTRICTED_NAME = "Turbo";
   const extensionsDropdown = document.getElementById("extensionsDropdown");
   const extensionIdDisplay = document.getElementById("extensionIdDisplay");
 
   chrome.management.getAll(function (extensions) {
     extensions.forEach((extension) => {
-      if (extension.type === "extension" && extension.id != RESTRICTED && extension.name != RESTRICTED_NAME) {
+      if (
+        extension.type === "extension" &&
+        extension.id != RESTRICTED &&
+        extension.name != RESTRICTED_NAME
+      ) {
         let button = document.createElement("button");
         let option = document.createElement("option");
         option.value = extension.id;
@@ -29,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (activeId) {
       extensionIdDisplay.textContent = "Extension ID: " + activeId;
       chrome.storage.local.set({ activeId: activeId }, function () {
-        console.log('Active ID saved to storage');
+        console.log("Active ID saved to storage");
       });
     } else {
       extensionIdDisplay.textContent = "";
