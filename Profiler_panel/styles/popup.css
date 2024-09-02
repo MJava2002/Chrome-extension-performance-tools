@@ -165,6 +165,9 @@ select:focus {
   background-size: 8px 6px; /* Adjusts arrow size */
   background-repeat: no-repeat;
   background-position: right 10px center; /* Adjust arrow position */
+  white-space: nowrap; /* Prevent text from wrapping to the next line */
+  overflow: hidden; /* Hide the overflowed text */
+  text-overflow: ellipsis; /* Add ellipsis (...) when the text overflows */
 }
 
 /* Optional: Control the dropdown arrow in Firefox */
