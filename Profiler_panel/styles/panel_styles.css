@@ -184,30 +184,62 @@ tbody tr:hover {
   background-color: rgba(38, 36, 36, 0.8); /* Light gray background on hover */
   color: #333; /* Text color on hover */
 }
-.fit-parent-div {
-  /* overflow-y: auto; */
+/*.fit-parent-div {*/
+/*  display: block;*/
+/*  width: 100%; !* Expand to full width of parent *!*/
+/*  height: auto; !* Adjust height to fit content *!*/
+/*  max-width: 100%; !* Prevent overflowing parent width *!*/
+/*  max-height: 100%; !* Prevent overflowing parent height *!*/
+/*  box-sizing: border-box; !* Include padding and border in size calculations *!*/
+/*  overflow-y: auto; !* Enable vertical scrolling *!*/
+/*  overflow-x: auto; !* Enable horizontal scrolling *!*/
+/*  margin-right: 20px; !* Adjust this value to set the desired left margin *!*/
+/*}*/
+::-webkit-scrollbar {
+  width: 5px; /* Narrow scrollbar width */
+  height: 5px; /* Narrow scrollbar height for horizontal scrolling */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Fully transparent track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.5); /* Semi-transparent thumb */
+  border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+/* Optional: Add a slight hover effect for better visibility */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.7); /* Darker thumb on hover */
+}
+
+.fit-parent-div  {
   display: block;
-  width: 100%; /* Expand to full width of parent */
-  height: auto; /* Adjust height to fit content */
-  max-width: 100%; /* Prevent overflowing parent width */
-  max-height: 100%; /* Prevent overflowing parent height */
-  box-sizing: border-box; /* Include padding and border in size calculations */
+  width: 100%; /* Adjust width based on desired margins */
+  height: auto;
+  max-width: calc(100% - 58px);
+  max-height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: auto;
+  /*margin: 0 auto; !* Center horizontally with equal left and right margins *!*/
 }
 
-@font-face {
-  font-family: "MyCustomFont";
-  src: url("fonts/SpaceGrotesk-VariableFont_wght.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
+/*@font-face {*/
+/*  font-family: "MyCustomFont";*/
+/*  src: url("fonts/SpaceGrotesk-VariableFont_wght.ttf") format("truetype");*/
+/*  font-weight: normal;*/
+/*  font-style: normal;*/
+/*}*/
 
-body {
-  font-family: "MyCustomFont", sans-serif;
-}
+/*body {*/
+/*  font-family: "MyCustomFont", sans-serif;*/
+/*}*/
 
-#flameGraph {
-  font-family: "MyCustomFont", sans-serif; /* Apply the custom font */
-}
+/*#flameGraph {*/
+/*  font-family: "MyCustomFont", sans-serif; !* Apply the custom font *!*/
+/*}*/
 
 .bar .tooltip {
   visibility: hidden;

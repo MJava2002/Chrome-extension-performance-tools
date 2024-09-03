@@ -3,6 +3,11 @@
   "description": "Performance Tool Extension",
   "version": "1.0",
   "manifest_version": 3,
+  "icons": {
+    "16": "icons/default_theme/logo-16.png",
+    "48": "icons/default_theme/logo-48.png",
+    "128": "icons/default_theme/logo-128.png"
+  },
   "devtools_page": "devtools.html",
   "permissions": [
     "storage",
