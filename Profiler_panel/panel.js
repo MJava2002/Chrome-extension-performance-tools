@@ -54,6 +54,7 @@ function initializeFlameGraph() {
       .label(function (d) {
         return d.name + " (" + d.value + ")";
       });
+
     chrome.runtime.onMessage.addListener(
       function (message, sender, sendResponse) {
         if (message.action === "dataSaved") {
@@ -73,6 +74,7 @@ function initializeFlameGraph() {
                   }
 
                   d3.select("#flameGraph").datum(data).call(chart);
+                  chart.search("Run by extension:");
                 })
                 .catch((error) => {
                   console.warn("Error loading JSON:", error);
