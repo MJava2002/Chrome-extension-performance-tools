@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     chrome.management.getAll(function (extensions) {
       extensions.forEach((extension) => {
-        if (extension.type === "extension" && extension.id != RESTRICTED) {
+        if (extension.type === "extension" && extension.id !== RESTRICTED) {
           let option = document.createElement("option");
           option.value = extension.id;
           option.textContent = extension.name;
