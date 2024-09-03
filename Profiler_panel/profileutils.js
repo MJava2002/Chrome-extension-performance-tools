@@ -35,11 +35,11 @@ export function transformProfileData(profile, extensionId) {
     let label = node.callFrame.functionName && node.callFrame.functionName.trim() !== ''
     ? node.callFrame.functionName
     : `(${node.callFrame.url})`;
-    // console.log("LABELLL", label)
+
     if (checkValidUrl(`${node.callFrame.url}`, extensionId)) {
-      console.log("LABELLL", label)
+
       label = "Run by extension: " + label
-      console.log("CURRRRR", label)
+
     }
     const result = {
       name: label,
