@@ -21,6 +21,7 @@ body {
   white-space: pre-wrap;
   margin-bottom: 20px;
 }
+
 .button {
   min-width: 140px;
   width: auto;
@@ -48,6 +49,10 @@ body {
   align-items: center; /* Center items vertically in the container */
   width: 100%; /* Full width of the parent container */
   padding: 10px;
+}
+.button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 #coverageButton {

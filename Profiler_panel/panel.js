@@ -354,3 +354,28 @@ function handleButtonClick(buttonId) {
 
   startTime = new Date();
 }
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName === "local" && changes.activeId?.newValue) {
+    coverageButton.disabled = false;
+    networkButton.disabled = false;
+    flamegraphButton.disabled = false;
+
+    coverageButton.style.cursor = "pointer";
+    networkButton.style.cursor = "pointer";
+    flamegraphButton.style.cursor = "pointer";
+  }
+});
+
+chrome.storage.local.get("activeId", function (result) {
+  if (result.activeId) {
+    console.log(result.activeId);
+    coverageButton.disabled = false;
+    networkButton.disabled = false;
+    flamegraphButton.disabled = false;
+
+    coverageButton.style.cursor = "pointer";
+    networkButton.style.cursor = "pointer";
+    flamegraphButton.style.cursor = "pointer";
+  }
+});
