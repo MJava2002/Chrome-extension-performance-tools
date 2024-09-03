@@ -32,11 +32,11 @@ export function tabProfileForFlameGraph(extensionId) {
       chrome.debugger.sendCommand(
         { tabId: tabId },
         "Profiler.stop",
-        (result) => {
+        async (result) => {
           console.log("Profiler stopped");
           const profile = result.profile;
           console.log(JSON.stringify(profile, null, 2));
-          extensionId = getId();
+          extensionId = await getId();
           console.log("extensionID", extensionId);
           const transformedData = transformProfileData(profile, extensionId);
           console.log("Before saving", transformedData);

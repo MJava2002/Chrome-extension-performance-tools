@@ -28,12 +28,21 @@ export function transformProfileData(profile, extensionId) {
     const node = nodes[idx];
 
     if (!node) return null;
-    let label = node.callFrame.functionName;
-    if (checkValidUrl(`(${node.callFrame.url})`, extensionId)) {
-      label = "Run by extension: " + node.callFrame.functionName;
+    // let label = node.callFrame.functionName;
+    // if (checkValidUrl(`(${node.callFrame.url})`, extensionId)) {
+    //   label = "Run by extension: " + node.callFrame.functionName;
+    // }
+    let label = node.callFrame.functionName && node.callFrame.functionName.trim() !== ''
+    ? node.callFrame.functionName
+    : `(${node.callFrame.url})`;
+    // console.log("LABELLL", label)
+    if (checkValidUrl(`${node.callFrame.url}`, extensionId)) {
+      console.log("LABELLL", label)
+      label = "Run by extension: " + label
+      console.log("CURRRRR", label)
     }
     const result = {
-      name: label || `(${node.callFrame.url}`,
+      name: label,
       value: node.selfTime || 1,
       children: [],
     };
