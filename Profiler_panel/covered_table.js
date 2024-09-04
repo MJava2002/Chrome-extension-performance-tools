@@ -82,16 +82,6 @@ function createProgressBar(containerId, widthPercentage) {
 }
 
 export function drawTable(data) {
-  // let i = 1
-  // data.forEach((percentage, fileName) => {
-  //   console.log('abcd')
-  //   const container = document.getElementById('flameGraph');
-  //   let bar = document.createElement("div");
-  //   bar.id = `container${i}`;
-  //   i += 1
-  //   container.appendChild(bar);
-  //   createProgressBar(`#${bar.id}`, percentage);
-  // });
   const docBody = document.getElementById("flameGraph");
   docBody.innerHTML = "";
 
@@ -99,20 +89,19 @@ export function drawTable(data) {
   container.style.width = "100%";
   container.style.border = "1px solid " + BORDER_COLOR;
   if (data.size === 0) {
-    container.style.border = "none"; // Remove table border
-    // If there are no data entries, display an image
+    container.style.border = "none"; 
     const emptyRow = document.createElement("div");
-    emptyRow.style.textAlign = "center"; // Center the image in the div
+    emptyRow.style.textAlign = "center"; 
 
     const img = document.createElement("img");
-    img.src = IMAGE_PATH; // Replace with your image file name
+    img.src = IMAGE_PATH; 
     img.alt = "Nothing to observe here";
-    img.style.width = "25%"; // Set the image width as needed
+    img.style.width = "25%";
     const text = document.createElement("div");
     text.textContent = "Nothing to observe here";
     text.style.fontFamily = "'MyCustomFont', sans-serif";
-    text.style.color = TEXT_COLOR; // Set the text color
-    text.style.marginTop = "10px"; // Add some space between the image and the text
+    text.style.color = TEXT_COLOR;
+    text.style.marginTop = "10px";
     text.style.fontSize = "24px";
 
     emptyRow.appendChild(img);
@@ -120,7 +109,6 @@ export function drawTable(data) {
 
     container.appendChild(emptyRow);
   } else {
-    // Create header row
     const headerRow = createCoverageTableRow(
       "header",
       "File Name",
@@ -130,7 +118,6 @@ export function drawTable(data) {
     headerRow.style.fontWeight = "bold";
     container.appendChild(headerRow);
 
-    // Add data rows
     data.forEach((item, index) => {
       const containerId = `container${index}`;
       const row = createCoverageTableRow(
@@ -139,13 +126,18 @@ export function drawTable(data) {
         item.bytesCovered,
         item.percentageCovered,
       );
+       // Add a click event listener to open a modal
+       row.addEventListener("click", () => {
+        openModal(item); // Function to open the modal with item details
+      });
+
       container.appendChild(row);
 
       docBody.appendChild(container);
       createProgressBar(`#${containerId}`, item.percentageCovered);
     });
   }
-  // Append the table to the body (or any other element you prefer)
+  
   docBody.appendChild(container);
 }
 
@@ -202,4 +194,85 @@ function createCoverageTableRow(
   // createProgressBar(`#${containerId}`, percentageCovered);
 
   return row;
+}
+function openModal(item) {
+  // Create the modal overlay
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+  overlay.style.zIndex = "999"; // Make sure the overlay is below the modal
+
+  // Create the modal container
+  const modal = document.createElement("div");
+  modal.style.position = "fixed";
+  modal.style.width = "500px"; // Set the width of the modal
+  modal.style.height = "400px"; // Set the height of the modal
+  modal.style.top = "50%";
+  modal.style.left = "50%";
+  modal.style.transform = "translate(-50%, -50%)";
+  modal.style.backgroundColor = "#fff";
+  modal.style.padding = "20px";
+  modal.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+  modal.style.zIndex = "1000"; // Ensure the modal is above the overlay
+  modal.style.overflowY = "auto"; // Add vertical scroll if content overflows
+
+  // Highlight the ranges in the content
+  const highlightedContent = highlightRanges(item.content, item.ranges);
+
+  const modalContent = `
+    <h2>${item.fileName}</h2>
+    <p>Coverage: ${item.ranges}%</p>
+    <pre style="white-space: pre-wrap;">${highlightedContent}</pre>
+  `;
+  modal.innerHTML = modalContent;
+
+  // Append the modal and overlay to the body
+  document.body.appendChild(overlay);
+  document.body.appendChild(modal);
+
+  // Add event listener to close the modal when clicking outside of it
+  overlay.addEventListener("click", () => {
+    document.body.removeChild(modal);
+    document.body.removeChild(overlay);
+  });
+}
+
+// Function to highlight specified ranges in the content
+function highlightRanges(content, ranges) {
+  let result = "";
+  let currentIndex = 0;
+
+  // Sort ranges to ensure they are in the correct order
+  ranges.sort((a, b) => a[0] - b[0]);
+
+  ranges.forEach(([start, end]) => {
+    // Add the text before the range
+    result += escapeHtml(content.slice(currentIndex, start));
+    // Add the highlighted range
+    result += `<span style="background-color: yellow;">${escapeHtml(content.slice(start, end))}</span>`;
+    // Update the current index
+    currentIndex = end;
+  });
+
+  // Add any remaining text after the last range
+  result += escapeHtml(content.slice(currentIndex));
+
+  return result;
+}
+
+// Helper function to escape HTML special characters
+function escapeHtml(text) {
+  return text.replace(/[&<>"']/g, function (m) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[m];
+  });
 }
