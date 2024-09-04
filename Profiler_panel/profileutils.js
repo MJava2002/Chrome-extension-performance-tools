@@ -7,7 +7,17 @@ export function transformProfileData(profile, extensionId) {
   }
 
   const nodes = profile.nodes;
-  const sampleTimes = profile.timeDeltas || [];
+  const root = nodes[0];
+  const samples = [root.id].concat(profile.samples || []);
+  const deltas = [0].concat(profile.timeDeltas || []);
+  const timeValues = new Map();
+  
+  samples.forEach((sample, index) => {
+    const id = samples[index - 1];
+    const curr = timeValues.get(id) || 0;
+    const delta = deltas[index];
+    timeValues.set(id, curr + delta);
+  });
   let totalTime = sampleTimes.reduce((sum, time) => sum + time, 0);
 
   // Create a map of node IDs to their children
