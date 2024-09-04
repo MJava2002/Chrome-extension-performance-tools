@@ -44,7 +44,7 @@ export function transformProfileData(profile, extensionId) {
     // }
     let label = node.callFrame.functionName && node.callFrame.functionName.trim() !== ''
     ? node.callFrame.functionName
-    : `(${node.callFrame.url})`;
+    : `(${node.callFrame.url}:${node.callFrame.lineNumber})`;
 
     if (checkValidUrl(`${node.callFrame.url}`, extensionId)) {
 
@@ -77,7 +77,7 @@ export function transformProfileData(profile, extensionId) {
     node.value = (node.value / rootValue) * 100;
     node.children.forEach(normalizeValues);
   }
-  normalizeValues(rootNode);
+  // normalizeValues(rootNode);
 
   return rootNode;
 }
