@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     chrome.management.getAll(function (extensions) {
       extensions.forEach((extension) => {
-        if (extension.type === "extension" && extension.id != RESTRICTED) {
+        if (extension.type === "extension" && extension.id !== RESTRICTED) {
           let option = document.createElement("option");
           option.value = extension.id;
           option.textContent = extension.name;
@@ -47,7 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Open DevTools panel when link is clicked
   detailsLink.addEventListener("click", (e) => {
-    e.preventDefault(); 
-    chrome.tabs.create({active: true, url: 'https://github.com/MJava2002/Chrome-extension-performance-tools'});
+    e.preventDefault();
+    chrome.tabs.create({
+      active: true,
+      url: "https://github.com/MJava2002/Chrome-extension-performance-tools",
+    });
   });
 });

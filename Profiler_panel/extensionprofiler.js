@@ -2,7 +2,7 @@ import { getId, setAttached, waitForStopButtonClick } from "./helpers.js";
 import { transformProfileData } from "./profileutils.js";
 
 export function extensionProfileForFlameGraph(extensionId) {
-  console.log("extensionID", extensionId);
+  console.log("AI ESAA EXTENSION IDDDDDDDDD", extensionId);
   chrome.debugger.getTargets((result) => {
     // sendToDevTools(result);
     let target = result.find((t) => t.title.includes(extensionId));
@@ -64,7 +64,13 @@ export function extensionProfileForFlameGraph(extensionId) {
         );
       });
     } else {
-      chrome.runtime.sendMessage({ action: "targetNotFound" });
+      const emptyData = {};
+      const jsonData = JSON.stringify(emptyData, null, 2);
+      console.log("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", jsonData)
+      chrome.storage.local.set({ myJsonData: jsonData }, function () {
+          console.log("JSON data has been saved.", jsonData);
+          chrome.runtime.sendMessage({ action: "dataSaved" });
+        });
       // chrome.runtime.sendMessage({ action: "changeTargetBool" });
     }
   });

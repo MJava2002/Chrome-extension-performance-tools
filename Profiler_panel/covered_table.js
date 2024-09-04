@@ -60,16 +60,12 @@ function createProgressBar(containerId, widthPercentage) {
     from: { color: YELLOW },
     to: { color: finalColor },
     step: (state, bar) => {
-      // Determine the current percentage of animation
       const progress = bar.value();
 
-      // Define the color at different points
       let color = state.color;
       if (progress < 0.5 && widthPercentage >= 50) {
-        // Interpolate between the initial color and the middle color
         color = interpolateColor(YELLOW, ORANGE, progress * 2);
       } else if (widthPercentage >= 50) {
-        // Interpolate between the middle color and the final color
         color = interpolateColor(ORANGE, finalColor, (progress - 0.5) * 2);
       }
 
@@ -82,16 +78,6 @@ function createProgressBar(containerId, widthPercentage) {
 }
 
 export function drawTable(data) {
-  // let i = 1
-  // data.forEach((percentage, fileName) => {
-  //   console.log('abcd')
-  //   const container = document.getElementById('flameGraph');
-  //   let bar = document.createElement("div");
-  //   bar.id = `container${i}`;
-  //   i += 1
-  //   container.appendChild(bar);
-  //   createProgressBar(`#${bar.id}`, percentage);
-  // });
   const docBody = document.getElementById("flameGraph");
   docBody.innerHTML = "";
 
@@ -99,20 +85,19 @@ export function drawTable(data) {
   container.style.width = "100%";
   container.style.border = "1px solid " + BORDER_COLOR;
   if (data.size === 0) {
-    container.style.border = "none"; // Remove table border
-    // If there are no data entries, display an image
+    container.style.border = "none";
     const emptyRow = document.createElement("div");
-    emptyRow.style.textAlign = "center"; // Center the image in the div
+    emptyRow.style.textAlign = "center";
 
     const img = document.createElement("img");
-    img.src = IMAGE_PATH; // Replace with your image file name
+    img.src = IMAGE_PATH;
     img.alt = "Nothing to observe here";
-    img.style.width = "25%"; // Set the image width as needed
+    img.style.width = "25%";
     const text = document.createElement("div");
     text.textContent = "Nothing to observe here";
     text.style.fontFamily = "'MyCustomFont', sans-serif";
-    text.style.color = TEXT_COLOR; // Set the text color
-    text.style.marginTop = "10px"; // Add some space between the image and the text
+    text.style.color = TEXT_COLOR;
+    text.style.marginTop = "10px";
     text.style.fontSize = "24px";
 
     emptyRow.appendChild(img);
@@ -120,7 +105,6 @@ export function drawTable(data) {
 
     container.appendChild(emptyRow);
   } else {
-    // Create header row
     const headerRow = createCoverageTableRow(
       "header",
       "File Name",
@@ -130,7 +114,6 @@ export function drawTable(data) {
     headerRow.style.fontWeight = "bold";
     container.appendChild(headerRow);
 
-    // Add data rows
     data.forEach((item, index) => {
       const containerId = `container${index}`;
       const row = createCoverageTableRow(
@@ -139,13 +122,18 @@ export function drawTable(data) {
         item.bytesCovered,
         item.percentageCovered,
       );
+      // Add a click event listener to open a modal
+      row.addEventListener("click", () => {
+        openModal(item); // Function to open the modal with item details
+      });
+
       container.appendChild(row);
 
       docBody.appendChild(container);
       createProgressBar(`#${containerId}`, item.percentageCovered);
     });
   }
-  // Append the table to the body (or any other element you prefer)
+
   docBody.appendChild(container);
 }
 
@@ -188,18 +176,82 @@ function createCoverageTableRow(
     progressBarContainer.style.marginLeft = "0"; // Align to the left
     progressBarContainer.id = containerId; // Assign the containerId to the progressBarContainer
     coverageCell.textContent = ""; // Clear the text content for data rows
-    coverageCell.appendChild(progressBarContainer); // Append progress bar container for data rows
+    coverageCell.appendChild(progressBarContainer);
   }
-
-  // Append the container to the coverageCell
-  // coverageCell.appendChild(progressBarContainer);
 
   row.appendChild(filenameCell);
   row.appendChild(bytesCoveredCell);
   row.appendChild(coverageCell);
 
-  // After appending the row, create the progress bar in the container
-  // createProgressBar(`#${containerId}`, percentageCovered);
-
   return row;
+}
+function openModal(item) {
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+  overlay.style.zIndex = "999";
+
+  const modal = document.createElement("div");
+  modal.style.position = "fixed";
+  modal.style.width = "500px";
+  modal.style.height = "400px";
+  modal.style.top = "50%";
+  modal.style.left = "50%";
+  modal.style.transform = "translate(-50%, -50%)";
+  modal.style.backgroundColor = "#fff";
+  modal.style.padding = "20px";
+  modal.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+  modal.style.zIndex = "1000"; // Ensure the modal is above the overlay
+  modal.style.overflowY = "auto"; // Add vertical scroll if content overflows
+  modal.style.border = "4px solid"
+
+  const highlightedContent = highlightRanges(item.content, item.ranges);
+
+  const modalContent = `
+    <h2>${item.fileName}</h2>
+    <p>Coverage: ${item.percentageCovered}%</p>
+    <pre style="white-space: pre-wrap;">${highlightedContent}</pre>
+  `;
+  modal.innerHTML = modalContent;
+
+  document.body.appendChild(overlay);
+  document.body.appendChild(modal);
+
+  overlay.addEventListener("click", () => {
+    document.body.removeChild(modal);
+    document.body.removeChild(overlay);
+  });
+}
+
+function highlightRanges(content, ranges) {
+  let result = "";
+  let currentIndex = 0;
+
+  ranges.sort((a, b) => a[0] - b[0]);
+
+  ranges.forEach(([start, end]) => {
+    result += escapeHtml(content.slice(currentIndex, start));
+    result += `<span style="background-color: yellow;">${escapeHtml(content.slice(start, end))}</span>`;
+    currentIndex = end;
+  });
+
+  result += escapeHtml(content.slice(currentIndex));
+
+  return result;
+}
+
+function escapeHtml(text) {
+  return text.replace(/[&<>"']/g, function (m) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[m];
+  });
 }

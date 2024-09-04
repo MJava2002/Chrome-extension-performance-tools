@@ -12,7 +12,10 @@
 import { drawTable } from "./covered_table.js";
 import { detachDebugger } from "./helpers.js";
 import { drawNetworkTable } from "./network.js";
-
+const TEXT_COLOR = "#baaec4";
+const BORDER_COLOR = "#a79ab4";
+const IMAGE_PATH =
+  "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
 function disableButtons() {
   const coverageButton = document.getElementById("coverageButton");
   const networkButton = document.getElementById("networkButton");
@@ -54,13 +57,16 @@ function initializeFlameGraph() {
       .label(function (d) {
         return d.name + " (" + d.value + ")";
       });
+
     chrome.runtime.onMessage.addListener(
       function (message, sender, sendResponse) {
         if (message.action === "dataSaved") {
           chrome.storage.local.get(["myJsonData"], function (result) {
-            if (result.myJsonData) {
+            console.log("NOOOOOOOOOOOPE", result.myJsonData )
+            if (result.myJsonData && result.myJsonData  !== "{}" ) {
               const retrievedData = JSON.parse(result.myJsonData);
               console.log("Retrieved JSON data:", retrievedData);
+
               const blob = new Blob([result.myJsonData], {
                 type: "application/json",
               });
@@ -71,8 +77,13 @@ function initializeFlameGraph() {
                   if (loadingImage) {
                     loadingImage.style.display = "none";
                   }
+                  const docBody = document.getElementById("flameGraph");
+                  if(docBody){
 
+                  }
+                  docBody.innerHTML = "";
                   d3.select("#flameGraph").datum(data).call(chart);
+                  chart.search("Run by extension:");
                 })
                 .catch((error) => {
                   console.warn("Error loading JSON:", error);
@@ -83,18 +94,46 @@ function initializeFlameGraph() {
                 });
             } else {
               console.log("No data found.");
-              const loadingImage = document.getElementById("loadingImage");
-              if (loadingImage) {
-                loadingImage.style.display = "none";
-              }
+              const docBody = document.getElementById("flameGraph");
+              docBody.innerHTML = "";
+              // const docBody = document.getElementById("#flameGraph");
+              const container = document.createElement("div");
+              container.style.width = "100%";
+              container.style.border = "1px solid " + BORDER_COLOR;
+
+              container.style.border = "none"; // Remove table border
+              // If there are no data entries, display an image
+              const emptyRow = document.createElement("div");
+              emptyRow.style.textAlign = "center"; // Center the image in the div
+
+              const img = document.createElement("img");
+              img.src = IMAGE_PATH; // Replace with your image file name
+              img.alt = "Nothing to observe here";
+              img.style.width = "25%"; // Set the image width as needed
+              const text = document.createElement("div");
+              text.textContent = "Target Does not exist";
+              text.style.fontFamily = "'MyCustomFont', sans-serif";
+              text.style.color = TEXT_COLOR; // Set the text color
+              text.style.marginTop = "10px"; // Add some space between the image and the text
+              text.style.fontSize = "24px";
+
+              emptyRow.appendChild(img);
+              emptyRow.appendChild(text);
+
+              container.appendChild(emptyRow);
+              docBody.appendChild(container);
             }
           });
         }
       },
     );
   } else {
+
     console.error("D3 not loaded");
-    document.getElementById("loadingImage").style.display = "none";
+    const loadingImage = document.getElementById("loadingImage");
+    if (loadingImage) {
+      loadingImage.style.display = "none";
+    }
   }
 }
 
@@ -219,12 +258,7 @@ function updateDisplay(containerId, message) {
     container.innerText = message;
   }
 }
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.action === "targetNotFound") {
-    alert("The target for the specified extension ID could not be found.");
-  }
-  // Handle other actions...
-});
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.target === "devtools") {
     updateDisplay(
