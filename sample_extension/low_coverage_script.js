@@ -71,11 +71,19 @@ chrome.runtime.sendMessage(
   },
 );
 
+async function bottleneck() {
+  await new Promise(r => setTimeout(r, 10000));
+}
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "iconClicked") {
     console.log("Extension icon clicked - recognized in content script");
     // call only one function
     executeFunction();
+    executeFunction();
+    executeFunction();
+    
+    bottleneck();
 
     // Uncomment for more nuanced testing
     // waitForNonExistentEvent();

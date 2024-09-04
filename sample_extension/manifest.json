@@ -12,7 +12,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["requests.js"]
+      "js": ["low_coverage_script.js"]
     }
   ],
   "permissions": [
