@@ -69,10 +69,11 @@ function initializeFlameGraph() {
       .transitionEase(d3.easeCubic)
       .title("")
       .label(function (d) {
-        return d.name + " (" + d.value + ")";
+        return d.data.name + " (" + d.data.value + ")";
       })
       .selfValue(true);
-
+    var details = document.getElementById("details");
+    chart.setDetailsElement(details);
     let controlsAdded = false;
     chrome.runtime.onMessage.addListener(
       function (message, sender, sendResponse) {
@@ -89,6 +90,7 @@ function initializeFlameGraph() {
               d3.json(dataUrl)
                 .then((data) => {
                   const loadingImage = document.getElementById("loadingImage");
+
                   if (loadingImage) {
                     loadingImage.style.display = "none";
                     let resets;
@@ -115,6 +117,7 @@ function initializeFlameGraph() {
                       clearButton.addEventListener('click', function () {
                         document.getElementById('term').value = '';
                         chart.clear();
+                        chart.search("Run by extension:");
                       });
 
                       const searchButton = document.getElementById('searchButton');
@@ -197,6 +200,7 @@ document.getElementById('clearButton').addEventListener('click', function () {
   document.getElementById('term').value = '';
   if(chart) {
       chart.clear();
+      chart.search("Run by extension:")
   }
 });
 
