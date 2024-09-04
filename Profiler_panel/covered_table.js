@@ -60,16 +60,12 @@ function createProgressBar(containerId, widthPercentage) {
     from: { color: YELLOW },
     to: { color: finalColor },
     step: (state, bar) => {
-      // Determine the current percentage of animation
       const progress = bar.value();
 
-      // Define the color at different points
       let color = state.color;
       if (progress < 0.5 && widthPercentage >= 50) {
-        // Interpolate between the initial color and the middle color
         color = interpolateColor(YELLOW, ORANGE, progress * 2);
       } else if (widthPercentage >= 50) {
-        // Interpolate between the middle color and the final color
         color = interpolateColor(ORANGE, finalColor, (progress - 0.5) * 2);
       }
 
@@ -89,12 +85,12 @@ export function drawTable(data) {
   container.style.width = "100%";
   container.style.border = "1px solid " + BORDER_COLOR;
   if (data.size === 0) {
-    container.style.border = "none"; 
+    container.style.border = "none";
     const emptyRow = document.createElement("div");
-    emptyRow.style.textAlign = "center"; 
+    emptyRow.style.textAlign = "center";
 
     const img = document.createElement("img");
-    img.src = IMAGE_PATH; 
+    img.src = IMAGE_PATH;
     img.alt = "Nothing to observe here";
     img.style.width = "25%";
     const text = document.createElement("div");
@@ -126,8 +122,8 @@ export function drawTable(data) {
         item.bytesCovered,
         item.percentageCovered,
       );
-       // Add a click event listener to open a modal
-       row.addEventListener("click", () => {
+      // Add a click event listener to open a modal
+      row.addEventListener("click", () => {
         openModal(item); // Function to open the modal with item details
       });
 
@@ -137,7 +133,7 @@ export function drawTable(data) {
       createProgressBar(`#${containerId}`, item.percentageCovered);
     });
   }
-  
+
   docBody.appendChild(container);
 }
 
@@ -180,23 +176,16 @@ function createCoverageTableRow(
     progressBarContainer.style.marginLeft = "0"; // Align to the left
     progressBarContainer.id = containerId; // Assign the containerId to the progressBarContainer
     coverageCell.textContent = ""; // Clear the text content for data rows
-    coverageCell.appendChild(progressBarContainer); // Append progress bar container for data rows
+    coverageCell.appendChild(progressBarContainer);
   }
-
-  // Append the container to the coverageCell
-  // coverageCell.appendChild(progressBarContainer);
 
   row.appendChild(filenameCell);
   row.appendChild(bytesCoveredCell);
   row.appendChild(coverageCell);
 
-  // After appending the row, create the progress bar in the container
-  // createProgressBar(`#${containerId}`, percentageCovered);
-
   return row;
 }
 function openModal(item) {
-  // Create the modal overlay
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
   overlay.style.top = "0";
@@ -204,13 +193,12 @@ function openModal(item) {
   overlay.style.width = "100%";
   overlay.style.height = "100%";
   overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-  overlay.style.zIndex = "999"; // Make sure the overlay is below the modal
+  overlay.style.zIndex = "999";
 
-  // Create the modal container
   const modal = document.createElement("div");
   modal.style.position = "fixed";
-  modal.style.width = "500px"; // Set the width of the modal
-  modal.style.height = "400px"; // Set the height of the modal
+  modal.style.width = "500px";
+  modal.style.height = "400px";
   modal.style.top = "50%";
   modal.style.left = "50%";
   modal.style.transform = "translate(-50%, -50%)";
@@ -220,7 +208,6 @@ function openModal(item) {
   modal.style.zIndex = "1000"; // Ensure the modal is above the overlay
   modal.style.overflowY = "auto"; // Add vertical scroll if content overflows
 
-  // Highlight the ranges in the content
   const highlightedContent = highlightRanges(item.content, item.ranges);
 
   const modalContent = `
@@ -230,41 +217,32 @@ function openModal(item) {
   `;
   modal.innerHTML = modalContent;
 
-  // Append the modal and overlay to the body
   document.body.appendChild(overlay);
   document.body.appendChild(modal);
 
-  // Add event listener to close the modal when clicking outside of it
   overlay.addEventListener("click", () => {
     document.body.removeChild(modal);
     document.body.removeChild(overlay);
   });
 }
 
-// Function to highlight specified ranges in the content
 function highlightRanges(content, ranges) {
   let result = "";
   let currentIndex = 0;
 
-  // Sort ranges to ensure they are in the correct order
   ranges.sort((a, b) => a[0] - b[0]);
 
   ranges.forEach(([start, end]) => {
-    // Add the text before the range
     result += escapeHtml(content.slice(currentIndex, start));
-    // Add the highlighted range
     result += `<span style="background-color: yellow;">${escapeHtml(content.slice(start, end))}</span>`;
-    // Update the current index
     currentIndex = end;
   });
 
-  // Add any remaining text after the last range
   result += escapeHtml(content.slice(currentIndex));
 
   return result;
 }
 
-// Helper function to escape HTML special characters
 function escapeHtml(text) {
   return text.replace(/[&<>"']/g, function (m) {
     return {

@@ -30,16 +30,13 @@ export async function proccessFiles(uniqueFiles, coverageData, extensionId) {
         coverageData,
         url_1,
       );
-      console.log(
-        "in process file",
-        coverageData
-      );
+      console.log("in process file", coverageData);
       percentPerFile.push({
         fileName: getLastSegmentFromUrl(url_1, extensionId),
         bytesCovered: covered.coveredBytes,
         percentageCovered: covered.coveragePercentage,
         content: content_1,
-        ranges: covered.ranges
+        ranges: covered.ranges,
       });
     });
     console.log("processFile", percentPerFile);
