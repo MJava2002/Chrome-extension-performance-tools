@@ -98,9 +98,33 @@ function initializeFlameGraph() {
                     }
                   }
                   const docBody = document.getElementById("flameGraph");
-                  docBody.innerHTML = "";
-                  d3.select("#flameGraph").datum(data).call(chart);
-                  chart.search("Run by extension:");
+                    docBody.innerHTML = "";
+                    d3.select("#flameGraph").datum(data).call(chart);
+                    chart.search("Run by extension:");
+
+                    const controlsDiv = document.getElementById('controlsContainer');
+                    controlsDiv.style.display = 'block'; // Show the controls
+
+                    if (!controlsAdded) { // Add controls only if they haven't been added
+                      const resetButton = document.getElementById('resetButton');
+                      resetButton.addEventListener('click', function () {
+                        chart.resetZoom();
+                      });
+
+                      const clearButton = document.getElementById('clearButton');
+                      clearButton.addEventListener('click', function () {
+                        document.getElementById('term').value = '';
+                        chart.clear();
+                      });
+
+                      const searchButton = document.getElementById('searchButton');
+                      searchButton.addEventListener('click', function () {
+                        const searchInput = document.getElementById('term').value;
+                        chart.search(searchInput);
+                      });
+
+                      controlsAdded = true; // Mark controls as added
+                    }
                 })
                 .catch((error) => {
                   console.warn("Error loading JSON:", error);
