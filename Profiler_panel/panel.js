@@ -16,6 +16,8 @@ const TEXT_COLOR = "#baaec4";
 const BORDER_COLOR = "#a79ab4";
 const IMAGE_PATH =
   "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
+
+let chart = null;
 function disableButtons() {
   const coverageButton = document.getElementById("coverageButton");
   const networkButton = document.getElementById("networkButton");
@@ -49,20 +51,33 @@ function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
     console.log("D3 version:", d3.version);
 
+
+
+    // const chart = flamegraph()
+    //   .width(960)
+    //   .cellHeight(18)
+    //   .transitionDuration(750)
+    //   .minFrameSize(5)
+    //   .label(function (d) {
+    //     return d.name + " (" + d.value + ")";
+    //   });
     const chart = flamegraph()
       .width(960)
       .cellHeight(18)
       .transitionDuration(750)
       .minFrameSize(5)
+      .transitionEase(d3.easeCubic)
+      .title("")
       .label(function (d) {
         return d.name + " (" + d.value + ")";
-      });
+      })
+      .selfValue(true);
 
+    let controlsAdded = false;
     chrome.runtime.onMessage.addListener(
       function (message, sender, sendResponse) {
         if (message.action === "dataSaved") {
           chrome.storage.local.get(["myJsonData"], function (result) {
-            console.log("NOOOOOOOOOOOPE", result.myJsonData )
             if (result.myJsonData && result.myJsonData  !== "{}" ) {
               const retrievedData = JSON.parse(result.myJsonData);
               console.log("Retrieved JSON data:", retrievedData);
@@ -76,11 +91,13 @@ function initializeFlameGraph() {
                   const loadingImage = document.getElementById("loadingImage");
                   if (loadingImage) {
                     loadingImage.style.display = "none";
+                    let resets;
+                    resets = document.getElementById('controlsContainer')
+                    if(resets){
+                        resets.style.display = 'block';
+                    }
                   }
                   const docBody = document.getElementById("flameGraph");
-                  if(docBody){
-
-                  }
                   docBody.innerHTML = "";
                   d3.select("#flameGraph").datum(data).call(chart);
                   chart.search("Run by extension:");
@@ -140,6 +157,27 @@ function initializeFlameGraph() {
 document
   .getElementById("coverageButton")
   .addEventListener("click", drawCoverageTable);
+
+document.getElementById('resetButton').addEventListener('click', function () {
+    if(chart){
+        chart.resetZoom();
+    }
+});
+
+document.getElementById('clearButton').addEventListener('click', function () {
+  document.getElementById('term').value = '';
+  if(chart) {
+      chart.clear();
+  }
+});
+
+document.getElementById('searchButton').addEventListener('click', function () {
+  const searchInput = document.getElementById('term');
+  if(chart) {
+      chart.search(searchInput.value);
+  }
+
+});
 
 document
   .getElementById("coverageButton")
@@ -228,8 +266,9 @@ document
     disableButtons();
     // Clear the flameGraph container
     const docBody = document.getElementById("flameGraph");
-    docBody.innerHTML = "";
-
+    if(docBody) {
+      docBody.innerHTML = "";
+    }
     // Show the loading image
     const loadingImage = document.createElement("img");
     loadingImage.id = "loadingImage";
@@ -250,6 +289,7 @@ document
 
     // Handle button click actions, if any
     handleButtonClick("flamegraphButton");
+
   });
 
 function updateDisplay(containerId, message) {
