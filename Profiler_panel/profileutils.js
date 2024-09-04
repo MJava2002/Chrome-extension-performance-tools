@@ -18,7 +18,7 @@ export function transformProfileData(profile, extensionId) {
     const delta = deltas[index];
     timeValues.set(id, curr + delta);
   });
-  let totalTime = sampleTimes.reduce((sum, time) => sum + time, 0);
+  let totalTime = deltas.reduce((sum, time) => sum + time, 0);
 
   // Create a map of node IDs to their children
   const childrenMap = new Map();
@@ -53,7 +53,7 @@ export function transformProfileData(profile, extensionId) {
     }
     const result = {
       name: label,
-      value: node.selfTime || 1,
+      value: timeValues.get(nodeId) || 1,
       children: [],
     };
 
@@ -71,10 +71,10 @@ export function transformProfileData(profile, extensionId) {
 
   // Start from the root node (usually the first node)
   const rootNode = processNode(nodes[0].id);
-
+  const rootValue = rootNode.value;
   // Normalize values to percentages of total time
   function normalizeValues(node) {
-    node.value = (node.value / totalTime) * 100;
+    node.value = (node.value / rootValue) * 100;
     node.children.forEach(normalizeValues);
   }
   normalizeValues(rootNode);
