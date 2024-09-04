@@ -47,7 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Open DevTools panel when link is clicked
   detailsLink.addEventListener("click", (e) => {
-    e.preventDefault(); 
-    chrome.tabs.create({active: true, url: 'https://github.com/MJava2002/Chrome-extension-performance-tools'});
+    e.preventDefault();
+    chrome.tabs.create({
+      active: true,
+      url: "https://github.com/MJava2002/Chrome-extension-performance-tools",
+    });
   });
 });
