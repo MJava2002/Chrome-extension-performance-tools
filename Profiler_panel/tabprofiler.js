@@ -6,7 +6,7 @@ import {
 } from "./helpers.js";
 import { transformProfileData } from "./profileutils.js";
 
-export function tabProfileForFlameGraph(extensionId) {
+export function tabProfileForFlameGraph() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     let activeTab = tabs[0];
     console.log("Active Tab ID: " + activeTab.id);
@@ -32,11 +32,12 @@ export function tabProfileForFlameGraph(extensionId) {
       chrome.debugger.sendCommand(
         { tabId: tabId },
         "Profiler.stop",
-        (result) => {
+        async (result) => {
           console.log("Profiler stopped");
           const profile = result.profile;
           console.log(JSON.stringify(profile, null, 2));
-          extensionId = getId();
+            let extensionId;
+            extensionId = await getId();
           console.log("extensionID", extensionId);
           const transformedData = transformProfileData(profile, extensionId);
           console.log("Before saving", transformedData);
