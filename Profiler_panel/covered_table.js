@@ -207,12 +207,13 @@ function openModal(item) {
   modal.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
   modal.style.zIndex = "1000"; // Ensure the modal is above the overlay
   modal.style.overflowY = "auto"; // Add vertical scroll if content overflows
+  modal.style.border = "4px solid"
 
   const highlightedContent = highlightRanges(item.content, item.ranges);
 
   const modalContent = `
     <h2>${item.fileName}</h2>
-    <p>Coverage: ${item.ranges}%</p>
+    <p>Coverage: ${item.percentageCovered}%</p>
     <pre style="white-space: pre-wrap;">${highlightedContent}</pre>
   `;
   modal.innerHTML = modalContent;
