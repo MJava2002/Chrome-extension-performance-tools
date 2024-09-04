@@ -137,6 +137,11 @@ function initializeFlameGraph() {
               console.log("No data found.");
               const docBody = document.getElementById("flameGraph");
               docBody.innerHTML = "";
+              let resets;
+              resets = document.getElementById('controlsContainer')
+              if(resets){
+                  resets.style.display = 'none';
+              }
               // const docBody = document.getElementById("#flameGraph");
               const container = document.createElement("div");
               container.style.width = "100%";
@@ -209,7 +214,11 @@ document
     disableButtons();
     const docBody = document.getElementById("flameGraph");
     docBody.innerHTML = "";
-
+    let resets;
+    resets = document.getElementById('controlsContainer')
+    if(resets){
+        resets.style.display = 'none';
+    }
     // Show the loading image
     const loadingImage = document.createElement("img");
     loadingImage.id = "loadingImage";
@@ -292,6 +301,11 @@ document
     const docBody = document.getElementById("flameGraph");
     if(docBody) {
       docBody.innerHTML = "";
+    }
+    let resets;
+    resets = document.getElementById('controlsContainer')
+    if(resets){
+        resets.style.display = 'none';
     }
     // Show the loading image
     const loadingImage = document.createElement("img");
