@@ -9,7 +9,7 @@
  *   requred, but it's unclear whether this is still supported
  */
 
-import { drawTable } from "./covered_table.js";
+import { addImage, drawTable } from "./covered_table.js";
 import { detachDebugger } from "./helpers.js";
 import { drawNetworkTable } from "./network.js";
 const TEXT_COLOR = "#baaec4";
@@ -62,7 +62,7 @@ function initializeFlameGraph() {
       function (message, sender, sendResponse) {
         if (message.action === "dataSaved") {
           chrome.storage.local.get(["myJsonData"], function (result) {
-            if (result.myJsonData && result.myJsonData  !== "{}" ) {
+            if (result.myJsonData && result.myJsonData !== "{}") {
               const retrievedData = JSON.parse(result.myJsonData);
               console.log("Retrieved JSON data:", retrievedData);
 
@@ -77,8 +77,7 @@ function initializeFlameGraph() {
                     loadingImage.style.display = "none";
                   }
                   const docBody = document.getElementById("flameGraph");
-                  if(docBody){
-
+                  if (docBody) {
                   }
                   docBody.innerHTML = "";
                   d3.select("#flameGraph").datum(data).call(chart);
@@ -127,7 +126,6 @@ function initializeFlameGraph() {
       },
     );
   } else {
-
     console.error("D3 not loaded");
     const loadingImage = document.getElementById("loadingImage");
     if (loadingImage) {
@@ -353,8 +351,15 @@ document.getElementById("networkButton").addEventListener("click", function () {
               loadingImage.style.display = "none";
             }
             drawNetworkTable(result.networkData);
+          } else {
+            console.log("here?? ig");
           }
         });
+      } else if (message.action === "networkDataNotFound") {
+        addImage(
+          "styles/Astronaut--Streamline-Bangalore.svg",
+          "Chosen extension is not running",
+        );
       }
     },
   );

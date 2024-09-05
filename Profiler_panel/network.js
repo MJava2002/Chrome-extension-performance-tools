@@ -161,6 +161,8 @@ export function stopNetwork() {
       console.log("Debugger detached");
       debugee = null;
     });
+  } else {
+    chrome.runtime.sendMessage({ action: "networkDataNotFound" });
   }
 }
 

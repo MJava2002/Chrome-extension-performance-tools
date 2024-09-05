@@ -79,6 +79,7 @@ function createProgressBar(containerId, widthPercentage) {
 
 export function addImage(IMAGE_PATH, message) {
   const docBody = document.getElementById("flameGraph");
+  docBody.innerHTML = "";
   const container = document.createElement("div");
   container.style.width = "100%";
   container.style.border = "1px solid " + BORDER_COLOR;
@@ -109,13 +110,11 @@ export function drawTable(data) {
   docBody.innerHTML = "";
   if (data.size === 0) {
     const message = "Nothing to observe here";
-    addImage(IMAGE_PATH, message)
-   
+    addImage(IMAGE_PATH, message);
   } else {
-
-  const container = document.createElement("div");
-  container.style.width = "100%";
-  container.style.border = "1px solid " + BORDER_COLOR;
+    const container = document.createElement("div");
+    container.style.width = "100%";
+    container.style.border = "1px solid " + BORDER_COLOR;
     const headerRow = createCoverageTableRow(
       "header",
       "File Name",
@@ -145,7 +144,6 @@ export function drawTable(data) {
     });
     docBody.appendChild(container);
   }
-
 }
 
 function createCoverageTableRow(
@@ -218,7 +216,7 @@ function openModal(item) {
   modal.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
   modal.style.zIndex = "1000"; // Ensure the modal is above the overlay
   modal.style.overflowY = "auto"; // Add vertical scroll if content overflows
-  modal.style.border = "4px solid"
+  modal.style.border = "4px solid";
 
   const highlightedContent = highlightRanges(item.content, item.ranges);
 

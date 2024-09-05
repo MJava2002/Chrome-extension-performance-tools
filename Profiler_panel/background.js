@@ -52,7 +52,7 @@ async function startExtensionCoverage(extensionId) {
 
   if (!backgroundPage) {
     console.log("Background page not found.");
-    return {result: []};
+    return { result: [] };
   }
 
   console.log(backgroundPage.id);
@@ -85,7 +85,7 @@ async function stopAndCollectExtensionCoverage(extensionId) {
 
   if (!backgroundPage) {
     console.log("Background page not found.");
-    return {result: []};
+    return { result: [] };
   }
 
   // Collect data

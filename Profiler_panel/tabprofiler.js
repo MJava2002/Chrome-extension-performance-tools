@@ -36,8 +36,8 @@ export function tabProfileForFlameGraph() {
           console.log("Profiler stopped");
           const profile = result.profile;
           console.log(JSON.stringify(profile, null, 2));
-            let extensionId;
-            extensionId = await getId();
+          let extensionId;
+          extensionId = await getId();
           console.log("extensionID", extensionId);
           const transformedData = transformProfileData(profile, extensionId);
           console.log("Before saving", transformedData);
