@@ -11,16 +11,11 @@
   },
   "content_scripts": [
     {
-      "all_frames": true,
       "matches": ["http://*/*", "https://*/*"],
-      "match_about_blank": true,
-      "js": ["low_coverage_script.js"],
-      "run_at": "document_start"
+      "js": ["low_coverage_script.js"]
     }
   ],
-  "host_permissions": [
-  "<all_urls>"
-  ],
+  "host_permissions": [ "*://*/*" ],
   "permissions": [
     "activeTab",
     "declarativeNetRequestWithHostAccess",
@@ -36,7 +31,7 @@
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
   "web_accessible_resources": [ {
-      "matches": [ "http://*/*", "https://*/*" ],
+      "matches":[ "\u003Call_urls>" ],
       "resources": ["background.js", "low_coverage_script.js", "requests.js", "blocker_rule.json", "icon.png"]
       }]
 }

@@ -85,6 +85,7 @@ export function calculateCoveragePercentage(
   let ranges = [];
   coverageData.result.forEach((script) => {
     if (script.url === scriptUrl) {
+      console.log("script", script)
       script.functions.forEach((func) => {
         // [...list1, ...list2];
         const tmp = func.ranges.map(({ startOffset, endOffset }) => [
