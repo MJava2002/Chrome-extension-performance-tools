@@ -405,7 +405,14 @@ document.getElementById("networkButton").addEventListener("click", function () {
     console.log("Network data cleared");
   });
   const docBody = document.getElementById("flameGraph");
-  docBody.innerHTML = "";
+  if(docBody){
+    docBody.innerHTML = "";
+  }
+  let resets;
+    resets = document.getElementById('controlsContainer')
+    if(resets){
+        resets.style.display = 'none';
+    }
 
   // Show the loading image
   const loadingImage = document.createElement("img");
