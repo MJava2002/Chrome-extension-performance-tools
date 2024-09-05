@@ -46,6 +46,7 @@ export function extensionProfileForFlameGraph(extensionId) {
           { targetId: targetId },
           "Profiler.stop",
           (result) => {
+            if (!result) return;
             console.log("RESULT IS", result);
             const profile = result.profile;
             console.log("PROFILERRR:", profile);
