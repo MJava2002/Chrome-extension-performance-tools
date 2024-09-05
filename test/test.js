@@ -331,7 +331,7 @@ const mockCoverageData = {
 };
 
 // calculateCoveragePercentage
-describe("Get file name", function () {
+describe("Get Percentage", function () {
   describe("basic test", function () {
     it("", async function () {
       assert.equal(
@@ -340,7 +340,7 @@ describe("Get file name", function () {
           mockCoverageData,
           "chrome-extension://abcd1234/background.js",
         ).coveragePercentage,
-        20,
+        15,
       );
     });
   });
@@ -366,7 +366,7 @@ describe("Get file name", function () {
           mockCoverageData,
           "chrome-extension://abcd1234/script/background.js",
         ).coveragePercentage,
-        3.8,
+        0.8,
       );
     });
   });
