@@ -1,4 +1,4 @@
-export async function proccessFiles(uniqueFiles, coverageData, extensionId) {
+export async function proccessFiles(uniqueFiles, coverageData, extensionId, isTab = true) {
   uniqueFiles = [...uniqueFiles];
   const percentPerFile = [];
   console.log(uniqueFiles);
@@ -29,6 +29,7 @@ export async function proccessFiles(uniqueFiles, coverageData, extensionId) {
         content_1.length,
         coverageData,
         url_1,
+        isTab
       );
       console.log("in process file", coverageData);
       percentPerFile.push({
@@ -81,17 +82,24 @@ export function calculateCoveragePercentage(
   totalScriptSize,
   coverageData,
   scriptUrl,
+  isTab = true
 ) {
   let ranges = [];
   coverageData.result.forEach((script) => {
     if (script.url === scriptUrl) {
-      console.log("script", script)
+      console.log("script", script);
       script.functions.forEach((func) => {
-        // [...list1, ...list2];
-        const tmp = func.ranges.map(({ startOffset, endOffset }) => [
-          startOffset,
-          endOffset,
-        ]);
+       
+        const tmp = func.ranges
+        .filter(({ count }) => count !== 0) // Remove ranges with count == 0
+        .filter(({ startOffset, endOffset }) => {
+         
+          if (isTab) {
+            return !(startOffset === 0 && endOffset === totalScriptSize);
+          }
+          return true;
+        })
+        .map(({ startOffset, endOffset }) => [startOffset, endOffset]);
         ranges = [...ranges, ...tmp];
       });
     }
