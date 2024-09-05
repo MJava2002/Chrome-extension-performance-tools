@@ -1,6 +1,6 @@
 // Create a new panel in the Chrome DevTools
 chrome.devtools.panels.create(
-  "Performance",
+  "Turbo",
   "icons/icon.png",
   "panel.html",
   function (panel) {
