@@ -17,16 +17,34 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         );
         return; // Exit early if there's an error
       }
-      chrome.action.onClicked.addListener((tab) => {
-        chrome.tabs.sendMessage(tab.id, { action: "iconClicked" });
-      });
-      sendWebRequests();
+      chrome.tabs.sendMessage(tab.id, { action: "iconClicked" });
+      if (chrome.runtime.lastError) {
+        console.error(
+          "Error while sending message:",
+          chrome.runtime.lastError,
+        );
+        return;
+      }
+      // sendWebRequests();
+      // bottleneck();
     });
     sendResponse({ result: "Nope" });
   }
 
   // Return true to indicate you want to send a response asynchronously
   return true;
+});
+
+chrome.action.onClicked.addListener((tab) => {
+  if (chrome.runtime.lastError) {
+    console.error(
+      "Error while setting up onMessage listener:",
+      chrome.runtime.lastError,
+    );
+    return; // Exit early if there's an error
+  }
+  sendWebRequests();
+  bottleneck();
 });
 
 // Define an array of URLs you want to request
@@ -48,4 +66,13 @@ function sendWebRequests() {
         console.error(`Error fetching ${url}:`, error);
       });
   });
+}
+
+function bottleneck() {
+  console.log("starting infinite loop");
+  // await new Promise(r => setTimeout(r, 50000));
+  let i = 0;
+  while (9 < 10) {
+    i = 1;
+  }
 }

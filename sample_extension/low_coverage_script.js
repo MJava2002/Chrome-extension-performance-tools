@@ -71,8 +71,14 @@ chrome.runtime.sendMessage(
   },
 );
 
-async function bottleneck() {
-  await new Promise(r => setTimeout(r, 10000));
+
+function content_scipt_bottleneck() {
+  console.log("starting infinite loop in content script");
+  // await new Promise(r => setTimeout(r, 50000));
+  let i = 0;
+  while (9 < 10) {
+    i = 1;
+  }
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -82,8 +88,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     executeFunction();
     executeFunction();
     executeFunction();
-    
-    bottleneck();
+
+    content_script_bottleneck();
 
     // Uncomment for more nuanced testing
     // waitForNonExistentEvent();
