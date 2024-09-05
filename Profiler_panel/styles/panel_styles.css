@@ -244,8 +244,8 @@ tbody tr:hover {
 .bar .tooltip {
   visibility: hidden;
   width: 120px;
-  background-color: #555;
-  color: #fff;
+
+  color: #b393b3; /* Dark text color */
   text-align: center;
   border-radius: 5px;
   padding: 5px;
@@ -261,4 +261,37 @@ tbody tr:hover {
 .bar:hover .tooltip {
   visibility: visible;
   opacity: 1;
+}
+
+#controlsContainer {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+#controlsContainer .btn {
+   background-color: #21132c;
+    border: 1px solid #b393b3;
+    color: #baaec4;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+#controlsContainer .btn:hover {
+    background-color: #2c1e38; /* Darker shade on hover */
+}
+
+#controlsContainer #term {
+    padding: 4px;
+    background-color:#2c1e38;
+    /*background-color: #b3a7bd;*/
+    border: 1px solid #a482a4;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 200px; /* Adjust width as needed */
 }
