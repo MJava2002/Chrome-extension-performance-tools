@@ -32,13 +32,15 @@ export async function proccessFiles(uniqueFiles, coverageData, extensionId, isTa
         isTab
       );
       console.log("in process file", coverageData);
-      percentPerFile.push({
-        fileName: getLastSegmentFromUrl(url_1, extensionId),
-        bytesCovered: covered.coveredBytes,
-        percentageCovered: covered.coveragePercentage,
-        content: content_1,
-        ranges: covered.ranges,
-      });
+      if(covered.coveredBytes != 0){
+        percentPerFile.push({
+          fileName: getLastSegmentFromUrl(url_1, extensionId),
+          bytesCovered: covered.coveredBytes,
+          percentageCovered: covered.coveragePercentage,
+          content: content_1,
+          ranges: covered.ranges,
+        });
+      }
     });
     console.log("processFile", percentPerFile);
     return percentPerFile;
