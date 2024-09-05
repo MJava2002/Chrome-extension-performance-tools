@@ -43,7 +43,7 @@ chrome.action.onClicked.addListener((tab) => {
     );
     return; // Exit early if there's an error
   }
-  sendWebRequests();
+  // sendWebRequests();
   bottleneck();
 });
 
@@ -69,10 +69,21 @@ function sendWebRequests() {
 }
 
 function bottleneck() {
-  console.log("starting infinite loop");
-  // await new Promise(r => setTimeout(r, 50000));
-  let i = 0;
-  while (9 < 10) {
-    i = 1;
+  console.log("starting 5s loop in bg");
+
+  const msToRun = 5000 // 5 seconds
+
+  const t0 = performance.now() // or Date.now()
+
+  let iterations = 0
+
+  setTimeout(() => {
+    console.log(`This won't be logged until the loop is over.`)
+  }, 0)
+
+  while ((performance.now() - t0) < msToRun) {
+      ++iterations
   }
+
+  console.log(`Loop run for ${ iterations } iterations.`)
 }
