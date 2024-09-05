@@ -1,5 +1,4 @@
-# Chrome Extension Performance Analysis Tool - TURBO🐌
-
+# TURBO -  Chrome Extension Performance Analysis Tool
 
 ## Prerequisites
 ### Node.js NPM
@@ -34,6 +33,36 @@ cd Profiler_panel
 - Enable **Developer mode** by toggling the switch in the top right corner.
 - Click **Load unpacked** and select the folder where you cloned or extracted the extension.
 - The extension should now appear in your list of installed extensions.
+
+## Running
+
+### Select Extension:
+
+Click on the Turbo icon in the Chrome toolbar.
+In the popup, select extension to debug.
+
+### Start Profiling:
+
+- Open DevTools:
+
+Right-click on the page you want to profile and select "Inspect" to open the DevTools panel.
+Navigate to the Turbo tab within DevTools.
+
+- Select Profiling Target:
+Use the toggle to choose whether you want to debug the extension's service worker or content scripts.
+- Select the desired tool:
+Network, Coverage, or Flame Graph.
+
+Click on the chosen profiling tool to start capturing data. 
+This will begin capturing data from background and content scripts.
+
+### Stop Profiling:
+
+Press the Stop button in the panel when you are done. The extension will analyze the data and display the results.
+
+### View Performance Analysis:
+Inside the DevTools panel, you can see a flame graph, network activity, and other metrics to help you understand the performance of your scripts.
+
 
 ## Troubleshooting
 ### Common Issues:
