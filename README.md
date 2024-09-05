@@ -16,7 +16,8 @@ feature/api testing phase:
 
 ## TODO
 
-- disable other buttons when one is clicked (there are errors when you click multiple buttons quickly)
-- maybe display a text like 'recording coverage...' or change button text to 'recording...'
-- coverage table draws over flamegraph. flamegraph doesnt show up if you do coverage first
-- test extensively because there's a lot of changes in this branch
+1. networkზე ქოლის დროს რაც ვთქვი რამე გაუმჯობესება თუ შეილება
+2. networkზე ფერები უბრალოდ შევცვალოთ უფრო რომ ჩაჯდეს და ილუსტრაცია ცარიელის დროს
+3. ანგარიში
+4. flamegraphზე clearის მერე ბაგები
+5. target not found bugs

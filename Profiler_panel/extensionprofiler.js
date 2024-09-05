@@ -67,11 +67,11 @@ export function extensionProfileForFlameGraph(extensionId) {
     } else {
       const emptyData = {};
       const jsonData = JSON.stringify(emptyData, null, 2);
-      console.log("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", jsonData)
+      console.log("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", jsonData);
       chrome.storage.local.set({ myJsonData: jsonData }, function () {
-          console.log("JSON data has been saved.", jsonData);
-          chrome.runtime.sendMessage({ action: "dataSaved" });
-        });
+        console.log("JSON data has been saved.", jsonData);
+        chrome.runtime.sendMessage({ action: "dataSaved" });
+      });
       // chrome.runtime.sendMessage({ action: "changeTargetBool" });
     }
   });

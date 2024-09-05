@@ -9,13 +9,13 @@
  *   requred, but it's unclear whether this is still supported
  */
 
-import { drawTable } from "./covered_table.js";
+import { addImage, drawTable } from "./covered_table.js";
 import { detachDebugger } from "./helpers.js";
 import { drawNetworkTable } from "./network.js";
 const TEXT_COLOR = "#baaec4";
 const BORDER_COLOR = "#a79ab4";
 const IMAGE_PATH =
-  "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
+  "styles/Astronaut--Streamline-Bangalore.svg";
 
 let chart = null;
 function disableButtons() {
@@ -157,10 +157,10 @@ function initializeFlameGraph() {
 
               const img = document.createElement("img");
               img.src = IMAGE_PATH; // Replace with your image file name
-              img.alt = "Nothing to observe here";
-              img.style.width = "25%"; // Set the image width as needed
+              img.alt = "Chosen extension is not running";
+              img.style.width = "20%"; // Set the image width as needed
               const text = document.createElement("div");
-              text.textContent = "Target Does not exist";
+              text.textContent = "Chosen extension is not running";
               text.style.fontFamily = "'MyCustomFont', sans-serif";
               text.style.color = TEXT_COLOR; // Set the text color
               text.style.marginTop = "10px"; // Add some space between the image and the text
@@ -177,7 +177,6 @@ function initializeFlameGraph() {
       },
     );
   } else {
-
     console.error("D3 not loaded");
     const loadingImage = document.getElementById("loadingImage");
     if (loadingImage) {
@@ -410,7 +409,14 @@ document.getElementById("networkButton").addEventListener("click", function () {
     console.log("Network data cleared");
   });
   const docBody = document.getElementById("flameGraph");
-  docBody.innerHTML = "";
+  if(docBody){
+    docBody.innerHTML = "";
+  }
+  let resets;
+    resets = document.getElementById('controlsContainer')
+    if(resets){
+        resets.style.display = 'none';
+    }
 
   // Show the loading image
   const loadingImage = document.createElement("img");
@@ -440,8 +446,16 @@ document.getElementById("networkButton").addEventListener("click", function () {
               loadingImage.style.display = "none";
             }
             drawNetworkTable(result.networkData);
+          } else {
+            console.log("here?? ig");
           }
         });
+      } else if (message.action === "networkDataNotFound") {
+        console.log("HEREEEEE")
+        addImage(
+          "styles/Astronaut--Streamline-Bangalore.svg",
+          "Chosen extension is not running",
+        );
       }
     },
   );

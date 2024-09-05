@@ -30,15 +30,13 @@ export async function proccessFiles(uniqueFiles, coverageData, extensionId) {
         coverageData,
         url_1,
       );
-      console.log(
-        "in process file",
-        covered,
-        getLastSegmentFromUrl(url_1, extensionId),
-      );
+      console.log("in process file", coverageData);
       percentPerFile.push({
         fileName: getLastSegmentFromUrl(url_1, extensionId),
         bytesCovered: covered.coveredBytes,
         percentageCovered: covered.coveragePercentage,
+        content: content_1,
+        ranges: covered.ranges,
       });
     });
     console.log("processFile", percentPerFile);
@@ -103,7 +101,7 @@ export function calculateCoveragePercentage(
   console.log(`Covered Bytes: ${coveredBytes} bytes`);
   console.log(`Coverage Percentage: ${coveragePercentage.toFixed(2)}%`);
 
-  return { coveragePercentage, coveredBytes };
+  return { coveragePercentage, coveredBytes, ranges };
 }
 
 // ranges is a list of [start,end] numbers
@@ -131,27 +129,6 @@ export function countCoveredNumbers(ranges) {
 
   return totalCovered;
 }
-
-// def count_covered_numbers(ranges):
-//     events = []
-//     for start, end in ranges:
-//         events.append((start, 1))
-//         events.append((end + 1, -1))
-
-//     events.sort()
-
-//     count = 0
-//     active_ranges = 0
-//     total_covered = 0
-
-//     for point, event_type in events:
-//         if active_ranges > 0:
-//             total_covered += point - count
-
-//         active_ranges += event_type
-//         count = point
-
-//     return total_covered
 
 export function setAttached(target) {
   chrome.storage.local.set({ attachedTarget: target }, () => {

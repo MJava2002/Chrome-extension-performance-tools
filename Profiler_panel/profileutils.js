@@ -42,14 +42,13 @@ export function transformProfileData(profile, extensionId) {
     // if (checkValidUrl(`(${node.callFrame.url})`, extensionId)) {
     //   label = "Run by extension: " + node.callFrame.functionName;
     // }
-    let label = node.callFrame.functionName && node.callFrame.functionName.trim() !== ''
-    ? node.callFrame.functionName
-    : `(${node.callFrame.url}:${node.callFrame.lineNumber})`;
+    let label =
+      node.callFrame.functionName && node.callFrame.functionName.trim() !== ""
+        ? node.callFrame.functionName
+        : `(${node.callFrame.url})`;
 
     if (checkValidUrl(`${node.callFrame.url}`, extensionId)) {
-
-      label = "Run by extension: " + label
-
+      label = "Run by extension: " + label;
     }
     const result = {
       name: label,
