@@ -395,6 +395,10 @@ document.getElementById("stopButton").addEventListener("click", function () {
       console.log(`${activeButton.id}RecordingStopped`);
       activeButton = null;
     }
+    const loadingImage = document.getElementById("loadingImage");
+    if (loadingImage) {
+      loadingImage.style.display = "none";
+    }
   } else {
     console.log("Recording not started.");
   }
