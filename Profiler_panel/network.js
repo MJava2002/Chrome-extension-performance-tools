@@ -12,6 +12,7 @@ function startRequestMonitoring() {
       console.log("Request intercepted: ", params);
       if (
         (params.initiator.stack &&
+          params.initiator.stack.callFrames[0] &&
           params.initiator.stack.callFrames[0].url.startsWith(pattern)) ||
         params.documentURL.startsWith(pattern)
       ) {
@@ -20,6 +21,7 @@ function startRequestMonitoring() {
           url: params.request.url,
           method: params.request.method,
           size: 0,
+          initiator: params.initiator.stack.callFrames[0].functionName
         };
       }
     }
@@ -27,10 +29,10 @@ function startRequestMonitoring() {
 
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     if (message === "Network.dataReceived") {
-      console.log("Data received IGUESS: ", params.data);
+      console.log("Data received IGUESS: ", params);
       if (requestTimes[params.requestId]) {
-        console.log("Data received: ", params.data);
-        requestTimes.size += params.dataLength;
+        console.log("Data received: ", params);
+        requestTimes[params.requestId] += params.dataLength;
       }
     }
   });
@@ -61,13 +63,14 @@ function startRequestMonitoring() {
           status: params.response.status,
           type: params.type,
           size: size,
+          initiator: requestTimes[params.requestId].initiator,
           timing: params.response.timing,
         };
 
         // Save the data in chrome storage
         saveRequestData(requestData);
 
-        delete requestTimes[params.requestId];
+        // delete requestTimes[params.requestId];
       }
     }
   });
@@ -191,6 +194,7 @@ export function drawNetworkTable(networkData) {
     "URL",
     "Method",
     "Status",
+    "Initiator",
     "Type",
     "Size",
     "Latency",
@@ -239,14 +243,16 @@ function drawRows(tbody, networkData) {
     const nameCell = row.insertCell(0);
     const methodCell = row.insertCell(1);
     const statusCell = row.insertCell(2);
-    const typeCell = row.insertCell(3);
-    const sizeCell = row.insertCell(4);
-    const timeCell = row.insertCell(5);
-    const waterfallCell = row.insertCell(6);
+    const initiatorCell = row.insertCell(3);
+    const typeCell = row.insertCell(4);
+    const sizeCell = row.insertCell(5);
+    const timeCell = row.insertCell(6);
+    const waterfallCell = row.insertCell(7);
 
     nameCell.textContent = requestData.url; // Just the file name
     methodCell.textContent = requestData.method;
     statusCell.textContent = requestData.status;
+    initiatorCell.textContent =requestData.initiator;
     typeCell.textContent = requestData.type;
     sizeCell.textContent = `${(requestData.size / 1024).toFixed(2)} KB`; // Convert size to KB
     timeCell.textContent = `${requestData.latency.toFixed(2)} ms`;
@@ -353,6 +359,7 @@ function drawRows(tbody, networkData) {
       nameCell,
       methodCell,
       statusCell,
+      initiatorCell,
       typeCell,
       sizeCell,
       timeCell,
