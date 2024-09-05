@@ -159,7 +159,7 @@ async function runCoverage(extensionId) {
         uniqueFiles.add(script.url);
       }
     });
-    const covData = await proccessFiles(uniqueFiles, coverageData, extensionId);
+    const covData = await proccessFiles(uniqueFiles, coverageData, extensionId, false);
     console.log("runCoverge", covData);
     const mapArray = Array.from(covData.entries());
     // Save the array in chrome.storage.local
