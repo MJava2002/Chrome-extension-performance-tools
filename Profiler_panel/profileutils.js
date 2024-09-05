@@ -53,7 +53,7 @@ export function transformProfileData(profile, extensionId) {
     }
     const result = {
       name: label,
-      value: timeValues.get(nodeId) || 1,
+      value: node.hitCount || 1,
       children: [],
     };
 
