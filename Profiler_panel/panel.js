@@ -14,8 +14,7 @@ import { detachDebugger } from "./helpers.js";
 import { drawNetworkTable } from "./network.js";
 const TEXT_COLOR = "#baaec4";
 const BORDER_COLOR = "#a79ab4";
-const IMAGE_PATH =
-  "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
+const IMAGE_PATH = "styles/Astronaut--Streamline-Bangalore.svg";
 function disableButtons() {
   const coverageButton = document.getElementById("coverageButton");
   const networkButton = document.getElementById("networkButton");
@@ -106,10 +105,10 @@ function initializeFlameGraph() {
 
               const img = document.createElement("img");
               img.src = IMAGE_PATH; // Replace with your image file name
-              img.alt = "Nothing to observe here";
+              img.alt = "Chosen extension is not running";
               img.style.width = "20%"; // Set the image width as needed
               const text = document.createElement("div");
-              text.textContent = "Target Does not exist";
+              text.textContent = "Chosen extension is not running";
               text.style.fontFamily = "'MyCustomFont', sans-serif";
               text.style.color = TEXT_COLOR; // Set the text color
               text.style.marginTop = "10px"; // Add some space between the image and the text
