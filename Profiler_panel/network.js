@@ -120,6 +120,7 @@ export function startNetwork(extensionId) {
       });
     } else {
       console.log("No matching target found.");
+      debugee = "NO NETWORK"
     }
   });
 }
@@ -148,10 +149,11 @@ export function startNetworkWithTabID(extensionId) {
       startRequestMonitoring();
     });
   });
+  debugee = "NO NETWORK"
 }
 
 export function stopNetwork() {
-  if (debugee) {
+  if (debugee && debugee != "NO NETWORK") {
     chrome.debugger.sendCommand(debugee, "Network.disable", () => {
       // console.log(debugee);
       console.log("Network disabled");
@@ -161,8 +163,9 @@ export function stopNetwork() {
       console.log("Debugger detached");
       debugee = null;
     });
-  } else {
+  } else if (debugee == "NO NETWORK") {
     chrome.runtime.sendMessage({ action: "networkDataNotFound" });
+    debugee = null
   }
 }
 

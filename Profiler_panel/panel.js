@@ -447,6 +447,7 @@ document.getElementById("networkButton").addEventListener("click", function () {
           }
         });
       } else if (message.action === "networkDataNotFound") {
+        console.log("HEREEEEE")
         addImage(
           "styles/Astronaut--Streamline-Bangalore.svg",
           "Chosen extension is not running",
