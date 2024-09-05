@@ -5,6 +5,7 @@ const YELLOW = "#eaa41e";
 const ORANGE = "#f48250";
 const IMAGE_PATH =
   "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
+const COLORS = ["lightgreen", "yellow", "red"]; // from least to most 
 
 function interpolateColor(color1, color2, factor) {
   var result = color1
@@ -237,19 +238,33 @@ function openModal(item) {
 }
 
 function highlightRanges(content, ranges) {
-  let result = "";
   let currentIndex = 0;
-
-  ranges.sort((a, b) => a[0] - b[0]);
+  let result = "";
+  const highlightMap = new Array(content.length).fill(0);
+  ranges.forEach(([start, end]) => {
+    for (let i = start; i < end; i++) {
+      highlightMap[i]++;
+    }
+  });
 
   ranges.forEach(([start, end]) => {
     result += escapeHtml(content.slice(currentIndex, start));
-    result += `<span style="background-color: yellow;">${escapeHtml(content.slice(start, end))}</span>`;
+    for (let i = start; i < end; i++) {
+      const highlightLevel = highlightMap[i];
+      const color = COLORS[(highlightLevel - 1) % COLORS.length];
+      if (i === start || highlightMap[i] !== highlightMap[i - 1]) {
+        result += `<span style="background-color: ${color};">`;
+      }
+      result += escapeHtml(content[i]);
+      if (i === end - 1 || highlightMap[i] !== highlightMap[i + 1]) {
+        result += `</span>`;
+      }
+    }
+
     currentIndex = end;
   });
 
   result += escapeHtml(content.slice(currentIndex));
-
   return result;
 }
 
