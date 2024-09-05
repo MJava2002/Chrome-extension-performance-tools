@@ -77,34 +77,45 @@ function createProgressBar(containerId, widthPercentage) {
   bar.animate(1.0); // Animate from 0.0 to 1.0
 }
 
+export function addImage(IMAGE_PATH, message) {
+  const docBody = document.getElementById("flameGraph");
+  const container = document.createElement("div");
+  container.style.width = "100%";
+  container.style.border = "1px solid " + BORDER_COLOR;
+  container.style.border = "none";
+  const emptyRow = document.createElement("div");
+  emptyRow.style.textAlign = "center";
+
+  const img = document.createElement("img");
+  img.src = IMAGE_PATH;
+  img.alt = message;
+  img.style.width = "20%";
+  const text = document.createElement("div");
+  text.textContent = message;
+  text.style.fontFamily = "'MyCustomFont', sans-serif";
+  text.style.color = TEXT_COLOR;
+  text.style.marginTop = "10px";
+  text.style.fontSize = "24px";
+
+  emptyRow.appendChild(img);
+  emptyRow.appendChild(text);
+
+  container.appendChild(emptyRow);
+  docBody.appendChild(container);
+}
+
 export function drawTable(data) {
   const docBody = document.getElementById("flameGraph");
   docBody.innerHTML = "";
+  if (data.size === 0) {
+    const message = "Nothing to observe here";
+    addImage(IMAGE_PATH, message)
+   
+  } else {
 
   const container = document.createElement("div");
   container.style.width = "100%";
   container.style.border = "1px solid " + BORDER_COLOR;
-  if (data.size === 0) {
-    container.style.border = "none";
-    const emptyRow = document.createElement("div");
-    emptyRow.style.textAlign = "center";
-
-    const img = document.createElement("img");
-    img.src = IMAGE_PATH;
-    img.alt = "Nothing to observe here";
-    img.style.width = "25%";
-    const text = document.createElement("div");
-    text.textContent = "Nothing to observe here";
-    text.style.fontFamily = "'MyCustomFont', sans-serif";
-    text.style.color = TEXT_COLOR;
-    text.style.marginTop = "10px";
-    text.style.fontSize = "24px";
-
-    emptyRow.appendChild(img);
-    emptyRow.appendChild(text);
-
-    container.appendChild(emptyRow);
-  } else {
     const headerRow = createCoverageTableRow(
       "header",
       "File Name",
@@ -132,9 +143,9 @@ export function drawTable(data) {
       docBody.appendChild(container);
       createProgressBar(`#${containerId}`, item.percentageCovered);
     });
+    docBody.appendChild(container);
   }
 
-  docBody.appendChild(container);
 }
 
 function createCoverageTableRow(

@@ -51,8 +51,8 @@ async function startExtensionCoverage(extensionId) {
   );
 
   if (!backgroundPage) {
-    console.error("Background page not found.");
-    return;
+    console.log("Background page not found.");
+    return {result: []};
   }
 
   console.log(backgroundPage.id);
@@ -84,8 +84,8 @@ async function stopAndCollectExtensionCoverage(extensionId) {
   );
 
   if (!backgroundPage) {
-    console.error("Background page not found.");
-    return;
+    console.log("Background page not found.");
+    return {result: []};
   }
 
   // Collect data

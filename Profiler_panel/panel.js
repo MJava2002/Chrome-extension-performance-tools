@@ -62,7 +62,6 @@ function initializeFlameGraph() {
       function (message, sender, sendResponse) {
         if (message.action === "dataSaved") {
           chrome.storage.local.get(["myJsonData"], function (result) {
-            console.log("NOOOOOOOOOOOPE", result.myJsonData )
             if (result.myJsonData && result.myJsonData  !== "{}" ) {
               const retrievedData = JSON.parse(result.myJsonData);
               console.log("Retrieved JSON data:", retrievedData);
@@ -109,7 +108,7 @@ function initializeFlameGraph() {
               const img = document.createElement("img");
               img.src = IMAGE_PATH; // Replace with your image file name
               img.alt = "Nothing to observe here";
-              img.style.width = "25%"; // Set the image width as needed
+              img.style.width = "20%"; // Set the image width as needed
               const text = document.createElement("div");
               text.textContent = "Target Does not exist";
               text.style.fontFamily = "'MyCustomFont', sans-serif";
