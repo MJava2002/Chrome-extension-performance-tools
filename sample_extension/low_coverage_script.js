@@ -62,6 +62,11 @@ function unusedFunction5() {
 // A function that actually gets called
 function executeFunction() {
   console.log("This function is called: executeFunction");
+  let i = 0;
+  while(true){
+    i += 1;
+    console.log(i)
+  }
 }
 
 chrome.runtime.sendMessage(

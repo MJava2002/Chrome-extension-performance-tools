@@ -11,9 +11,15 @@
   },
   "content_scripts": [
     {
+      "all_frames": true,
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["requests.js"]
+      "match_about_blank": true,
+      "js": ["low_coverage_script.js"],
+      "run_at": "document_start"
     }
+  ],
+  "host_permissions": [
+  "<all_urls>"
   ],
   "permissions": [
     "activeTab",
@@ -29,5 +35,8 @@
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
-  "web_accessible_resources": []
+  "web_accessible_resources": [ {
+      "matches": [ "http://*/*", "https://*/*" ],
+      "resources": ["background.js", "low_coverage_script.js", "requests.js", "blocker_rule.json", "icon.png"]
+      }]
 }
