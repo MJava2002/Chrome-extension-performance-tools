@@ -72,29 +72,47 @@ chrome.runtime.sendMessage(
 );
 
 
-function content_scipt_bottleneck() {
-  console.log("starting infinite loop in content script");
+function content_script_bottleneck() {
+  console.log("starting 5s loop in content script");
   // await new Promise(r => setTimeout(r, 50000));
-  let i = 0;
-  while (9 < 10) {
-    i = 1;
+  // let i = 0;
+  // while (9 < 10) {
+  //   i = 1;
+  // }
+  const msToRun = 5000 // 5 seconds
+
+  const t0 = performance.now() // or Date.now()
+
+  let iterations = 0
+
+  setTimeout(() => {
+    console.log(`This won't be logged until the loop is over.`)
+  }, 0)
+
+  while ((performance.now() - t0) < msToRun) {
+      ++iterations
   }
+
+  console.log(`Loop run for ${ iterations } iterations.`)
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "iconClicked") {
-    console.log("Extension icon clicked - recognized in content script");
-    // call only one function
-    executeFunction();
-    executeFunction();
-    executeFunction();
+content_script_bottleneck();
 
-    content_script_bottleneck();
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//   if (message.action === "iconClicked") {
+//     console.log("Extension icon clicked - recognized in content script");
+//     // call only one function
+//     executeFunction();
+//     executeFunction();
+//     executeFunction();
 
-    // Uncomment for more nuanced testing
-    // waitForNonExistentEvent();
+//     content_script_bottleneck();
 
-    // Uncomment if we need to look at block coverage
-    // conditionalLogic();
-  }
-});
+//     // Uncomment for more nuanced testing
+//     // waitForNonExistentEvent();
+
+//     // Uncomment if we need to look at block coverage
+//     // conditionalLogic();
+//   }
+// });
+
