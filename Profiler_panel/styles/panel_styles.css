@@ -182,7 +182,7 @@ thead tr {
 }
 tbody tr:hover {
   background-color: rgba(38, 36, 36, 0.8); /* Light gray background on hover */
-  color: #333; /* Text color on hover */
+  color: #fbc4c4; /* Text color on hover */
 }
 /*.fit-parent-div {*/
 /*  display: block;*/
@@ -294,4 +294,8 @@ tbody tr:hover {
     border-radius: 5px;
     font-size: 14px;
     width: 200px; /* Adjust width as needed */
+}
+
+#term {
+  color: #e6e6fa; /* Text color */
 }

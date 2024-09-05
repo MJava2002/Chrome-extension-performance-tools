@@ -71,7 +71,7 @@ function initializeFlameGraph() {
       .label(function (d) {
         return d.data.name + " (" + d.data.value + ")";
       })
-      .selfValue(true);
+      .selfValue(false);
     var details = document.getElementById("details");
     chart.setDetailsElement(details);
     let controlsAdded = false;

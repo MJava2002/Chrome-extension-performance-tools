@@ -1,6 +1,8 @@
 console.log("Background");
 
 console.log("Before adding listener");
+
+/*
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   // Wait for this message to ensure that content script started executing
   console.log("Message received in background:", request);
@@ -31,9 +33,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     sendResponse({ result: "Nope" });
   }
 
-  // Return true to indicate you want to send a response asynchronously
+  Return true to indicate you want to send a response asynchronously
   return true;
 });
+*/
 
 chrome.action.onClicked.addListener((tab) => {
   if (chrome.runtime.lastError) {
@@ -43,7 +46,7 @@ chrome.action.onClicked.addListener((tab) => {
     );
     return; // Exit early if there's an error
   }
-  // sendWebRequests();
+  sendWebRequests(); 
   bottleneck();
 });
 
