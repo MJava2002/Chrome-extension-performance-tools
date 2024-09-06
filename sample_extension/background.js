@@ -46,19 +46,24 @@ chrome.action.onClicked.addListener((tab) => {
     );
     return; // Exit early if there's an error
   }
-  sendWebRequests(); 
+  sendManyWebRequests(); 
+  requestLargeResource();
   bottleneck();
 });
 
-// Define an array of URLs you want to request
+// Define an array of URLs to request
 const urls = [
   "https://jsonplaceholder.typicode.com/posts/1",
   "https://jsonplaceholder.typicode.com/posts/2",
   "https://jsonplaceholder.typicode.com/posts/3",
+  "https://jsonplaceholder.typicode.com/posts/4",
+  "https://jsonplaceholder.typicode.com/posts/5",
+  "https://jsonplaceholder.typicode.com/posts/6",
+  "https://jsonplaceholder.typicode.com/posts/7",
 ];
 
 // Function to send web requests
-function sendWebRequests() {
+function sendManyWebRequests() {
   urls.forEach((url) => {
     fetch(url)
       .then((response) => response.json()) // Parse the JSON response
@@ -69,6 +74,17 @@ function sendWebRequests() {
         console.error(`Error fetching ${url}:`, error);
       });
   });
+}
+
+function requestLargeResource() {
+  const url = 'https://www.gutenberg.org/cache/epub/10/pg10.txt';
+  fetch(url)
+      .then(() => {
+        console.log(`Received large data from ${url}`);
+      })
+      .catch((error) => {
+        console.error(`Error fetching ${url}:`, error);
+      });
 }
 
 function bottleneck() {
