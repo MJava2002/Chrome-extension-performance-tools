@@ -82,19 +82,6 @@ function startRequestMonitoring() {
         // recvStart = (recvStart / 1000).toFixed(4);
         requestInfo[id].recvStart = recvStart;
 
-        // Add additional details to the request data
-        /*
-        const requestData = {
-          url: requestInfo[params.requestId].url,
-          method: requestInfo[params.requestId].method,
-          latency: latency.toFixed(4) * 1000, // convert to ms
-          status: params.response.status,
-          type: params.type,
-          size: size,
-          initiator: requestInfo[params.requestId].initiator,
-          timing: params.response.timing,
-        }; */
-
         // Save the data in chrome storage
         saveRequestData(requestInfo[id]);
 
@@ -358,7 +345,6 @@ function drawRows(tbody, networkData) {
         label: "Receiving",
       });
     }
-    // console.log(phases);
 
     // Create the waterfall bar
     const maxWidth = 150; // Set a maximum width for the bars
