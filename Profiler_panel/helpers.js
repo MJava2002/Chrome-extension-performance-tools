@@ -36,7 +36,7 @@ export async function proccessFiles(uniqueFiles, coverageData, extensionId, isTa
         percentPerFile.push({
           fileName: getLastSegmentFromUrl(url_1, extensionId),
           bytesCovered: covered.coveredBytes,
-          percentageCovered: covered.coveragePercentage,
+          percentageCovered: covered.coveragePercentage.toFixed(2),
           content: content_1,
           ranges: covered.ranges,
         });

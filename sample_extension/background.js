@@ -1,6 +1,8 @@
 console.log("Background");
 
 console.log("Before adding listener");
+
+/*
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   // Wait for this message to ensure that content script started executing
   console.log("Message received in background:", request);
@@ -17,16 +19,35 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         );
         return; // Exit early if there's an error
       }
-      chrome.action.onClicked.addListener((tab) => {
-        chrome.tabs.sendMessage(tab.id, { action: "iconClicked" });
-      });
-      sendWebRequests();
+      chrome.tabs.sendMessage(tab.id, { action: "iconClicked" });
+      if (chrome.runtime.lastError) {
+        console.error(
+          "Error while sending message:",
+          chrome.runtime.lastError,
+        );
+        return;
+      }
+      // sendWebRequests();
+      // bottleneck();
     });
     sendResponse({ result: "Nope" });
   }
 
-  // Return true to indicate you want to send a response asynchronously
+  Return true to indicate you want to send a response asynchronously
   return true;
+});
+*/
+
+chrome.action.onClicked.addListener((tab) => {
+  if (chrome.runtime.lastError) {
+    console.error(
+      "Error while setting up onMessage listener:",
+      chrome.runtime.lastError,
+    );
+    return; // Exit early if there's an error
+  }
+  sendWebRequests(); 
+  bottleneck();
 });
 
 // Define an array of URLs you want to request
@@ -48,4 +69,24 @@ function sendWebRequests() {
         console.error(`Error fetching ${url}:`, error);
       });
   });
+}
+
+function bottleneck() {
+  console.log("starting 5s loop in bg");
+
+  const msToRun = 5000 // 5 seconds
+
+  const t0 = performance.now() // or Date.now()
+
+  let iterations = 0
+
+  setTimeout(() => {
+    console.log(`This won't be logged until the loop is over.`)
+  }, 0)
+
+  while ((performance.now() - t0) < msToRun) {
+      ++iterations
+  }
+
+  console.log(`Loop run for ${ iterations } iterations.`)
 }

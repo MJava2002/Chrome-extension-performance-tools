@@ -7,8 +7,18 @@ export function transformProfileData(profile, extensionId) {
   }
 
   const nodes = profile.nodes;
-  const sampleTimes = profile.timeDeltas || [];
-  let totalTime = sampleTimes.reduce((sum, time) => sum + time, 0);
+  const root = nodes[0];
+  const samples = [root.id].concat(profile.samples || []);
+  const deltas = [0].concat(profile.timeDeltas || []);
+  const timeValues = new Map();
+  
+  samples.forEach((sample, index) => {
+    const id = samples[index - 1];
+    const curr = timeValues.get(id) || 0;
+    const delta = deltas[index];
+    timeValues.set(id, curr + delta);
+  });
+  let totalTime = deltas.reduce((sum, time) => sum + time, 0);
 
   // Create a map of node IDs to their children
   const childrenMap = new Map();
@@ -42,7 +52,7 @@ export function transformProfileData(profile, extensionId) {
     }
     const result = {
       name: label,
-      value: node.selfTime || 1,
+      value: node.hitCount || 1,
       children: [],
     };
 
@@ -60,13 +70,13 @@ export function transformProfileData(profile, extensionId) {
 
   // Start from the root node (usually the first node)
   const rootNode = processNode(nodes[0].id);
-
+  const rootValue = rootNode.value;
   // Normalize values to percentages of total time
   function normalizeValues(node) {
-    node.value = (node.value / totalTime) * 100;
+    node.value = (node.value / rootValue) * 100;
     node.children.forEach(normalizeValues);
   }
-  normalizeValues(rootNode);
+  // normalizeValues(rootNode);
 
   return rootNode;
 }

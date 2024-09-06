@@ -224,7 +224,13 @@ chrome.runtime.onMessage.addListener(
     if (request.action === "networkButtonClicked") {
       const extensionId = await getId();
       console.log("Network button clicked");
-      startNetwork(extensionId);
+      if (tabIsChecked) {
+        console.log("Network with tab");
+        startNetworkWithTabID(extensionId);
+      } else {
+        console.log("Network with ext");
+        startNetwork(extensionId);
+      }
     }
   },
 );

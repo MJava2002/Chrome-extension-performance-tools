@@ -71,7 +71,7 @@ function initializeFlameGraph() {
       .label(function (d) {
         return d.data.name + " (" + d.data.value + ")";
       })
-      .selfValue(true);
+      .selfValue(false);
     var details = document.getElementById("details");
     chart.setDetailsElement(details);
     let controlsAdded = false;
@@ -394,6 +394,10 @@ document.getElementById("stopButton").addEventListener("click", function () {
       console.log(`${activeButton.id}RecordingStopped`);
       activeButton = null;
     }
+    const loadingImage = document.getElementById("loadingImage");
+    if (loadingImage) {
+      loadingImage.style.display = "none";
+    }
   } else {
     console.log("Recording not started.");
   }
@@ -435,7 +439,7 @@ document.getElementById("networkButton").addEventListener("click", function () {
     function (message, sender, sendResponse) {
       if (message.action === "networkDataSaved") {
         chrome.storage.local.get(["networkData"], function (result) {
-          if (result.networkData) {
+          if (result.networkData && result.networkData.length) {
             console.log("Retrieved network data:", result.networkData);
             const loadingImage = document.getElementById("loadingImage");
             if (loadingImage) {
@@ -444,6 +448,10 @@ document.getElementById("networkButton").addEventListener("click", function () {
             drawNetworkTable(result.networkData);
           } else {
             console.log("here?? ig");
+            addImage(
+              "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg",
+              "Nothing to observe here",
+            );
           }
         });
       } else if (message.action === "networkDataNotFound") {
