@@ -4,7 +4,7 @@ let id;
 let debugee;
 
 function startRequestMonitoring() {
-  let requestTimes = {};
+  let requestInfo = {};
 
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     const pattern = `chrome-extension://${id}`;
@@ -16,12 +16,18 @@ function startRequestMonitoring() {
           params.initiator.stack.callFrames[0].url.startsWith(pattern)) ||
         params.documentURL.startsWith(pattern)
       ) {
-        requestTimes[params.requestId] = {
+        requestInfo[params.requestId] = {
           startTime: params.timestamp,
           url: params.request.url,
           method: params.request.method,
           size: 0,
-          initiator: params.initiator.stack.callFrames[0].functionName
+          initiator: params.initiator.stack.callFrames[0].functionName,
+          latency: -1,
+          status: -1,
+          type: null,
+          timing: null,
+          recvStart: -1,
+          recvEnd: -1,
         };
       }
     }
@@ -30,23 +36,31 @@ function startRequestMonitoring() {
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     if (message === "Network.dataReceived") {
       console.log("Data received IGUESS: ", params);
-      if (requestTimes[params.requestId]) {
+      const id = params.requestId;
+      if (requestInfo[id]) {
         console.log("Data received: ", params);
-        requestTimes[params.requestId] += params.dataLength;
+        requestInfo[id].size += params.encodedDataLength;
+        if (requestInfo[id].recvStart > 0) {
+          requestInfo[id].recvEnd = params.timestamp;
+        } else {
+          requestInfo[id].recvStart = params.timestamp;
+        }
+        saveRequestData(requestInfo[id]);
       }
     }
   });
 
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     if (message === "Network.responseReceived") {
-      if (requestTimes[params.requestId]) {
+      const id = params.requestId;
+      if (requestInfo[id]) {
         console.log("Response received: ", params.response);
-        console.log("Data size:", requestTimes[params.requestId].size);
+        console.log("Data size:", requestInfo[params.requestId].size);
         // Retrieve the request start time and compute latency
-        const startTime = requestTimes[params.requestId].startTime;
+        const startTime = requestInfo[id].startTime;
         const endTime = params.timestamp;
         const latency = endTime - startTime;
-        let size = requestTimes[params.requestId].size;
+        let size = requestInfo[params.requestId].size;
         if (size == 0 && params.response.encodedDataLength > 0) {
           size = params.response.encodedDataLength;
         }
@@ -54,21 +68,24 @@ function startRequestMonitoring() {
         if (size === 0 && local_protocols.includes(params.response.protocol)) {
           size = "(Local resource)";
         }
-
+        requestInfo[id].latency = latency.toFixed(4) * 1000;
+        requestInfo[id].status = params.response.status;
+        requestInfo[id].type = params.type;
+        requestInfo[id].timing = params.response.timing;
         // Add additional details to the request data
         const requestData = {
-          url: requestTimes[params.requestId].url,
-          method: requestTimes[params.requestId].method,
+          url: requestInfo[params.requestId].url,
+          method: requestInfo[params.requestId].method,
           latency: latency.toFixed(4) * 1000, // convert to ms
           status: params.response.status,
           type: params.type,
           size: size,
-          initiator: requestTimes[params.requestId].initiator,
+          initiator: requestInfo[params.requestId].initiator,
           timing: params.response.timing,
         };
 
         // Save the data in chrome storage
-        saveRequestData(requestData);
+        // saveRequestData(requestData);
 
         // delete requestTimes[params.requestId];
       }
@@ -77,10 +94,11 @@ function startRequestMonitoring() {
 }
 
 function saveRequestData(requestData) {
+  console.log("abt to save");
   chrome.storage.local.get({ networkData: [] }, function (result) {
     const networkData = result.networkData;
     networkData.push(requestData);
-
+    console.log("tried to save");
     chrome.storage.local.set({ networkData: networkData }, function () {
       console.log("Network request data saved:", requestData);
     });
