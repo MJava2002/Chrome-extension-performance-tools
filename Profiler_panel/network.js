@@ -70,14 +70,14 @@ function startRequestMonitoring() {
         if (size === 0 && local_protocols.includes(params.response.protocol)) {
           size = "(Local resource)";
         }
-        requestInfo[id].latency = latency.toFixed(4);
+        requestInfo[id].latency = (latency * 1000).toFixed(4);
         requestInfo[id].status = params.response.status;
         requestInfo[id].type = params.type;
         requestInfo[id].timing = params.response.timing;
 
         let recvStart = params.response.timing
           ? params.response.timing.requestTime 
-          + params.response.timing.receiveHeadersEnd * 1000
+          + params.response.timing.receiveHeadersEnd / 1000
           : params.timestamp;
         // recvStart = (recvStart / 1000).toFixed(4);
         requestInfo[id].recvStart = recvStart;
