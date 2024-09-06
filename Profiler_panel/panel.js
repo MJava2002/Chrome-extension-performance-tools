@@ -51,16 +51,6 @@ function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
     console.log("D3 version:", d3.version);
 
-
-
-    // const chart = flamegraph()
-    //   .width(960)
-    //   .cellHeight(18)
-    //   .transitionDuration(750)
-    //   .minFrameSize(5)
-    //   .label(function (d) {
-    //     return d.name + " (" + d.value + ")";
-    //   });
     const chart = flamegraph()
       .width(960)
       .cellHeight(18)
@@ -394,10 +384,10 @@ document.getElementById("stopButton").addEventListener("click", function () {
       console.log(`${activeButton.id}RecordingStopped`);
       activeButton = null;
     }
-    const loadingImage = document.getElementById("loadingImage");
-    if (loadingImage) {
-      loadingImage.style.display = "none";
-    }
+    // const loadingImage = document.getElementById("loadingImage");
+    // if (loadingImage) {
+    //   loadingImage.style.display = "none";
+    // }
   } else {
     console.log("Recording not started.");
   }
