@@ -7,6 +7,9 @@ Make sure [Node and npm](https://nodejs.org/en/download/package-manager)  instal
 ### d3-flame-graph
 Install the [d3-flame-graph](https://github.com/spiermar/d3-flame-graph) plugin.
 
+### --extensions-on-chrome-urls
+Make sure to enable the # extensions-on-chrome-urls flag on chrome to allow debugging extensions.
+
 ```bash
 $ npm install d3-flame-graph --save
 ```
