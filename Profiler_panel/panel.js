@@ -1,13 +1,3 @@
-/*  Collect a profile of an extension's background worker
- *
- *   (!) Attaching to an extension background worker requires
- *   the extensions-on-chrome-urls flag to be set
- *   It works, but it shows a warning: "You are using an unsupported
- *   command-line flag. Stability and security will suffer"
- *
- *   Based on the docs, the silent-debugger-extension-api flag is
- *   requred, but it's unclear whether this is still supported
- */
 
 import { addImage, drawTable } from "./covered_table.js";
 import { detachDebugger } from "./helpers.js";

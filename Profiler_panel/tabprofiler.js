@@ -43,7 +43,6 @@ export function tabProfileForFlameGraph() {
           console.log("Before saving", transformedData);
           const jsonData = JSON.stringify(transformedData, null, 2);
 
-          // Save the stringified JSON using chrome.storage.local
           chrome.storage.local.set({ myJsonData: jsonData }, function () {
             console.log("JSON data has been saved.");
             chrome.runtime.sendMessage({ action: "dataSaved" });

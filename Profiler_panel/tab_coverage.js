@@ -27,7 +27,7 @@ async function stopProfilerAndCollectCoverage(tabId) {
 
 export async function runContentScriptCoverage(tabId, extensionId) {
   try {
-    // Attach the debugger to the tab
+
     await new Promise((resolve, reject) => {
       chrome.debugger.attach({ tabId }, "1.3", () => {
         if (chrome.runtime.lastError) {
@@ -45,16 +45,15 @@ export async function runContentScriptCoverage(tabId, extensionId) {
       });
     });
 
-    // Start profiling
+
     await startProfilerForCoverage(tabId);
 
-    // Wait for a specified time to collect coverage data
     await waitForStopButtonClick();
 
-    // Stop profiling and collect coverage data
+
     const coverageData = await stopProfilerAndCollectCoverage(tabId);
 
-    // Process the coverage data
+
     let uniqueFiles = new Set();
     coverageData.result.forEach((script) => {
       if (
@@ -70,15 +69,15 @@ export async function runContentScriptCoverage(tabId, extensionId) {
     console.log("Unique Files:", uniqueFiles);
     console.log("Extension ID:", extensionId);
 
-    // Process the collected files
+
     const mapData = await proccessFiles(uniqueFiles, coverageData, extensionId);
     console.log("runContentScriptCoverage", mapData);
     return mapData;
   } catch (error) {
     console.error("Error during coverage analysis:", error);
-    return null; // Return null or appropriate value if there's an error
+    return null;
   } finally {
-    // Detach the debugger in case of error or successful completion
+
     try {
       await new Promise((resolve, reject) => {
         chrome.debugger.detach({ tabId }, () => {
@@ -97,6 +96,6 @@ export async function runContentScriptCoverage(tabId, extensionId) {
     } catch (error) {
       console.error("Error detaching debugger:", error);
     }
-    // await detachDebugger();
+
   }
 }

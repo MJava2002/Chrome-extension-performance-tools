@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Open DevTools panel when link is clicked
   detailsLink.addEventListener("click", (e) => {
     e.preventDefault();
     chrome.tabs.create({
