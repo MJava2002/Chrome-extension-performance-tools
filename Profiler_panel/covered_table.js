@@ -5,7 +5,7 @@ const YELLOW = "#eaa41e";
 const ORANGE = "#f48250";
 const IMAGE_PATH =
   "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg";
-const COLORS = ["lightgreen", "yellow", "red"]; // from least to most 
+const COLORS = ["lightgreen", "yellow", "red"];
 
 function interpolateColor(color1, color2, factor) {
   var result = color1
@@ -51,8 +51,8 @@ function createProgressBar(containerId, widthPercentage) {
         color: TEXT_COLOR,
         position: "absolute",
         right: "0",
-        top: "50%", // Adjusted to align with the bar
-        transform: "translateY(-50%)", // Center vertically with the bar
+        top: "50%",
+        transform: "translateY(-50%)",
         padding: 0,
         margin: 0,
       },
@@ -75,7 +75,7 @@ function createProgressBar(containerId, widthPercentage) {
     },
   });
   bar.set(0);
-  bar.animate(1.0); // Animate from 0.0 to 1.0
+  bar.animate(1.0);
 }
 
 export function addImage(IMAGE_PATH, message) {
@@ -133,9 +133,8 @@ export function drawTable(data) {
         item.bytesCovered,
         item.percentageCovered,
       );
-      // Add a click event listener to open a modal
       row.addEventListener("click", () => {
-        openModal(item); // Function to open the modal with item details
+        openModal(item);
       });
 
       container.appendChild(row);
@@ -172,20 +171,20 @@ function createCoverageTableRow(
 
   const coverageCell = document.createElement("div");
   coverageCell.style.flex = "3";
-  coverageCell.style.textAlign = "left"; // Align the progress bar to the left
+  coverageCell.style.textAlign = "left";
 
   if (containerId === "header") {
     coverageCell.textContent = coverageLabel;
     coverageCell.style.color = TEXT_COLOR;
-    coverageCell.style.textAlign = "center"; // Center the text for the header
+    coverageCell.style.textAlign = "center";
   } else {
     const progressBarContainer = document.createElement("div");
     progressBarContainer.style.position = "relative";
     progressBarContainer.style.width = "100%";
     progressBarContainer.style.height = "30px";
-    progressBarContainer.style.marginLeft = "0"; // Align to the left
-    progressBarContainer.id = containerId; // Assign the containerId to the progressBarContainer
-    coverageCell.textContent = ""; // Clear the text content for data rows
+    progressBarContainer.style.marginLeft = "0";
+    progressBarContainer.id = containerId;
+    coverageCell.textContent = "";
     coverageCell.appendChild(progressBarContainer);
   }
 
@@ -215,8 +214,8 @@ function openModal(item) {
   modal.style.backgroundColor = "#fff";
   modal.style.padding = "20px";
   modal.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
-  modal.style.zIndex = "1000"; // Ensure the modal is above the overlay
-  modal.style.overflowY = "auto"; // Add vertical scroll if content overflows
+  modal.style.zIndex = "1000";
+  modal.style.overflowY = "auto";
   modal.style.border = "4px solid";
 
   const highlightedContent = highlightRanges(item.content, item.ranges);

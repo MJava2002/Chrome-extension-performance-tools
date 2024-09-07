@@ -1,4 +1,4 @@
-// Create a new panel in the Chrome DevTools
+
 chrome.devtools.panels.create(
   "Turbo",
   "icons/icon.png",

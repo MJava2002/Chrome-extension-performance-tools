@@ -76,7 +76,6 @@ async function startExtensionCoverage(extensionId) {
   console.log("Coverage started for the extension's background page.");
 }
 
-// Function to stop and collect coverage data
 async function stopAndCollectExtensionCoverage(extensionId) {
   const targets = await chrome.debugger.getTargets();
   const backgroundPage = targets.find(
@@ -108,7 +107,6 @@ async function stopAndCollectExtensionCoverage(extensionId) {
 
   // Detach
   await chrome.debugger.detach({ targetId: backgroundPage.id });
-  // await detachDebugger();
 
   console.log(
     "Coverage data collected for the extension's background page:",
@@ -129,7 +127,7 @@ async function runCoverage(extensionId) {
         const covData = await runContentScriptCoverage(tabId, extensionId);
         const mapArray = Array.from(covData.entries());
         console.log("runCoverge", covData);
-        // Save the array in chrome.storage.local
+
         await new Promise((resolve, reject) => {
           chrome.storage.local.set({ coverageData: mapArray }, function () {
             if (chrome.runtime.lastError) {
@@ -141,7 +139,6 @@ async function runCoverage(extensionId) {
           });
         });
 
-        // Send the coverageDone message
         chrome.runtime.sendMessage({ action: "coverageDone" });
       },
     );
@@ -162,7 +159,7 @@ async function runCoverage(extensionId) {
     const covData = await proccessFiles(uniqueFiles, coverageData, extensionId, false);
     console.log("runCoverge", covData);
     const mapArray = Array.from(covData.entries());
-    // Save the array in chrome.storage.local
+
     await new Promise((resolve, reject) => {
       chrome.storage.local.set({ coverageData: mapArray }, function () {
         if (chrome.runtime.lastError) {
@@ -174,7 +171,6 @@ async function runCoverage(extensionId) {
       });
     });
 
-    // Send the coverageDone message
     chrome.runtime.sendMessage({ action: "coverageDone" });
   }
 }
@@ -194,7 +190,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     targetNotFound = true;
     console.log("GOT THIS FARRRRRRRRR");
   }
-  // Handle other actions...
+
 });
 chrome.runtime.onMessage.addListener(
   async function (request, sender, sendResponse) {
@@ -211,7 +207,7 @@ chrome.runtime.onMessage.addListener(
         tabProfileForFlameGraph();
       }
     }
-    // }
+
 
     if (request.action === "toggleClicked") {
       tabIsChecked = request.state === "Tab";

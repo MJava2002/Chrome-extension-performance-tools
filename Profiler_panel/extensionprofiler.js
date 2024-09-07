@@ -2,9 +2,7 @@ import { getId, setAttached, waitForStopButtonClick } from "./helpers.js";
 import { transformProfileData } from "./profileutils.js";
 
 export function extensionProfileForFlameGraph(extensionId) {
-  console.log("AI ESAA EXTENSION IDDDDDDDDD", extensionId);
   chrome.debugger.getTargets((result) => {
-    // sendToDevTools(result);
     let target = result.find((t) => t.title.includes(extensionId));
     if (target) {
       const targetId = target.id;
@@ -53,7 +51,6 @@ export function extensionProfileForFlameGraph(extensionId) {
             console.log(JSON.stringify(profile, null, 2));
             const transformedData = transformProfileData(profile);
 
-            // Serialize JSON object to a string
             const jsonData = JSON.stringify(transformedData, null, 2);
             console.log("JSON DATA ISSSSSSSSSSSS", jsonData);
             // Save the stringified JSON using chrome.storage.local

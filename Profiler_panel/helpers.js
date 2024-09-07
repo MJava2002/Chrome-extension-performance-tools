@@ -49,7 +49,7 @@ export async function proccessFiles(uniqueFiles, coverageData, extensionId, isTa
     return percentPerFile;
   }
 }
-// i will use this in graphs
+
 export function getLastSegmentFromUrl(url, extensionId) {
   try {
     const urlObj = new URL(url);
@@ -70,12 +70,12 @@ export function checkValidUrl(url, id) {
     const containsId = url.includes(id);
 
     const urlObj = new URL(url);
-    // Check if the protocol is chrome-extension:
+
     const isValidProtocol = urlObj.protocol === "chrome-extension:";
-    // Return true if both conditions are met
+
     return isValidProtocol && containsId;
   } catch (error) {
-    //console.error("Invalid URL:", error);
+
     return false;
   }
 }
@@ -93,7 +93,7 @@ export function calculateCoveragePercentage(
       script.functions.forEach((func) => {
        
         const tmp = func.ranges
-        .filter(({ count }) => count !== 0) // Remove ranges with count == 0
+        .filter(({ count }) => count !== 0)
         .filter(({ startOffset, endOffset }) => {
          
           if (isTab) {
@@ -115,7 +115,6 @@ export function calculateCoveragePercentage(
   return { coveragePercentage, coveredBytes, ranges };
 }
 
-// ranges is a list of [start,end] numbers
 export function countCoveredNumbers(ranges) {
   let events = [];
 
@@ -147,7 +146,6 @@ export function setAttached(target) {
   });
 }
 
-// Detach debugger using the stored target
 export async function detachDebugger() {
   chrome.storage.local.get("attachedTarget", async (result) => {
     const attachedTarget = result.attachedTarget;
@@ -179,7 +177,7 @@ export function waitForStopButtonClick() {
       function listener(request, sender, sendResponse) {
         if (request.action === "stopButtonClicked") {
           console.log("Received button click message in background script.");
-          chrome.runtime.onMessage.removeListener(listener); // Clean up the listener
+          chrome.runtime.onMessage.removeListener(listener);
           resolve();
         }
       },
@@ -194,7 +192,7 @@ export async function getId() {
         reject(new Error(chrome.runtime.lastError));
       } else {
         console.log("Active ID retrieved:", result.activeId);
-        resolve(result.activeId || ""); // Resolve with the retrieved ID or an empty string if not found
+        resolve(result.activeId || "");
       }
     });
   });

@@ -79,13 +79,13 @@ function startRequestMonitoring() {
           ? params.response.timing.requestTime 
           + params.response.timing.receiveHeadersEnd / 1000
           : params.timestamp;
-        // recvStart = (recvStart / 1000).toFixed(4);
+
         requestInfo[id].recvStart = recvStart;
 
-        // Save the data in chrome storage
+
         saveRequestData(requestInfo[id]);
 
-        // delete requestTimes[params.requestId];
+
       }
     }
   });
@@ -162,7 +162,7 @@ export function startNetworkWithTabID(extensionId) {
         return;
       }
       setAttached({ tabId: tabId });
-      // Enable debugger
+
       chrome.debugger.sendCommand({ tabId: tabId }, "Debugger.enable", () => {
         console.log("Debugger enabled");
       });
@@ -180,9 +180,9 @@ export function startNetworkWithTabID(extensionId) {
 export function stopNetwork() {
   if (debugee && debugee != "NO NETWORK") {
     chrome.debugger.sendCommand(debugee, "Network.disable", () => {
-      // console.log(debugee);
+
       console.log("Network disabled");
-      // chrome.debugger.detach(debugee);
+
       chrome.runtime.sendMessage({ action: "networkDataSaved" });
       detachDebugger();
       console.log("Debugger detached");
@@ -204,12 +204,12 @@ export function drawNetworkTable(networkData) {
   container.style.width = "100%";
   container.style.border = "1px solid " + BORDER_COLOR;
 
-  // Create the table element
+
   const table = document.createElement("table");
   table.style.width = "100%";
   table.style.borderCollapse = "collapse";
 
-  // Create the table headers
+
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
   const headers = [
@@ -235,11 +235,10 @@ export function drawNetworkTable(networkData) {
   thead.appendChild(headerRow);
   table.appendChild(thead);
 
-  // Create the table body
+
   const tbody = document.createElement("tbody");
   table.appendChild(tbody);
 
-  // Append the table to the container
   container.appendChild(table);
   docBody.appendChild(container);
 
@@ -271,12 +270,12 @@ function drawRows(tbody, networkData) {
     const timeCell = row.insertCell(6);
     const waterfallCell = row.insertCell(7);
 
-    nameCell.textContent = requestData.url; // Just the file name
+    nameCell.textContent = requestData.url;
     methodCell.textContent = requestData.method;
     statusCell.textContent = requestData.status;
     initiatorCell.textContent = requestData.initiator;
     typeCell.textContent = requestData.type;
-    sizeCell.textContent = `${(requestData.size / 1024).toFixed(2)} KB`; // Convert size to KB
+    sizeCell.textContent = `${(requestData.size / 1024).toFixed(2)} KB`;
     timeCell.textContent = `${requestData.latency} ms`;
     const timing = requestData.timing;
     let phases = [];
@@ -346,12 +345,9 @@ function drawRows(tbody, networkData) {
       });
     }
 
-    // Create the waterfall bar
-    const maxWidth = 150; // Set a maximum width for the bars
-    // const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
+    const maxWidth = 150;
     const scaleFactor = 1;
 
-    // const validPhases = phases.filter(phase => phase.start >= 0 && phase.end >= 0 && phase.end > phase.start);
     const validPhases = phases;
     const totalDuration = validPhases.reduce(
       (acc, phase) => acc + (phase.end - phase.start),
@@ -379,7 +375,7 @@ function drawRows(tbody, networkData) {
     barContainer.style.width = `300px`;
     waterfallCell.appendChild(barContainer);
 
-    // Style the row
+
     [
       nameCell,
       methodCell,
