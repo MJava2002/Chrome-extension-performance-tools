@@ -51,16 +51,6 @@ function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
     console.log("D3 version:", d3.version);
 
-
-
-    // const chart = flamegraph()
-    //   .width(960)
-    //   .cellHeight(18)
-    //   .transitionDuration(750)
-    //   .minFrameSize(5)
-    //   .label(function (d) {
-    //     return d.name + " (" + d.value + ")";
-    //   });
     const chart = flamegraph()
       .width(960)
       .cellHeight(18)
@@ -156,13 +146,13 @@ function initializeFlameGraph() {
               emptyRow.style.textAlign = "center"; // Center the image in the div
 
               const img = document.createElement("img");
-              img.src = IMAGE_PATH; // Replace with your image file name
+              img.src = IMAGE_PATH; 
               img.alt = "Chosen extension is not running";
-              img.style.width = "20%"; // Set the image width as needed
+              img.style.width = "20%"; 
               const text = document.createElement("div");
               text.textContent = "Chosen extension is not running";
               text.style.fontFamily = "'MyCustomFont', sans-serif";
-              text.style.color = TEXT_COLOR; // Set the text color
+              text.style.color = TEXT_COLOR;
               text.style.marginTop = "10px"; // Add some space between the image and the text
               text.style.fontSize = "24px";
 
@@ -366,11 +356,6 @@ document.body.appendChild(messagesContainer);
 
 let startTime, endTime;
 
-// document.getElementById("recordButton").addEventListener("click", function () {
-//   handleButtonClick("recordButton");
-//   console.log("Recording started at", startTime);
-// });
-
 document.getElementById("stopButton").addEventListener("click", function () {
   if (startTime) {
     endTime = new Date();
@@ -393,10 +378,6 @@ document.getElementById("stopButton").addEventListener("click", function () {
       activeButton.classList.remove("pressed");
       console.log(`${activeButton.id}RecordingStopped`);
       activeButton = null;
-    }
-    const loadingImage = document.getElementById("loadingImage");
-    if (loadingImage) {
-      loadingImage.style.display = "none";
     }
   } else {
     console.log("Recording not started.");
@@ -455,7 +436,6 @@ document.getElementById("networkButton").addEventListener("click", function () {
           }
         });
       } else if (message.action === "networkDataNotFound") {
-        console.log("HEREEEEE")
         addImage(
           "styles/Astronaut--Streamline-Bangalore.svg",
           "Chosen extension is not running",

@@ -4,7 +4,7 @@ let id;
 let debugee;
 
 function startRequestMonitoring() {
-  let requestTimes = {};
+  let requestInfo = {};
 
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     const pattern = `chrome-extension://${id}`;
@@ -16,12 +16,21 @@ function startRequestMonitoring() {
           params.initiator.stack.callFrames[0].url.startsWith(pattern)) ||
         params.documentURL.startsWith(pattern)
       ) {
-        requestTimes[params.requestId] = {
+        const initiator = params.initiator.stack.callFrames[0].functionName ||
+        params.initiator.stack.callFrames[0].url; 
+        requestInfo[params.requestId] = {
+          id: params.requestId,
           startTime: params.timestamp,
           url: params.request.url,
           method: params.request.method,
           size: 0,
-          initiator: params.initiator.stack.callFrames[0].functionName
+          initiator: initiator,
+          latency: -1,
+          status: -1,
+          type: null,
+          timing: null,
+          recvStart: -1,
+          recvEnd: -1,
         };
       }
     }
@@ -30,23 +39,30 @@ function startRequestMonitoring() {
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     if (message === "Network.dataReceived") {
       console.log("Data received IGUESS: ", params);
-      if (requestTimes[params.requestId]) {
+      const id = params.requestId;
+      if (requestInfo[id]) {
         console.log("Data received: ", params);
-        requestTimes[params.requestId] += params.dataLength;
+        requestInfo[id].size +=
+          params.encodedDataLength !== 0
+            ? params.encodedDataLength
+            : params.dataLength;
+        requestInfo[id].recvEnd = params.timestamp;
+        saveRequestData(requestInfo[id]);
       }
     }
   });
 
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     if (message === "Network.responseReceived") {
-      if (requestTimes[params.requestId]) {
+      const id = params.requestId;
+      if (requestInfo[id]) {
         console.log("Response received: ", params.response);
-        console.log("Data size:", requestTimes[params.requestId].size);
+        console.log("Data size:", requestInfo[params.requestId].size);
         // Retrieve the request start time and compute latency
-        const startTime = requestTimes[params.requestId].startTime;
+        const startTime = requestInfo[id].startTime;
         const endTime = params.timestamp;
         const latency = endTime - startTime;
-        let size = requestTimes[params.requestId].size;
+        let size = requestInfo[params.requestId].size;
         if (size == 0 && params.response.encodedDataLength > 0) {
           size = params.response.encodedDataLength;
         }
@@ -54,21 +70,20 @@ function startRequestMonitoring() {
         if (size === 0 && local_protocols.includes(params.response.protocol)) {
           size = "(Local resource)";
         }
+        requestInfo[id].latency = (latency * 1000).toFixed(4);
+        requestInfo[id].status = params.response.status;
+        requestInfo[id].type = params.type;
+        requestInfo[id].timing = params.response.timing;
 
-        // Add additional details to the request data
-        const requestData = {
-          url: requestTimes[params.requestId].url,
-          method: requestTimes[params.requestId].method,
-          latency: latency.toFixed(4) * 1000, // convert to ms
-          status: params.response.status,
-          type: params.type,
-          size: size,
-          initiator: requestTimes[params.requestId].initiator,
-          timing: params.response.timing,
-        };
+        let recvStart = params.response.timing
+          ? params.response.timing.requestTime 
+          + params.response.timing.receiveHeadersEnd / 1000
+          : params.timestamp;
+        // recvStart = (recvStart / 1000).toFixed(4);
+        requestInfo[id].recvStart = recvStart;
 
         // Save the data in chrome storage
-        saveRequestData(requestData);
+        saveRequestData(requestInfo[id]);
 
         // delete requestTimes[params.requestId];
       }
@@ -79,10 +94,17 @@ function startRequestMonitoring() {
 function saveRequestData(requestData) {
   chrome.storage.local.get({ networkData: [] }, function (result) {
     const networkData = result.networkData;
-    networkData.push(requestData);
+    const index = networkData.findIndex(item => item.id === requestData.id);
 
+    if (index !== -1) {
+      networkData[index] = requestData;
+      console.log('replacing', index, ' with ', requestData);
+    } else {
+      console.log('pushing');
+      networkData.push(requestData);
+    }
     chrome.storage.local.set({ networkData: networkData }, function () {
-      console.log("Network request data saved:", requestData);
+      console.log("Network request data saved:", networkData);
     });
   });
 }
@@ -123,7 +145,7 @@ export function startNetwork(extensionId) {
       });
     } else {
       console.log("No matching target found.");
-      debugee = "NO NETWORK"
+      debugee = "NO NETWORK";
     }
   });
 }
@@ -152,7 +174,7 @@ export function startNetworkWithTabID(extensionId) {
       startRequestMonitoring();
     });
   });
-  debugee = "NO NETWORK"
+  debugee = "NO NETWORK";
 }
 
 export function stopNetwork() {
@@ -168,7 +190,7 @@ export function stopNetwork() {
     });
   } else if (debugee == "NO NETWORK") {
     chrome.runtime.sendMessage({ action: "networkDataNotFound" });
-    debugee = null
+    debugee = null;
   }
 }
 
@@ -252,13 +274,14 @@ function drawRows(tbody, networkData) {
     nameCell.textContent = requestData.url; // Just the file name
     methodCell.textContent = requestData.method;
     statusCell.textContent = requestData.status;
-    initiatorCell.textContent =requestData.initiator;
+    initiatorCell.textContent = requestData.initiator;
     typeCell.textContent = requestData.type;
     sizeCell.textContent = `${(requestData.size / 1024).toFixed(2)} KB`; // Convert size to KB
-    timeCell.textContent = `${requestData.latency.toFixed(2)} ms`;
+    timeCell.textContent = `${requestData.latency} ms`;
     const timing = requestData.timing;
+    let phases = [];
     if (timing) {
-      const phases = [
+      phases = [
         {
           start: timing.proxyStart,
           end: timing.proxyEnd,
@@ -314,45 +337,47 @@ function drawRows(tbody, networkData) {
           label: "Receive Headers",
         }, // Receive Headers
       ];
-      console.log(phases);
-
-      // Create the waterfall bar
-      const maxWidth = 150; // Set a maximum width for the bars
-      // const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
-      const scaleFactor = 1;
-
-      // const validPhases = phases.filter(phase => phase.start >= 0 && phase.end >= 0 && phase.end > phase.start);
-      const validPhases = phases;
-      const totalDuration = validPhases.reduce(
-        (acc, phase) => acc + (phase.end - phase.start),
-        0,
-      );
-
-      const barContainer = document.createElement("div");
-      barContainer.style.display = "flex";
-      barContainer.style.height = "100%";
-      barContainer.style.alignItems = "center";
-
-      validPhases.forEach((phase) => {
-        const phaseDuration = phase.end - phase.start;
-        const bar = document.createElement("div");
-        bar.className = "bar";
-        bar.style.width = `${(phaseDuration / totalDuration) * 100}%`;
-        bar.style.height = "10px";
-        bar.style.backgroundColor = phase.color;
-        bar.style.marginRight = "2px";
-        bar.title = `${phase.label}: ${phase.start}, ${phase.end}`;
-
-        // const tooltip = document.createElement("div");
-        // tooltip.className = 'tooltip';
-        // tooltip.textContent = 'pls';
-        // bar.appendChild(tooltip);
-        barContainer.appendChild(bar);
+    } else {
+      phases.push({
+        start: requestData.recvStart / 1000,
+        end: requestData.recvEnd / 1000,
+        color: colors[7],
+        label: "Receiving",
       });
-
-      barContainer.style.width = `300px`;
-      waterfallCell.appendChild(barContainer);
     }
+
+    // Create the waterfall bar
+    const maxWidth = 150; // Set a maximum width for the bars
+    // const scaleFactor = Math.min(maxWidth / requestData.latency, 1); // Scale factor based on latency
+    const scaleFactor = 1;
+
+    // const validPhases = phases.filter(phase => phase.start >= 0 && phase.end >= 0 && phase.end > phase.start);
+    const validPhases = phases;
+    const totalDuration = validPhases.reduce(
+      (acc, phase) => acc + (phase.end - phase.start),
+      0,
+    );
+
+    const barContainer = document.createElement("div");
+    barContainer.style.display = "flex";
+    barContainer.style.height = "100%";
+    barContainer.style.alignItems = "center";
+
+    validPhases.forEach((phase) => {
+      const phaseDuration = phase.end - phase.start;
+      const bar = document.createElement("div");
+      bar.className = "bar";
+      bar.style.width = `${(phaseDuration / totalDuration) * 100}%`;
+      bar.style.height = "10px";
+      bar.style.backgroundColor = phase.color;
+      bar.style.marginRight = "2px";
+      bar.title = `${phase.label}: ${phase.start}ms to ${phase.end}ms`;
+
+      barContainer.appendChild(bar);
+    });
+
+    barContainer.style.width = `300px`;
+    waterfallCell.appendChild(barContainer);
 
     // Style the row
     [
