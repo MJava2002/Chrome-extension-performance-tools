@@ -44,14 +44,13 @@ chrome.action.onClicked.addListener((tab) => {
       "Error while setting up onMessage listener:",
       chrome.runtime.lastError,
     );
-    return; // Exit early if there's an error
+    return;
   }
   sendManyWebRequests(); 
   requestLargeResource();
   bottleneck();
 });
 
-// Define an array of URLs to request
 const urls = [
   "https://jsonplaceholder.typicode.com/posts/1",
   "https://jsonplaceholder.typicode.com/posts/2",
@@ -62,7 +61,6 @@ const urls = [
   "https://jsonplaceholder.typicode.com/posts/7",
 ];
 
-// Function to send web requests
 function sendManyWebRequests() {
   urls.forEach((url) => {
     fetch(url)

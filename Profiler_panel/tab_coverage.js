@@ -64,12 +64,6 @@ export async function runContentScriptCoverage(tabId, extensionId) {
         uniqueFiles.add(script.url);
       }
     });
-
-    console.log("Coverage Data:", coverageData);
-    console.log("Unique Files:", uniqueFiles);
-    console.log("Extension ID:", extensionId);
-
-
     const mapData = await proccessFiles(uniqueFiles, coverageData, extensionId);
     console.log("runContentScriptCoverage", mapData);
     return mapData;

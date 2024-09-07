@@ -30,7 +30,6 @@ export function transformProfileData(profile, extensionId) {
     idMap.set(node.id, index);
   });
 
-  console.log(idMap);
   function processNode(nodeId) {
     const idx = idMap.get(nodeId);
     const node = nodes[idx];

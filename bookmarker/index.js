@@ -49,9 +49,6 @@ function displayList(pins) {
 }
 
 function displayOne(item) {
-  // const li = document.createElement("li")
-  // li.textContent = item
-  // ulEl.append(li)
   let htmlItem = "<li><a target='_blank' href='#'>" + item + "</a></li>";
   ulEl.innerHTML += htmlItem;
 }

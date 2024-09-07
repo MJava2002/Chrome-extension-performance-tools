@@ -1,9 +1,4 @@
-/*
-A script to test out the code coverage feature on, with a bunch of unused functions
-In its current state, coverage should show around 200 bytes (length of lines 61-70)
-*/
 
-// Define a function that sets up an event listener for an event that will never happen
 function waitForNonExistentEvent() {
   console.log("Setting up event listener for nonExistentEvent");
   document.addEventListener("nonExistentEvent", function () {
@@ -12,7 +7,6 @@ function waitForNonExistentEvent() {
   console.log("Event listener for nonExistentEvent has been set up");
 }
 
-// Define a function that performs some conditional checks that will never be true
 function conditionalLogic() {
   console.log("Entering conditionalLogic");
   if (2 * 2 !== 4) {
@@ -28,7 +22,6 @@ function conditionalLogic() {
   console.log("Exiting conditionalLogic");
 }
 
-// Define a bunch of functions that won't be called
 function unusedFunction1() {
   console.log("Entering unusedFunction1");
   console.log("This function is never called: unusedFunction1");
@@ -59,7 +52,6 @@ function unusedFunction5() {
   console.log("This code should not show up as covered");
 }
 
-// A function that actually gets called
 function executeFunction() {
   console.log("This function is called: executeFunction");
 }

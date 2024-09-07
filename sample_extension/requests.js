@@ -9,11 +9,11 @@ const urls = [
 ];
 
 console.log("Before defining sendWebRequests function");
-// Function to send web requests
+
 function sendWebRequests() {
   urls.forEach((url) => {
     fetch(url)
-      .then((response) => response.json()) // Parse the JSON response
+      .then((response) => response.json())
       .then((data) => {
         console.log(`Content script; Data from ${url}:`, data);
       })
@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       "Error while setting up onMessage listener:",
       chrome.runtime.lastError,
     );
-    return; // Exit early if there's an error
+    return;
   }
   if (message.action === "iconClicked") {
     console.log("Extension icon clicked - recognized in content script");
@@ -45,7 +45,7 @@ chrome.runtime.sendMessage(
   function (response) {
     if (chrome.runtime.lastError) {
       console.error("Error in sending message:", chrome.runtime.lastError);
-      return; // Exit early if there's an error
+      return;
     }
     console.log("Response from background:", response);
   },
