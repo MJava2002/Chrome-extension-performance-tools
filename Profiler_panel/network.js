@@ -16,8 +16,9 @@ function startRequestMonitoring() {
           params.initiator.stack.callFrames[0].url.startsWith(pattern)) ||
         params.documentURL.startsWith(pattern)
       ) {
-        const initiator = params.initiator.stack.callFrames[0].functionName ||
-        params.initiator.stack.callFrames[0].url; 
+        const initiator =
+          params.initiator.stack.callFrames[0].functionName ||
+          params.initiator.stack.callFrames[0].url;
         requestInfo[params.requestId] = {
           id: params.requestId,
           startTime: params.timestamp,
@@ -76,16 +77,13 @@ function startRequestMonitoring() {
         requestInfo[id].timing = params.response.timing;
 
         let recvStart = params.response.timing
-          ? params.response.timing.requestTime 
-          + params.response.timing.receiveHeadersEnd / 1000
+          ? params.response.timing.requestTime +
+            params.response.timing.receiveHeadersEnd / 1000
           : params.timestamp;
 
         requestInfo[id].recvStart = recvStart;
 
-
         saveRequestData(requestInfo[id]);
-
-
       }
     }
   });
@@ -94,13 +92,13 @@ function startRequestMonitoring() {
 function saveRequestData(requestData) {
   chrome.storage.local.get({ networkData: [] }, function (result) {
     const networkData = result.networkData;
-    const index = networkData.findIndex(item => item.id === requestData.id);
+    const index = networkData.findIndex((item) => item.id === requestData.id);
 
     if (index !== -1) {
       networkData[index] = requestData;
-      console.log('replacing', index, ' with ', requestData);
+      console.log("replacing", index, " with ", requestData);
     } else {
-      console.log('pushing');
+      console.log("pushing");
       networkData.push(requestData);
     }
     chrome.storage.local.set({ networkData: networkData }, function () {
@@ -180,7 +178,6 @@ export function startNetworkWithTabID(extensionId) {
 export function stopNetwork() {
   if (debugee && debugee != "NO NETWORK") {
     chrome.debugger.sendCommand(debugee, "Network.disable", () => {
-
       console.log("Network disabled");
 
       chrome.runtime.sendMessage({ action: "networkDataSaved" });
@@ -204,11 +201,9 @@ export function drawNetworkTable(networkData) {
   container.style.width = "100%";
   container.style.border = "1px solid " + BORDER_COLOR;
 
-
   const table = document.createElement("table");
   table.style.width = "100%";
   table.style.borderCollapse = "collapse";
-
 
   const thead = document.createElement("thead");
   const headerRow = document.createElement("tr");
@@ -234,7 +229,6 @@ export function drawNetworkTable(networkData) {
 
   thead.appendChild(headerRow);
   table.appendChild(thead);
-
 
   const tbody = document.createElement("tbody");
   table.appendChild(tbody);
@@ -374,7 +368,6 @@ function drawRows(tbody, networkData) {
 
     barContainer.style.width = `300px`;
     waterfallCell.appendChild(barContainer);
-
 
     [
       nameCell,

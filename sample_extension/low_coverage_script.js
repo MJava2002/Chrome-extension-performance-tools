@@ -1,4 +1,3 @@
-
 function waitForNonExistentEvent() {
   console.log("Setting up event listener for nonExistentEvent");
   document.addEventListener("nonExistentEvent", function () {
@@ -63,7 +62,6 @@ chrome.runtime.sendMessage(
   },
 );
 
-
 function content_script_bottleneck() {
   console.log("starting 5s loop in content script");
   // await new Promise(r => setTimeout(r, 50000));
@@ -71,21 +69,21 @@ function content_script_bottleneck() {
   // while (9 < 10) {
   //   i = 1;
   // }
-  const msToRun = 5000 // 5 seconds
+  const msToRun = 5000; // 5 seconds
 
-  const t0 = performance.now() // or Date.now()
+  const t0 = performance.now(); // or Date.now()
 
-  let iterations = 0
+  let iterations = 0;
 
   setTimeout(() => {
-    console.log(`This won't be logged until the loop is over.`)
-  }, 0)
+    console.log(`This won't be logged until the loop is over.`);
+  }, 0);
 
-  while ((performance.now() - t0) < msToRun) {
-      ++iterations
+  while (performance.now() - t0 < msToRun) {
+    ++iterations;
   }
 
-  console.log(`Loop run for ${ iterations } iterations.`)
+  console.log(`Loop run for ${iterations} iterations.`);
 }
 
 content_script_bottleneck();
@@ -107,4 +105,3 @@ content_script_bottleneck();
 //     // conditionalLogic();
 //   }
 // });
-

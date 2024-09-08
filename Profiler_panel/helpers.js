@@ -1,7 +1,11 @@
-export async function proccessFiles(uniqueFiles, coverageData, extensionId, isTab = true) {
+export async function proccessFiles(
+  uniqueFiles,
+  coverageData,
+  extensionId,
+  isTab = true,
+) {
   uniqueFiles = [...uniqueFiles];
   const percentPerFile = [];
-
 
   try {
     const data = await Promise.all(
@@ -29,10 +33,10 @@ export async function proccessFiles(uniqueFiles, coverageData, extensionId, isTa
         content_1.length,
         coverageData,
         url_1,
-        isTab
+        isTab,
       );
 
-      if(covered.coveredBytes != 0){
+      if (covered.coveredBytes != 0) {
         percentPerFile.push({
           fileName: getLastSegmentFromUrl(url_1, extensionId),
           bytesCovered: covered.coveredBytes,
@@ -75,7 +79,6 @@ export function checkValidUrl(url, id) {
 
     return isValidProtocol && containsId;
   } catch (error) {
-
     return false;
   }
 }
@@ -84,31 +87,27 @@ export function calculateCoveragePercentage(
   totalScriptSize,
   coverageData,
   scriptUrl,
-  isTab = true
+  isTab = true,
 ) {
   let ranges = [];
   coverageData.result.forEach((script) => {
     if (script.url === scriptUrl) {
-
       script.functions.forEach((func) => {
-       
         const tmp = func.ranges
-        .filter(({ count }) => count !== 0)
-        .filter(({ startOffset, endOffset }) => {
-         
-          if (isTab) {
-            return !(startOffset === 0 && endOffset === totalScriptSize);
-          }
-          return true;
-        })
-        .map(({ startOffset, endOffset }) => [startOffset, endOffset]);
+          .filter(({ count }) => count !== 0)
+          .filter(({ startOffset, endOffset }) => {
+            if (isTab) {
+              return !(startOffset === 0 && endOffset === totalScriptSize);
+            }
+            return true;
+          })
+          .map(({ startOffset, endOffset }) => [startOffset, endOffset]);
         ranges = [...ranges, ...tmp];
       });
     }
   });
   const coveredBytes = countCoveredNumbers(ranges);
   const coveragePercentage = (coveredBytes / totalScriptSize) * 100;
- 
 
   return { coveragePercentage, coveredBytes, ranges };
 }
@@ -147,7 +146,7 @@ export function setAttached(target) {
 export async function detachDebugger() {
   chrome.storage.local.get("attachedTarget", async (result) => {
     const attachedTarget = result.attachedTarget;
-    
+
     if (attachedTarget) {
       try {
         await chrome.debugger.detach(attachedTarget);
@@ -188,7 +187,6 @@ export async function getId() {
       if (chrome.runtime.lastError) {
         reject(new Error(chrome.runtime.lastError));
       } else {
-       
         resolve(result.activeId || "");
       }
     });

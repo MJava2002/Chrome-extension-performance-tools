@@ -1,4 +1,3 @@
-
 chrome.devtools.panels.create(
   "Turbo",
   "icons/icon.png",

@@ -1,4 +1,4 @@
-import {checkValidUrl} from "./helpers.js";
+import { checkValidUrl } from "./helpers.js";
 
 export function transformProfileData(profile, extensionId) {
   if (!profile || !profile.nodes || !profile.nodes.length) {
@@ -11,7 +11,7 @@ export function transformProfileData(profile, extensionId) {
   const samples = [root.id].concat(profile.samples || []);
   const deltas = [0].concat(profile.timeDeltas || []);
   const timeValues = new Map();
-  
+
   samples.forEach((sample, index) => {
     const id = samples[index - 1];
     const curr = timeValues.get(id) || 0;

@@ -15,7 +15,7 @@
       "js": ["low_coverage_script.js"]
     }
   ],
-  "host_permissions": [ "*://*/*", "<all_urls>" ],
+  "host_permissions": ["*://*/*", "<all_urls>"],
   "permissions": [
     "activeTab",
     "declarativeNetRequestWithHostAccess",
@@ -30,8 +30,16 @@
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
-  "web_accessible_resources": [ {
-      "matches":[ "\u003Call_urls>" ],
-      "resources": ["background.js", "low_coverage_script.js", "requests.js", "blocker_rule.json", "icon.png"]
-      }]
+  "web_accessible_resources": [
+    {
+      "matches": ["\u003Call_urls>"],
+      "resources": [
+        "background.js",
+        "low_coverage_script.js",
+        "requests.js",
+        "blocker_rule.json",
+        "icon.png"
+      ]
+    }
+  ]
 }

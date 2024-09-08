@@ -46,7 +46,7 @@ chrome.action.onClicked.addListener((tab) => {
     );
     return;
   }
-  sendManyWebRequests(); 
+  sendManyWebRequests();
   requestLargeResource();
   bottleneck();
 });
@@ -75,32 +75,32 @@ function sendManyWebRequests() {
 }
 
 function requestLargeResource() {
-  const url = 'https://www.gutenberg.org/cache/epub/10/pg10.txt';
+  const url = "https://www.gutenberg.org/cache/epub/10/pg10.txt";
   fetch(url)
-      .then(() => {
-        console.log(`Received large data from ${url}`);
-      })
-      .catch((error) => {
-        console.error(`Error fetching ${url}:`, error);
-      });
+    .then(() => {
+      console.log(`Received large data from ${url}`);
+    })
+    .catch((error) => {
+      console.error(`Error fetching ${url}:`, error);
+    });
 }
 
 function bottleneck() {
   console.log("starting 5s loop in bg");
 
-  const msToRun = 5000 // 5 seconds
+  const msToRun = 5000; // 5 seconds
 
-  const t0 = performance.now() // or Date.now()
+  const t0 = performance.now(); // or Date.now()
 
-  let iterations = 0
+  let iterations = 0;
 
   setTimeout(() => {
-    console.log(`This won't be logged until the loop is over.`)
-  }, 0)
+    console.log(`This won't be logged until the loop is over.`);
+  }, 0);
 
-  while ((performance.now() - t0) < msToRun) {
-      ++iterations
+  while (performance.now() - t0 < msToRun) {
+    ++iterations;
   }
 
-  console.log(`Loop run for ${ iterations } iterations.`)
+  console.log(`Loop run for ${iterations} iterations.`);
 }

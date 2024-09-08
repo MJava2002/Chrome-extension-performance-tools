@@ -55,7 +55,6 @@ async function startExtensionCoverage(extensionId) {
     return { result: [] };
   }
 
-
   await chrome.debugger.attach({ targetId: backgroundPage.id }, "1.3");
   setAttached({ targetId: backgroundPage.id });
 
@@ -72,8 +71,6 @@ async function startExtensionCoverage(extensionId) {
       detailed: true,
     },
   );
-
-
 }
 
 async function stopAndCollectExtensionCoverage(extensionId) {
@@ -108,7 +105,6 @@ async function stopAndCollectExtensionCoverage(extensionId) {
   // Detach
   await chrome.debugger.detach({ targetId: backgroundPage.id });
 
-
   return coverageData;
 }
 
@@ -123,13 +119,11 @@ async function runCoverage(extensionId) {
         const covData = await runContentScriptCoverage(tabId, extensionId);
         const mapArray = Array.from(covData.entries());
 
-
         await new Promise((resolve, reject) => {
           chrome.storage.local.set({ coverageData: mapArray }, function () {
             if (chrome.runtime.lastError) {
               reject(new Error(chrome.runtime.lastError));
             } else {
-
               resolve();
             }
           });
@@ -152,7 +146,12 @@ async function runCoverage(extensionId) {
         uniqueFiles.add(script.url);
       }
     });
-    const covData = await proccessFiles(uniqueFiles, coverageData, extensionId, false);
+    const covData = await proccessFiles(
+      uniqueFiles,
+      coverageData,
+      extensionId,
+      false,
+    );
 
     const mapArray = Array.from(covData.entries());
 
@@ -161,7 +160,6 @@ async function runCoverage(extensionId) {
         if (chrome.runtime.lastError) {
           reject(new Error(chrome.runtime.lastError));
         } else {
-
           resolve();
         }
       });
@@ -174,7 +172,6 @@ async function runCoverage(extensionId) {
 chrome.runtime.onMessage.addListener(
   async function (request, sender, sendResponse) {
     if (request.action === "buttonClicked") {
-      
       const extensionId = await getId();
 
       runCoverage(extensionId);
@@ -184,9 +181,7 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "changeTargetBool") {
     targetNotFound = true;
-    
   }
-
 });
 chrome.runtime.onMessage.addListener(
   async function (request, sender, sendResponse) {
@@ -194,16 +189,13 @@ chrome.runtime.onMessage.addListener(
       if (!tabIsChecked) {
         const extensionId = await getId();
         if (extensionId) {
-         
           extensionProfileForFlameGraph(extensionId);
         } else {
-
         }
       } else if (tabIsChecked) {
         tabProfileForFlameGraph();
       }
     }
-
 
     if (request.action === "toggleClicked") {
       tabIsChecked = request.state === "Tab";
@@ -217,10 +209,8 @@ chrome.runtime.onMessage.addListener(
       const extensionId = await getId();
 
       if (tabIsChecked) {
-
         startNetworkWithTabID(extensionId);
       } else {
-
         startNetwork(extensionId);
       }
     }
@@ -229,7 +219,6 @@ chrome.runtime.onMessage.addListener(
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "stopButtonClicked") {
-
     stopNetwork();
   }
 });
