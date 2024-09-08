@@ -39,7 +39,6 @@ function startRequestMonitoring() {
 
   chrome.debugger.onEvent.addListener(function (debuggeeId, message, params) {
     if (message === "Network.dataReceived") {
-      console.log("Data received IGUESS: ", params);
       const id = params.requestId;
       if (requestInfo[id]) {
         console.log("Data received: ", params);
@@ -110,7 +109,6 @@ function saveRequestData(requestData) {
 export function startNetwork(extensionId) {
   id = extensionId;
   chrome.debugger.getTargets((result) => {
-    console.log(result);
     let target = result.find((t) => t.title.includes(extensionId));
 
     if (target) {

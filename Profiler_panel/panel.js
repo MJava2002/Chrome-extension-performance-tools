@@ -399,7 +399,6 @@ document.getElementById("networkButton").addEventListener("click", function () {
             }
             drawNetworkTable(result.networkData);
           } else {
-            console.log("here?? ig");
             addImage(
               "styles/Looking-Through-Telescope-2--Streamline-Bangalore (1).svg",
               "Nothing to observe here",
