@@ -58,7 +58,7 @@ function startRequestMonitoring() {
       if (requestInfo[id]) {
         console.log("Response received: ", params.response);
         console.log("Data size:", requestInfo[params.requestId].size);
-        // Retrieve the request start time and compute latency
+
         const startTime = requestInfo[id].startTime;
         const endTime = params.timestamp;
         const latency = endTime - startTime;

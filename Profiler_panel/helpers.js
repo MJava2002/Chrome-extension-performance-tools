@@ -1,7 +1,7 @@
 export async function proccessFiles(uniqueFiles, coverageData, extensionId, isTab = true) {
   uniqueFiles = [...uniqueFiles];
   const percentPerFile = [];
-  console.log(uniqueFiles);
+
 
   try {
     const data = await Promise.all(
@@ -22,7 +22,7 @@ export async function proccessFiles(uniqueFiles, coverageData, extensionId, isTa
           }),
       ),
     );
-    console.log(data);
+
     data.forEach((fileData) => {
       const { url: url_1, content: content_1 } = fileData;
       const covered = calculateCoveragePercentage(
@@ -31,7 +31,7 @@ export async function proccessFiles(uniqueFiles, coverageData, extensionId, isTa
         url_1,
         isTab
       );
-      console.log("in process file", coverageData);
+
       if(covered.coveredBytes != 0){
         percentPerFile.push({
           fileName: getLastSegmentFromUrl(url_1, extensionId),
@@ -42,7 +42,7 @@ export async function proccessFiles(uniqueFiles, coverageData, extensionId, isTa
         });
       }
     });
-    console.log("processFile", percentPerFile);
+
     return percentPerFile;
   } catch (e) {
     console.error("Error during Promise.all:", e);
@@ -89,7 +89,7 @@ export function calculateCoveragePercentage(
   let ranges = [];
   coverageData.result.forEach((script) => {
     if (script.url === scriptUrl) {
-      console.log("script", script);
+
       script.functions.forEach((func) => {
        
         const tmp = func.ranges
@@ -108,9 +108,7 @@ export function calculateCoveragePercentage(
   });
   const coveredBytes = countCoveredNumbers(ranges);
   const coveragePercentage = (coveredBytes / totalScriptSize) * 100;
-  console.log(`Total Script Size: ${totalScriptSize} bytes`);
-  console.log(`Covered Bytes: ${coveredBytes} bytes`);
-  console.log(`Coverage Percentage: ${coveragePercentage.toFixed(2)}%`);
+ 
 
   return { coveragePercentage, coveredBytes, ranges };
 }
@@ -149,11 +147,11 @@ export function setAttached(target) {
 export async function detachDebugger() {
   chrome.storage.local.get("attachedTarget", async (result) => {
     const attachedTarget = result.attachedTarget;
-    console.log("entered detach, attachedTarget value ", attachedTarget);
+    
     if (attachedTarget) {
       try {
         await chrome.debugger.detach(attachedTarget);
-        console.log("detachDebugger success");
+
         chrome.storage.local.remove("attachedTarget");
       } catch (error) {
         if (chrome.runtime.lastError) {
@@ -176,7 +174,6 @@ export function waitForStopButtonClick() {
     chrome.runtime.onMessage.addListener(
       function listener(request, sender, sendResponse) {
         if (request.action === "stopButtonClicked") {
-          console.log("Received button click message in background script.");
           chrome.runtime.onMessage.removeListener(listener);
           resolve();
         }
@@ -191,7 +188,7 @@ export async function getId() {
       if (chrome.runtime.lastError) {
         reject(new Error(chrome.runtime.lastError));
       } else {
-        console.log("Active ID retrieved:", result.activeId);
+       
         resolve(result.activeId || "");
       }
     });

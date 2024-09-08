@@ -13,7 +13,7 @@ export function extensionProfileForFlameGraph(extensionId) {
         }
         console.log("Debugger attached");
         setAttached({ targetId: targetId });
-        // Enable the debugger and profiler
+
         chrome.debugger.sendCommand(
           { targetId: targetId },
           "Debugger.enable",

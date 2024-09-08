@@ -36,7 +36,7 @@ function enableButtons() {
   flamegraphButton.style.cursor = "";
 }
 
-// const extensionId = "gpjandipboemefakdpakjglanfkfcjei"; // Extension ID
+
 function initializeFlameGraph() {
   if (typeof d3 !== "undefined") {
     console.log("D3 version:", d3.version);
@@ -85,9 +85,9 @@ function initializeFlameGraph() {
                     chart.search("Run by extension:");
 
                     const controlsDiv = document.getElementById('controlsContainer');
-                    controlsDiv.style.display = 'block'; // Show the controls
+                    controlsDiv.style.display = 'block';
 
-                    if (!controlsAdded) { // Add controls only if they haven't been added
+                    if (!controlsAdded) {
                       const resetButton = document.getElementById('resetButton');
                       resetButton.addEventListener('click', function () {
                         chart.resetZoom();
@@ -106,7 +106,7 @@ function initializeFlameGraph() {
                         chart.search(searchInput);
                       });
 
-                      controlsAdded = true; // Mark controls as added
+                      controlsAdded = true; 
                     }
                 })
                 .catch((error) => {
@@ -130,10 +130,9 @@ function initializeFlameGraph() {
               container.style.width = "100%";
               container.style.border = "1px solid " + BORDER_COLOR;
 
-              container.style.border = "none"; // Remove table border
-              // If there are no data entries, display an image
+              container.style.border = "none"; 
               const emptyRow = document.createElement("div");
-              emptyRow.style.textAlign = "center"; // Center the image in the div
+              emptyRow.style.textAlign = "center"; 
 
               const img = document.createElement("img");
               img.src = IMAGE_PATH; 
@@ -143,7 +142,7 @@ function initializeFlameGraph() {
               text.textContent = "Chosen extension is not running";
               text.style.fontFamily = "'MyCustomFont', sans-serif";
               text.style.color = TEXT_COLOR;
-              text.style.marginTop = "10px"; // Add some space between the image and the text
+              text.style.marginTop = "10px"; 
               text.style.fontSize = "24px";
 
               emptyRow.appendChild(img);
@@ -202,20 +201,20 @@ document
     if(resets){
         resets.style.display = 'none';
     }
-    // Show the loading image
+
     const loadingImage = document.createElement("img");
     loadingImage.id = "loadingImage";
     loadingImage.src = "styles/load.webp";
     loadingImage.alt = "Loading...";
 
-    // Set the style for the loading image
+
     loadingImage.style.position = "absolute";
     loadingImage.style.top = "60%";
     loadingImage.style.left = "50%";
     loadingImage.style.transform = "translate(-50%, -50%) scale(0.5)";
-    loadingImage.style.display = "block"; // Initially show the loading image
+    loadingImage.style.display = "block"; 
 
-    // Append the loading image to the flameGraph container
+
     docBody.appendChild(loadingImage);
 
     chrome.runtime.sendMessage({ action: "buttonClicked" });
@@ -228,7 +227,7 @@ function drawCoverageTable() {
       if (message.action === "coverageDone") {
         chrome.storage.local.get(["coverageData"], function (result) {
           if (result.coverageData) {
-            // Convert the array of key-value pairs back into a Map
+
             const retrievedMap = new Map(result.coverageData);
             console.log("Retrieved Map:", retrievedMap);
             drawTable(retrievedMap);
@@ -241,9 +240,9 @@ function drawCoverageTable() {
 function updateToggleState(isChecked) {
   if (isChecked) {
     console.log("Toggle switched to: Tab");
-    // alert("Toggle switched to: Tab");
+
   } else {
-    const extensionId = "your-extension-id-here"; // Replace with actual ID or method to get it
+    const extensionId = "your-extension-id-here"; 
     console.log("Toggle switched to: Extension", extensionId);
     // alert(`Toggle switched to: Extension (ID: ${extensionId})`);
   }
@@ -253,15 +252,15 @@ document.addEventListener("DOMContentLoaded", function () {
     '.can-toggle input[type="checkbox"]',
   );
 
-  // Set initial state
+
   updateToggleState(toggleSwitch.checked);
 
-  // Add event listener for change
+
   toggleSwitch.addEventListener("change", function () {
-    // Determine which option is currently checked
+
     const currentState = this.checked ? "Tab" : "Extension";
 
-    // Send message to background with the current state
+
     chrome.runtime.sendMessage({
       action: "toggleClicked",
       state: currentState,
@@ -278,9 +277,9 @@ document
 document
   .getElementById("flamegraphButton")
   .addEventListener("click", function () {
-    // Disable buttons to prevent multiple clicks
+
     disableButtons();
-    // Clear the flameGraph container
+
     const docBody = document.getElementById("flameGraph");
     if(docBody) {
       docBody.innerHTML = "";
@@ -290,25 +289,25 @@ document
     if(resets){
         resets.style.display = 'none';
     }
-    // Show the loading image
+
     const loadingImage = document.createElement("img");
     loadingImage.id = "loadingImage";
     loadingImage.src = "styles/load.webp";
     loadingImage.alt = "Loading...";
 
-    // Set the style for the loading image
+
     loadingImage.style.position = "absolute";
     loadingImage.style.top = "60%";
     loadingImage.style.left = "50%";
     loadingImage.style.transform = "translate(-50%, -50%) scale(0.5)";
-    loadingImage.style.display = "block"; // Initially show the loading image
+    loadingImage.style.display = "block";
 
-    // Append the loading image to the flameGraph container
+
     docBody.appendChild(loadingImage);
-    // Send message to background script to trigger flamegraph generation
+
     chrome.runtime.sendMessage({ action: "flamegraphClicked" });
 
-    // Handle button click actions, if any
+
     handleButtonClick("flamegraphButton");
 
   });
@@ -389,20 +388,20 @@ document.getElementById("networkButton").addEventListener("click", function () {
         resets.style.display = 'none';
     }
 
-  // Show the loading image
+
   const loadingImage = document.createElement("img");
   loadingImage.id = "loadingImage";
   loadingImage.src = "styles/load.webp";
   loadingImage.alt = "Loading...";
 
-  // Set the style for the loading image
+
   loadingImage.style.position = "absolute";
   loadingImage.style.top = "60%";
   loadingImage.style.left = "50%";
   loadingImage.style.transform = "translate(-50%, -50%) scale(0.5)";
-  loadingImage.style.display = "block"; // Initially show the loading image
+  loadingImage.style.display = "block"; 
 
-  // Append the loading image to the flameGraph container
+
   docBody.appendChild(loadingImage);
   handleButtonClick("networkButton");
 
@@ -444,20 +443,20 @@ let activeButton = null;
 
 function handleButtonClick(buttonId) {
   console.log("handling click ", buttonId);
-  document.getElementById("timeDisplay").innerText = ""; // Clear previous time display
+  document.getElementById("timeDisplay").innerText = "";
   const button = document.getElementById(buttonId);
 
   detachDebugger();
   if (activeButton) {
-    // If there's an active button, remove its "pressed" state
+
     activeButton.classList.remove("pressed");
   }
 
-  // Set the new active button
+
   activeButton = button;
   activeButton.classList.add("pressed");
 
-  // Send message for the button clicked
+
   chrome.runtime.sendMessage({ action: `${buttonId}Clicked` });
 
   startTime = new Date();

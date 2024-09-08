@@ -11,7 +11,7 @@ async function startProfilerForCoverage(tabId) {
       detailed: true,
     },
   );
-  console.log("Profiler started for precise coverage.");
+ 
 }
 
 async function stopProfilerAndCollectCoverage(tabId) {
@@ -21,7 +21,7 @@ async function stopProfilerAndCollectCoverage(tabId) {
   );
   await chrome.debugger.sendCommand({ tabId }, "Profiler.stopPreciseCoverage");
   await chrome.debugger.sendCommand({ tabId }, "Profiler.disable");
-  console.log("Profiler stopped and coverage data collected.");
+ 
   return coverageData;
 }
 
@@ -37,9 +37,9 @@ export async function runContentScriptCoverage(tabId, extensionId) {
             ),
           );
         } else {
-          console.log("Debugger attached successfully.");
+
           setAttached({ tabId });
-          console.log("should have set ", tabId);
+
           resolve();
         }
       });
@@ -65,7 +65,6 @@ export async function runContentScriptCoverage(tabId, extensionId) {
       }
     });
     const mapData = await proccessFiles(uniqueFiles, coverageData, extensionId);
-    console.log("runContentScriptCoverage", mapData);
     return mapData;
   } catch (error) {
     console.error("Error during coverage analysis:", error);

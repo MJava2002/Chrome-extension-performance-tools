@@ -14,7 +14,7 @@ import { startNetwork, startNetworkWithTabID, stopNetwork } from "./network.js";
 let tabIsChecked = false;
 
 let targetNotFound = false;
-console.log("Service worker loaded");
+
 chrome.storage.local.remove("attachedTarget");
 
 const TAB = false;
@@ -55,7 +55,7 @@ async function startExtensionCoverage(extensionId) {
     return { result: [] };
   }
 
-  console.log(backgroundPage.id);
+
   await chrome.debugger.attach({ targetId: backgroundPage.id }, "1.3");
   setAttached({ targetId: backgroundPage.id });
 
@@ -73,7 +73,7 @@ async function startExtensionCoverage(extensionId) {
     },
   );
 
-  console.log("Coverage started for the extension's background page.");
+
 }
 
 async function stopAndCollectExtensionCoverage(extensionId) {
@@ -108,10 +108,6 @@ async function stopAndCollectExtensionCoverage(extensionId) {
   // Detach
   await chrome.debugger.detach({ targetId: backgroundPage.id });
 
-  console.log(
-    "Coverage data collected for the extension's background page:",
-    coverageData,
-  );
 
   return coverageData;
 }
@@ -126,14 +122,14 @@ async function runCoverage(extensionId) {
         tabId = activeTab.id;
         const covData = await runContentScriptCoverage(tabId, extensionId);
         const mapArray = Array.from(covData.entries());
-        console.log("runCoverge", covData);
+
 
         await new Promise((resolve, reject) => {
           chrome.storage.local.set({ coverageData: mapArray }, function () {
             if (chrome.runtime.lastError) {
               reject(new Error(chrome.runtime.lastError));
             } else {
-              console.log("Map data has been saved.", covData);
+
               resolve();
             }
           });
@@ -157,7 +153,7 @@ async function runCoverage(extensionId) {
       }
     });
     const covData = await proccessFiles(uniqueFiles, coverageData, extensionId, false);
-    console.log("runCoverge", covData);
+
     const mapArray = Array.from(covData.entries());
 
     await new Promise((resolve, reject) => {
@@ -165,7 +161,7 @@ async function runCoverage(extensionId) {
         if (chrome.runtime.lastError) {
           reject(new Error(chrome.runtime.lastError));
         } else {
-          console.log("Map data has been saved.", covData);
+
           resolve();
         }
       });
@@ -178,9 +174,9 @@ async function runCoverage(extensionId) {
 chrome.runtime.onMessage.addListener(
   async function (request, sender, sendResponse) {
     if (request.action === "buttonClicked") {
-      console.log("Run coverage button clicked");
+      
       const extensionId = await getId();
-      console.log(extensionId);
+
       runCoverage(extensionId);
     }
   },
@@ -188,7 +184,7 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "changeTargetBool") {
     targetNotFound = true;
-    console.log("GOT THIS FARRRRRRRRR");
+    
   }
 
 });
@@ -198,10 +194,10 @@ chrome.runtime.onMessage.addListener(
       if (!tabIsChecked) {
         const extensionId = await getId();
         if (extensionId) {
-          console.log("EXTEBSUIB UD", extensionId);
+         
           extensionProfileForFlameGraph(extensionId);
         } else {
-          console.log("Enot checked", extensionId);
+
         }
       } else if (tabIsChecked) {
         tabProfileForFlameGraph();
@@ -219,12 +215,12 @@ chrome.runtime.onMessage.addListener(
   async function (request, sender, sendResponse) {
     if (request.action === "networkButtonClicked") {
       const extensionId = await getId();
-      console.log("Network button clicked");
+
       if (tabIsChecked) {
-        console.log("Network with tab");
+
         startNetworkWithTabID(extensionId);
       } else {
-        console.log("Network with ext");
+
         startNetwork(extensionId);
       }
     }
@@ -233,7 +229,7 @@ chrome.runtime.onMessage.addListener(
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "stopButtonClicked") {
-    console.log("Stop button clicked");
+
     stopNetwork();
   }
 });
